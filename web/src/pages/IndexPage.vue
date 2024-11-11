@@ -3,6 +3,10 @@ import { ref, onMounted } from 'vue';
 import { ethers } from 'ethers';
 import CounterContract from '../../../out/Counter.sol/Counter.json';
 import { transactions } from '../../../broadcast/Counter.s.sol/31337/run-latest.json';
+import { useQuasar } from 'quasar';
+
+const $q = useQuasar();
+
 const contractAddress = transactions[0].contractAddress;
 
 const currentNumber = ref(0);
@@ -32,21 +36,54 @@ onMounted(async () => {
 
 const getCurrentNumber = async () => {
   try {
+    console.log('getting current number...');
     currentNumber.value = await contract.number();
+    console.log('current number:', currentNumber.value);
   } catch (error) {
+    $q.notify({
+      type: 'negative',
+      message: 'Fehler beim Abrufen der Zahl',
+    });
     console.error('Error fetching number:', error);
   }
 };
 
 const setNumber = async () => {
-  const tx = await contract.setNumber(newNumber.value);
-  await tx.wait();
+  try {
+    const tx = await contract.setNumber(newNumber.value);
+    await tx.wait();
+    $q.notify({
+      type: 'positive',
+      message: 'Zahl erfolgreich gesetzt',
+    });
+  } catch (error) {
+    $q.notify({
+      type: 'negative',
+      message: 'Fehler beim Setzen der Zahl',
+    });
+    console.error('Error setting number:', error);
+  }
   await getCurrentNumber();
 };
 
 const increment = async () => {
-  const tx = await contract.increment();
-  await tx.wait();
+  try {
+    console.log('increment');
+    const tx = await contract.increment();
+    console.log('tx', tx);
+    const res = await tx.wait();
+    console.log('res', res);
+    $q.notify({
+      type: 'positive',
+      message: 'Zahl erfolgreich inkrementiert',
+    });
+  } catch (error) {
+    $q.notify({
+      type: 'negative',
+      message: 'Fehler beim Inkrementieren der Zahl',
+    });
+    console.error('Error incrementing number:', error);
+  }
   await getCurrentNumber();
 };
 </script>
