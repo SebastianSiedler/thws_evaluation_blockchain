@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import Viem from 'src/components/Viem.vue';
+import ViemCounterContract from 'src/components/ViemCounterContract.vue';
 import { onErrorCaptured, ref } from 'vue';
 
 const error = ref<Error | null>(null);
@@ -13,7 +13,7 @@ onErrorCaptured((e) => {
 <template>
   <Suspense>
     <template #default>
-      <Viem />
+      <ViemCounterContract />
     </template>
     <template #fallback>
       <q-spinner-gears />

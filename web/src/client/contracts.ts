@@ -1,38 +1,12 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/vue-query';
-import { Address, createPublicClient, createWalletClient, custom } from 'viem';
+import { createPublicClient, createWalletClient, custom } from 'viem';
 import { anvil } from 'viem/chains';
-import { transactions } from '../../../broadcast/Counter.s.sol/31337/run-latest.json';
 import { useAsyncState } from '@vueuse/core';
 import { computed } from 'vue';
-
-// TODO: replace with json import
-const CONTRACT_ADDRESS: Address = transactions[0].contractAddress;
-
-// ABI for the smart contract
-// TODO: replace with json import
-export const ABI = [
-  {
-    type: 'function',
-    name: 'increment',
-    inputs: [],
-    outputs: [],
-    stateMutability: 'nonpayable',
-  },
-  {
-    type: 'function',
-    name: 'number',
-    inputs: [],
-    outputs: [{ name: '', type: 'uint256', internalType: 'uint256' }],
-    stateMutability: 'view',
-  },
-  {
-    type: 'function',
-    name: 'setNumber',
-    inputs: [{ name: 'newNumber', type: 'uint256', internalType: 'uint256' }],
-    outputs: [],
-    stateMutability: 'nonpayable',
-  },
-] as const;
+import {
+  COUNTER_CONTRACT_ADDRESS,
+  CounterContract,
+} from './contracts/CounterContract';
 
 export const getClient = () => {
   const queryClient = useQueryClient();
@@ -54,8 +28,8 @@ export const getClient = () => {
     queryKey: ['getNumber'],
     queryFn: async () => {
       return publicClient.readContract({
-        address: CONTRACT_ADDRESS,
-        abi: ABI,
+        address: COUNTER_CONTRACT_ADDRESS,
+        abi: CounterContract.abi,
         functionName: 'number',
       });
     },
@@ -65,8 +39,8 @@ export const getClient = () => {
     mutationKey: ['incrementNumber'],
     mutationFn: async () => {
       await walletClient.writeContract({
-        address: CONTRACT_ADDRESS,
-        abi: ABI,
+        address: COUNTER_CONTRACT_ADDRESS,
+        abi: CounterContract.abi,
         functionName: 'increment',
         account: account.value,
       });
@@ -80,8 +54,8 @@ export const getClient = () => {
     mutationKey: ['setNumber'],
     mutationFn: async (newNumber: bigint) => {
       await walletClient.writeContract({
-        address: CONTRACT_ADDRESS,
-        abi: ABI,
+        address: COUNTER_CONTRACT_ADDRESS,
+        abi: CounterContract.abi,
         functionName: 'setNumber',
         account: account.value,
         args: [newNumber],
