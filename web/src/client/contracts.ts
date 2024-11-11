@@ -11,11 +11,17 @@ import {
 export const getClient = () => {
   const queryClient = useQueryClient();
 
+  /**
+   * Wallet client is used to write to contracts
+   */
   const walletClient = createWalletClient({
     chain: anvil, // or mainnet if on mainnet
     transport: custom(window.ethereum!),
   });
 
+  /**
+   * Public client is used to read contract state
+   */
   const publicClient = createPublicClient({
     chain: anvil, // or mainnet if on mainnet
     transport: custom(window.ethereum!),
@@ -38,12 +44,18 @@ export const getClient = () => {
   const incrementNumberMutation = useMutation({
     mutationKey: ['incrementNumber'],
     mutationFn: async () => {
-      await walletClient.writeContract({
+      const txHash = await walletClient.writeContract({
         address: COUNTER_CONTRACT_ADDRESS,
         abi: CounterContract.abi,
         functionName: 'increment',
         account: account.value,
       });
+
+      // Warten, bis die Transaktion bestätigt ist
+      const receipt = await publicClient.waitForTransactionReceipt({
+        hash: txHash,
+      });
+      return receipt;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['getNumber'] });
@@ -53,13 +65,19 @@ export const getClient = () => {
   const setNumberMutation = useMutation({
     mutationKey: ['setNumber'],
     mutationFn: async (newNumber: bigint) => {
-      await walletClient.writeContract({
+      const txHash = await walletClient.writeContract({
         address: COUNTER_CONTRACT_ADDRESS,
         abi: CounterContract.abi,
         functionName: 'setNumber',
         account: account.value,
         args: [newNumber],
       });
+
+      // Warten, bis die Transaktion bestätigt ist
+      const receipt = await publicClient.waitForTransactionReceipt({
+        hash: txHash,
+      });
+      return receipt;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['getNumber'] });
