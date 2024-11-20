@@ -13,6 +13,10 @@ const routes: RouteRecordRaw[] = [
         path: 'viem',
         component: () => import('pages/ViemPage.vue'),
       },
+      {
+        path: 'feedback',
+        component: () => import('pages/FeedbackPage.vue'),
+      },
     ],
   },
 

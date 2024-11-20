@@ -1,12 +1,33 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/vue-query';
-import { createPublicClient, createWalletClient, custom } from 'viem';
-import { anvil } from 'viem/chains';
+import {
+  Address,
+  createPublicClient,
+  createWalletClient,
+  custom,
+  http,
+} from 'viem';
+import { anvil, hardhat } from 'viem/chains';
 import { useAsyncState } from '@vueuse/core';
-import { computed } from 'vue';
+import { ref } from 'vue';
 import {
   COUNTER_CONTRACT_ADDRESS,
   CounterContract,
 } from './contracts/CounterContract';
+import {
+  FeedbackContractABI,
+  FEEDBACK_CONTRACT_ADDRESS,
+} from './contracts/FeedbackContract';
+import { generateProof, Group, Identity } from '@semaphore-protocol/core';
+import {
+  Contract,
+  decodeBytes32String,
+  encodeBytes32String,
+  JsonRpcProvider,
+  toBeHex,
+  Wallet,
+} from 'ethers';
+import { SemaphoreEthers } from '@semaphore-protocol/data';
+import { privateKeyToAccount } from 'viem/accounts';
 
 export const getClient = () => {
   const queryClient = useQueryClient();
@@ -15,7 +36,7 @@ export const getClient = () => {
    * Wallet client is used to write to contracts
    */
   const walletClient = createWalletClient({
-    chain: anvil, // or mainnet if on mainnet
+    chain: hardhat, // or mainnet if on mainnet
     transport: custom(window.ethereum!),
   });
 
@@ -23,12 +44,17 @@ export const getClient = () => {
    * Public client is used to read contract state
    */
   const publicClient = createPublicClient({
-    chain: anvil, // or mainnet if on mainnet
+    chain: hardhat, // or mainnet if on mainnet
     transport: custom(window.ethereum!),
   });
 
-  const accounts = useAsyncState(walletClient.getAddresses, []);
-  const account = computed(() => accounts.state.value[0]);
+  const account = ref<Address | null>(null);
+
+  const accounts = useAsyncState(walletClient.getAddresses, [], {
+    onSuccess: (data) => {
+      account.value = data[0];
+    },
+  });
 
   const getNumberQuery = useQuery({
     queryKey: ['getNumber'],
@@ -39,6 +65,7 @@ export const getClient = () => {
         functionName: 'number',
       });
     },
+    enabled: false,
   });
 
   const incrementNumberMutation = useMutation({
@@ -84,9 +111,315 @@ export const getClient = () => {
     },
   });
 
+  const joinGroup = useMutation({
+    mutationKey: ['joinGroup'],
+    mutationFn: async (args: { groupId: string; identity: Identity }) => {
+      const { groupId, identity } = args;
+
+      // Configure the provider
+      const providerUrl = 'http://127.0.0.1:8545';
+
+      // Configure the signer
+      const ethereumPrivateKey =
+        '0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80';
+      const account = privateKeyToAccount(ethereumPrivateKey);
+
+      const walletClient = createWalletClient({
+        chain: hardhat, // Replace with your chain, if applicable
+        transport: http(providerUrl),
+        // transport: custom(window.ethereum!),
+        // account,
+      });
+
+      // Contract details
+      // adress of the contract (from the logs forge deploy script/DeployFeedback.s.sol)
+      const contractAddress = '0xcf7ed3acca5a467e9e704c703e8d87f634fb0fc9';
+
+      // Prepare the transaction
+      const transactionHash = await walletClient.writeContract({
+        address: contractAddress,
+        abi: FeedbackContractABI.abi,
+        functionName: 'joinGroup',
+        args: [identity.commitment],
+        account: account,
+      });
+
+      console.log('Transaction Hash:', transactionHash);
+
+      // Wait for receipt
+      const receipt = await publicClient.waitForTransactionReceipt({
+        hash: transactionHash,
+      });
+      console.log('Transaction Receipt:', receipt);
+
+      // const txHash = await walletClient.writeContract({
+      //   address: FEEDBACK_CONTRACT_ADDRESS,
+      //   abi: FeedbackContractABI.abi,
+      //   functionName: 'joinGroup',
+      //   account: account.value,
+      //   args: [identity.commitment],
+      // });
+      // console.log('txHash', txHash);
+
+      // // Warten, bis die Transaktion bestätigt ist
+      // const receipt = await publicClient.waitForTransactionReceipt({
+      //   hash: txHash,
+      // });
+      // console.log(receipt);
+      // return receipt;
+    },
+    onError: (error) => {
+      console.error('joinGroup error', error);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['getUsers'] });
+    },
+  });
+
+  const feedbackAbi = [
+    {
+      inputs: [
+        {
+          internalType: 'address',
+          name: 'semaphoreAddress',
+          type: 'address',
+        },
+      ],
+      stateMutability: 'nonpayable',
+      type: 'constructor',
+    },
+    {
+      inputs: [],
+      name: 'groupId',
+      outputs: [
+        {
+          internalType: 'uint256',
+          name: '',
+          type: 'uint256',
+        },
+      ],
+      stateMutability: 'view',
+      type: 'function',
+    },
+    {
+      inputs: [
+        {
+          internalType: 'uint256',
+          name: 'identityCommitment',
+          type: 'uint256',
+        },
+      ],
+      name: 'joinGroup',
+      outputs: [],
+      stateMutability: 'nonpayable',
+      type: 'function',
+    },
+    {
+      inputs: [],
+      name: 'semaphore',
+      outputs: [
+        {
+          internalType: 'contract ISemaphore',
+          name: '',
+          type: 'address',
+        },
+      ],
+      stateMutability: 'view',
+      type: 'function',
+    },
+    {
+      inputs: [
+        {
+          internalType: 'uint256',
+          name: 'merkleTreeDepth',
+          type: 'uint256',
+        },
+        {
+          internalType: 'uint256',
+          name: 'merkleTreeRoot',
+          type: 'uint256',
+        },
+        {
+          internalType: 'uint256',
+          name: 'nullifier',
+          type: 'uint256',
+        },
+        {
+          internalType: 'uint256',
+          name: 'feedback',
+          type: 'uint256',
+        },
+        {
+          internalType: 'uint256[8]',
+          name: 'points',
+          type: 'uint256[8]',
+        },
+      ],
+      name: 'sendFeedback',
+      outputs: [],
+      stateMutability: 'nonpayable',
+      type: 'function',
+    },
+  ];
+
+  const sendFeedback = useMutation({
+    mutationKey: ['sendFeedback'],
+    mutationFn: async (args: {
+      // groupId: bigint;
+      feedback: string;
+      _identity: Identity;
+    }) => {
+      console.log('sending feedback...');
+      const { feedback, _identity } = args;
+
+      console.log({ _identity });
+
+      const _users = [...(getUsers.data.value?.at(0)?.members ?? [])];
+      console.log({ _users });
+      const group = new Group(_users);
+      console.log('created group', group);
+
+      const message = encodeBytes32String(feedback);
+      console.log('created message', { message, feedback });
+
+      const NEXT_PUBLIC_GROUP_ID = '0';
+
+      const { points, merkleTreeDepth, merkleTreeRoot, nullifier } =
+        await generateProof(_identity, group, message, NEXT_PUBLIC_GROUP_ID);
+      console.log('created proof', points, merkleTreeDepth, merkleTreeRoot);
+
+      // Configure the provider
+      const providerUrl = 'http://127.0.0.1:8545';
+
+      // Configure the signer
+      const ethereumPrivateKey =
+        '0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80';
+
+      const provider = new JsonRpcProvider(providerUrl);
+      const contractAddress = '0xcf7ed3acca5a467e9e704c703e8d87f634fb0fc9';
+
+      const signer = new Wallet(ethereumPrivateKey, provider);
+      const contract = new Contract(
+        contractAddress,
+        // FeedbackContractABI.abi,
+        feedbackAbi,
+        signer,
+      );
+      console.log('sending feedback...', { feedback, message });
+      const transaction = await contract.sendFeedback(
+        merkleTreeDepth,
+        merkleTreeRoot,
+        nullifier,
+        message,
+        points,
+      );
+      console.log('sending feedback done!');
+      console.log('Transaction:', transaction);
+      const receipe = await transaction.wait();
+      console.log('Transaction Receipt:', receipe);
+
+      return receipe;
+
+      // const walletClient = createWalletClient({
+      //   chain: hardhat, // Replace with your chain, if applicable
+      //   transport: http(providerUrl),
+      //   // transport: custom(window.ethereum!),
+      //   // account,
+      // });
+
+      // console.log('writing to contract...');
+      // const txHash = await walletClient.writeContract({
+      //   address: FEEDBACK_CONTRACT_ADDRESS,
+      //   abi: FeedbackContractABI.abi,
+      //   functionName: 'sendFeedback',
+      //   account: account,
+      //   args: [
+      //     BigInt(merkleTreeDepth),
+      //     merkleTreeRoot,
+      //     nullifier,
+      //     message,
+      //     points,
+      //   ],
+      // });
+      // console.log('txHash', txHash);
+
+      // // Warten, bis die Transaktion bestätigt ist
+      // const receipt = await publicClient.waitForTransactionReceipt({
+      //   hash: txHash,
+      // });
+      // return receipt;
+    },
+    onError: (error) => {
+      console.error('sendFeedback error', error);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['getFeedback'] });
+    },
+  });
+
+  const getUsers = useQuery({
+    queryKey: ['getUsers'],
+    queryFn: async () => {
+      const ethereumNetwork = 'http://127.0.0.1:8545';
+      const semaphore = new SemaphoreEthers(ethereumNetwork, {
+        address: '0x9fe46736679d2d9a65f0992f2272de9f3c7fa6e0', // NEXT.JS
+        // address: '0x1e0d7FF1610e480fC93BdEC510811ea2Ba6d7c2f', // ANVIL
+        // address: SEMAPHORE_CONTRACT_ADDRESS,
+        // projectId: process.env.NEXT_PUBLIC_INFURA_API_KEY,
+      });
+
+      const groupIds = await semaphore.getGroupIds();
+
+      const groupsWithUsers = await Promise.all(
+        groupIds.map(async (groupId) => {
+          const members = await semaphore.getGroupMembers(groupId);
+
+          return {
+            groupId,
+            members,
+          };
+        }),
+      );
+
+      return groupsWithUsers;
+    },
+  });
+
+  const getFeedback = useQuery({
+    queryKey: ['getFeedback'],
+    queryFn: async () => {
+      const ethereumNetwork = 'http://127.0.0.1:8545';
+      const semaphore = new SemaphoreEthers(ethereumNetwork, {
+        address: '0x9fe46736679d2d9a65f0992f2272de9f3c7fa6e0', // NEXT.JS
+        // address: '0x1e0d7FF1610e480fC93BdEC510811ea2Ba6d7c2f', // ANVIL
+        // address: SEMAPHORE_CONTRACT_ADDRESS,
+        // projectId: process.env.NEXT_PUBLIC_INFURA_API_KEY,
+      });
+
+      const GROUP_ID = '0';
+      const proofs = await semaphore.getGroupValidatedProofs(GROUP_ID);
+
+      const feedback: string[] = proofs.map(({ message }: any) =>
+        decodeBytes32String(toBeHex(message, 32)),
+      );
+
+      return feedback;
+    },
+  });
+
   return {
-    getNumberQuery,
-    incrementNumberMutation,
-    setNumberMutation,
+    counter: {
+      getNumberQuery,
+      incrementNumberMutation,
+      setNumberMutation,
+    },
+    feedback: {
+      joinGroup,
+      sendFeedback,
+      getUsers,
+      getFeedback,
+    },
+    account,
+    accounts,
   };
 };
