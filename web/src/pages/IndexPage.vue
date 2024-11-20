@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
 import { ethers } from 'ethers';
-import CounterContract from '../../../out/Counter.sol/Counter.json';
+import CounterContract from '../../../out/src/Counter.sol/Counter.json';
 import { transactions } from '../../../broadcast/Counter.s.sol/31337/run-latest.json';
 import { useQuasar } from 'quasar';
 
