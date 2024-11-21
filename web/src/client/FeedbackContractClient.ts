@@ -130,9 +130,19 @@ export const getFeedbackContractClient = (args: CreateClientArgs) => {
     return useQuery({
       queryKey: ['getFeedback', groupId],
       queryFn: async () => {
-        const proofs = await semaphore.getGroupValidatedProofs(groupId);
+        type GroupValidatedProof = {
+          merkleTreeDepth: number;
+          merkleTreeRoot: string;
+          nullifier: string;
+          message: string;
+          scope: string;
+          points: string[];
+        };
 
-        const feedback: string[] = proofs.map(({ message }: any) =>
+        const proofs: GroupValidatedProof[] =
+          await semaphore.getGroupValidatedProofs(groupId);
+
+        const feedback: string[] = proofs.map(({ message }) =>
           decodeBytes32String(toBeHex(message, 32)),
         );
 
