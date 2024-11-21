@@ -21,7 +21,15 @@ import { SEMAPHORE_CONTRACT_ADDRESS } from './contracts/SemaphoreContract';
 import { CreateClientArgs } from './contracts';
 
 export const getFeedbackContractClient = (args: CreateClientArgs) => {
-  const { queryClient, publicClient, walletClient } = args;
+  const {
+    queryClient,
+    publicClient,
+    walletClient,
+    walletServerClient,
+    publicServerClient,
+    semaphore,
+    account,
+  } = args;
   const GROUP_ID = '0';
 
   const joinGroup = useMutation({
@@ -29,28 +37,13 @@ export const getFeedbackContractClient = (args: CreateClientArgs) => {
     mutationFn: async (args: { groupId: string; identity: Identity }) => {
       const { groupId, identity } = args;
 
-      // Configure the provider
-      const providerUrl = 'http://127.0.0.1:8545';
-
-      // Configure the signer
-      const ethereumPrivateKey =
-        '0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80';
-      const account = privateKeyToAccount(ethereumPrivateKey);
-
-      const walletClient = createWalletClient({
-        chain: anvil, // Replace with your chain, if applicable
-        transport: http(providerUrl),
-        // transport: custom(window.ethereum!),
-        // account,
-      });
-
       // Prepare the transaction
-      const transactionHash = await walletClient.writeContract({
+      const transactionHash = await walletServerClient.writeContract({
         address: FEEDBACK_CONTRACT_ADDRESS,
         abi: FeedbackContractABI.abi,
         functionName: 'joinGroup',
         args: [identity.commitment],
-        account: account,
+        account: account.value,
       });
 
       console.log('Transaction Hash:', transactionHash);
@@ -60,22 +53,6 @@ export const getFeedbackContractClient = (args: CreateClientArgs) => {
         hash: transactionHash,
       });
       console.log('Transaction Receipt:', receipt);
-
-      // const txHash = await walletClient.writeContract({
-      //   address: FEEDBACK_CONTRACT_ADDRESS,
-      //   abi: FeedbackContractABI.abi,
-      //   functionName: 'joinGroup',
-      //   account: account.value,
-      //   args: [identity.commitment],
-      // });
-      // console.log('txHash', txHash);
-
-      // // Warten, bis die Transaktion bestätigt ist
-      // const receipt = await publicClient.waitForTransactionReceipt({
-      //   hash: txHash,
-      // });
-      // console.log(receipt);
-      // return receipt;
     },
     onError: (error) => {
       console.error('joinGroup error', error);
@@ -181,14 +158,6 @@ export const getFeedbackContractClient = (args: CreateClientArgs) => {
   const getUsers = useQuery({
     queryKey: ['getUsers'],
     queryFn: async () => {
-      const ethereumNetwork = 'http://127.0.0.1:8545';
-      const semaphore = new SemaphoreEthers(ethereumNetwork, {
-        address: SEMAPHORE_CONTRACT_ADDRESS, // NEXT.JS
-        // address: '0x1e0d7FF1610e480fC93BdEC510811ea2Ba6d7c2f', // ANVIL
-        // address: SEMAPHORE_CONTRACT_ADDRESS,
-        // projectId: process.env.NEXT_PUBLIC_INFURA_API_KEY,
-      });
-
       const groupIds = await semaphore.getGroupIds();
       console.log({ groupIds });
 
@@ -216,12 +185,6 @@ export const getFeedbackContractClient = (args: CreateClientArgs) => {
     return useQuery({
       queryKey: ['getFeedback', groupId],
       queryFn: async () => {
-        const ethereumNetwork = 'http://127.0.0.1:8545';
-        const semaphore = new SemaphoreEthers(ethereumNetwork, {
-          address: SEMAPHORE_CONTRACT_ADDRESS,
-          // projectId: process.env.NEXT_PUBLIC_INFURA_API_KEY,
-        });
-
         const proofs = await semaphore.getGroupValidatedProofs(groupId);
 
         const feedback: string[] = proofs.map(({ message }: any) =>
