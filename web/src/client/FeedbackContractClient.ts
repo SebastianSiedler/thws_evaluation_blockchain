@@ -12,10 +12,10 @@ import { CreateClientArgs } from './contracts';
 export const getFeedbackContractClient = (args: CreateClientArgs) => {
   const {
     queryClient,
-    publicClient,
-    walletClient,
-    walletServerClient,
-    publicServerClient,
+    // publicClient,
+    // walletClient,
+    walletServerClient: walletClient,
+    publicServerClient: publicClient,
     semaphore,
     account,
   } = args;
@@ -27,7 +27,7 @@ export const getFeedbackContractClient = (args: CreateClientArgs) => {
       const { groupId, identity } = args;
 
       // Prepare the transaction
-      const transactionHash = await walletServerClient.writeContract({
+      const transactionHash = await walletClient.writeContract({
         address: FEEDBACK_CONTRACT_ADDRESS,
         abi: FeedbackContractABI.abi,
         functionName: 'joinGroup',
@@ -35,13 +35,12 @@ export const getFeedbackContractClient = (args: CreateClientArgs) => {
         account: account.value,
       });
 
-      console.log('Transaction Hash:', transactionHash);
-
       // Wait for receipt
       const receipt = await publicClient.waitForTransactionReceipt({
         hash: transactionHash,
       });
-      console.log('Transaction Receipt:', receipt);
+
+      return receipt;
     },
     onError: (error) => {
       console.error('joinGroup error', error);
@@ -71,7 +70,7 @@ export const getFeedbackContractClient = (args: CreateClientArgs) => {
       const { points, merkleTreeDepth, merkleTreeRoot, nullifier } =
         await generateProof(_identity, group, message, NEXT_PUBLIC_GROUP_ID);
 
-      const txHash = await walletServerClient.writeContract({
+      const txHash = await walletClient.writeContract({
         address: FEEDBACK_CONTRACT_ADDRESS,
         abi: FeedbackContractABI.abi,
         functionName: 'sendFeedback',
@@ -104,7 +103,6 @@ export const getFeedbackContractClient = (args: CreateClientArgs) => {
     queryKey: ['getUsers'],
     queryFn: async () => {
       const groupIds = await semaphore.getGroupIds();
-      console.log({ groupIds });
 
       const groupsWithUsers = await Promise.all(
         groupIds.map(async (groupId) => {
@@ -116,8 +114,7 @@ export const getFeedbackContractClient = (args: CreateClientArgs) => {
           };
         }),
       );
-      console.log({ groupsWithUsers });
-
+      // TODO: remove
       semaphore.getGroupMembers('0').catch(console.error).then(console.log);
 
       return groupsWithUsers;
