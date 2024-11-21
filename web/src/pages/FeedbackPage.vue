@@ -3,12 +3,11 @@ import { ref } from 'vue';
 import { getClient } from 'src/client/contracts';
 import { Identity } from '@semaphore-protocol/core';
 import { useQuasar } from 'quasar';
-
+import FeedbackList from 'src/components/Feedback/FeedbackList.vue';
 // Reaktive Variablen für UI
 
 const $q = useQuasar();
 
-const userFeedback = ref<string>('');
 const client = getClient().feedback;
 const identity = ref<Identity>(new Identity());
 
@@ -80,45 +79,7 @@ const createIdentity = () => {
     <!-- Feedback -->
     <div class="q-pa-md">
       <div class="text-h6">Feedback</div>
-      <q-list bordered separator>
-        <q-item v-for="(feedback, i) in client.getFeedback.data.value" :key="i">
-          <q-item-section>{{ feedback }}</q-item-section>
-        </q-item>
-        <q-item>
-          <q-item-section class="row">
-            <q-input
-              v-model="userFeedback"
-              placeholder="Feedback eingeben"
-              type="text"
-            />
-          </q-item-section>
-          <q-item-section side>
-            <q-btn
-              @click="
-                client.sendFeedback
-                  .mutateAsync({
-                    feedback: userFeedback,
-                    _identity: identity,
-                  })
-                  .then(() => {
-                    $q.notify({
-                      message: 'Feedback gesendet',
-                      color: 'positive',
-                    });
-                    userFeedback = '';
-                  })
-                  .catch((err) => {
-                    $q.notify({ message: err.message, color: 'negative' });
-                    console.error(err);
-                  })
-              "
-              :loading="client.sendFeedback.isPending.value"
-            >
-              Feedback senden
-            </q-btn>
-          </q-item-section>
-        </q-item>
-      </q-list>
+      <FeedbackList :identity="identity" groupId="0" />
 
       <div>
         <div v-if="client.sendFeedback.isPending.value">Loading...</div>

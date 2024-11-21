@@ -210,24 +210,28 @@ export const getFeedbackContractClient = (args: CreateClientArgs) => {
     },
   });
 
-  const getFeedback = useQuery({
-    queryKey: ['getFeedback'],
-    queryFn: async () => {
-      const ethereumNetwork = 'http://127.0.0.1:8545';
-      const semaphore = new SemaphoreEthers(ethereumNetwork, {
-        address: SEMAPHORE_CONTRACT_ADDRESS,
-        // projectId: process.env.NEXT_PUBLIC_INFURA_API_KEY,
-      });
+  const getFeedback = (args: { groupId: string }) => {
+    const { groupId } = args;
 
-      const proofs = await semaphore.getGroupValidatedProofs(GROUP_ID);
+    return useQuery({
+      queryKey: ['getFeedback', groupId],
+      queryFn: async () => {
+        const ethereumNetwork = 'http://127.0.0.1:8545';
+        const semaphore = new SemaphoreEthers(ethereumNetwork, {
+          address: SEMAPHORE_CONTRACT_ADDRESS,
+          // projectId: process.env.NEXT_PUBLIC_INFURA_API_KEY,
+        });
 
-      const feedback: string[] = proofs.map(({ message }: any) =>
-        decodeBytes32String(toBeHex(message, 32)),
-      );
+        const proofs = await semaphore.getGroupValidatedProofs(groupId);
 
-      return feedback;
-    },
-  });
+        const feedback: string[] = proofs.map(({ message }: any) =>
+          decodeBytes32String(toBeHex(message, 32)),
+        );
+
+        return feedback;
+      },
+    });
+  };
 
   return {
     joinGroup,
