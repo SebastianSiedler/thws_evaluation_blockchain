@@ -235,6 +235,15 @@ import { transactions } from '../../../../broadcast/DeployFeedback.s.sol/31337/r
 
 import { Address } from 'viem';
 
+const address = transactions.find(
+  (transaction) =>
+    transaction.contractName === 'Feedback' &&
+    transaction.transactionType === 'CREATE',
+)?.contractAddress;
+
+if (!address) {
+  throw new Error('Feedback contract address not found');
+}
+
 // @ts-expect-error Type 'string' is not assignable to type '`0x${string}`'.
-export const FEEDBACK_CONTRACT_ADDRESS: Address =
-  transactions[0].contractAddress;
+export const FEEDBACK_CONTRACT_ADDRESS: Address = address;

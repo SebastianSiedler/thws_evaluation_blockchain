@@ -28,6 +28,7 @@ import {
 } from 'ethers';
 import { SemaphoreEthers } from '@semaphore-protocol/data';
 import { privateKeyToAccount } from 'viem/accounts';
+import { SEMAPHORE_CONTRACT_ADDRESS } from './contracts/SemaphoreContract';
 
 export const getClient = () => {
   const queryClient = useQueryClient();
@@ -36,7 +37,7 @@ export const getClient = () => {
    * Wallet client is used to write to contracts
    */
   const walletClient = createWalletClient({
-    chain: hardhat, // or mainnet if on mainnet
+    chain: anvil, // or mainnet if on mainnet
     transport: custom(window.ethereum!),
   });
 
@@ -44,7 +45,7 @@ export const getClient = () => {
    * Public client is used to read contract state
    */
   const publicClient = createPublicClient({
-    chain: hardhat, // or mainnet if on mainnet
+    chain: anvil, // or mainnet if on mainnet
     transport: custom(window.ethereum!),
   });
 
@@ -65,7 +66,6 @@ export const getClient = () => {
         functionName: 'number',
       });
     },
-    enabled: false,
   });
 
   const incrementNumberMutation = useMutation({
@@ -111,6 +111,8 @@ export const getClient = () => {
     },
   });
 
+  const GROUP_ID = '0';
+
   const joinGroup = useMutation({
     mutationKey: ['joinGroup'],
     mutationFn: async (args: { groupId: string; identity: Identity }) => {
@@ -125,19 +127,15 @@ export const getClient = () => {
       const account = privateKeyToAccount(ethereumPrivateKey);
 
       const walletClient = createWalletClient({
-        chain: hardhat, // Replace with your chain, if applicable
+        chain: anvil, // Replace with your chain, if applicable
         transport: http(providerUrl),
         // transport: custom(window.ethereum!),
         // account,
       });
 
-      // Contract details
-      // adress of the contract (from the logs forge deploy script/DeployFeedback.s.sol)
-      const contractAddress = '0xcf7ed3acca5a467e9e704c703e8d87f634fb0fc9';
-
       // Prepare the transaction
       const transactionHash = await walletClient.writeContract({
-        address: contractAddress,
+        address: FEEDBACK_CONTRACT_ADDRESS,
         abi: FeedbackContractABI.abi,
         functionName: 'joinGroup',
         args: [identity.commitment],
@@ -296,11 +294,10 @@ export const getClient = () => {
         '0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80';
 
       const provider = new JsonRpcProvider(providerUrl);
-      const contractAddress = '0xcf7ed3acca5a467e9e704c703e8d87f634fb0fc9';
 
       const signer = new Wallet(ethereumPrivateKey, provider);
       const contract = new Contract(
-        contractAddress,
+        FEEDBACK_CONTRACT_ADDRESS,
         // FeedbackContractABI.abi,
         feedbackAbi,
         signer,
@@ -362,13 +359,14 @@ export const getClient = () => {
     queryFn: async () => {
       const ethereumNetwork = 'http://127.0.0.1:8545';
       const semaphore = new SemaphoreEthers(ethereumNetwork, {
-        address: '0x9fe46736679d2d9a65f0992f2272de9f3c7fa6e0', // NEXT.JS
+        address: SEMAPHORE_CONTRACT_ADDRESS, // NEXT.JS
         // address: '0x1e0d7FF1610e480fC93BdEC510811ea2Ba6d7c2f', // ANVIL
         // address: SEMAPHORE_CONTRACT_ADDRESS,
         // projectId: process.env.NEXT_PUBLIC_INFURA_API_KEY,
       });
 
       const groupIds = await semaphore.getGroupIds();
+      console.log({ groupIds });
 
       const groupsWithUsers = await Promise.all(
         groupIds.map(async (groupId) => {
@@ -380,6 +378,9 @@ export const getClient = () => {
           };
         }),
       );
+      console.log({ groupsWithUsers });
+
+      semaphore.getGroupMembers('0').catch(console.error).then(console.log);
 
       return groupsWithUsers;
     },
@@ -390,13 +391,10 @@ export const getClient = () => {
     queryFn: async () => {
       const ethereumNetwork = 'http://127.0.0.1:8545';
       const semaphore = new SemaphoreEthers(ethereumNetwork, {
-        address: '0x9fe46736679d2d9a65f0992f2272de9f3c7fa6e0', // NEXT.JS
-        // address: '0x1e0d7FF1610e480fC93BdEC510811ea2Ba6d7c2f', // ANVIL
-        // address: SEMAPHORE_CONTRACT_ADDRESS,
+        address: SEMAPHORE_CONTRACT_ADDRESS,
         // projectId: process.env.NEXT_PUBLIC_INFURA_API_KEY,
       });
 
-      const GROUP_ID = '0';
       const proofs = await semaphore.getGroupValidatedProofs(GROUP_ID);
 
       const feedback: string[] = proofs.map(({ message }: any) =>

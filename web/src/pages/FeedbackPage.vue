@@ -31,6 +31,9 @@ const createIdentity = () => {
 
     <div>
       <div>Groups:</div>
+      <div v-if="(client.getUsers.data.value?.length ?? -1) < 1">
+        No groups found
+      </div>
       <div v-for="group in client.getUsers.data.value" :key="group.groupId">
         <div>
           Users in group {{ group.groupId }} ({{ group.members.length }})

@@ -2,12 +2,10 @@
 import { ref, onMounted } from 'vue';
 import { ethers } from 'ethers';
 import CounterContract from '../../../out/src/Counter.sol/Counter.json';
-import { transactions } from '../../../broadcast/Counter.s.sol/31337/run-latest.json';
 import { useQuasar } from 'quasar';
+import { COUNTER_CONTRACT_ADDRESS } from 'src/client/contracts/CounterContract';
 
 const $q = useQuasar();
-
-const contractAddress = transactions[0].contractAddress;
 
 const currentNumber = ref(0);
 const newNumber = ref(0);
@@ -22,7 +20,7 @@ onMounted(async () => {
 
     // Vertrag initialisieren
     contract = new ethers.Contract(
-      contractAddress,
+      COUNTER_CONTRACT_ADDRESS,
       CounterContract.abi,
       signer,
     );
