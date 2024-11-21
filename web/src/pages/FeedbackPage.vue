@@ -44,9 +44,28 @@ const createIdentity = () => {
             </div>
           </q-card-section>
           <q-card-section>
-            <q-list bordered separator>
+            <q-list bordered separator style="height: 240px; overflow-y: auto">
               <q-item v-for="user in group.members" :key="user">
-                <q-item-section>{{ user }}</q-item-section>
+                <q-item-section
+                  style="display: flex; flex-direction: row; flex-wrap: wrap"
+                >
+                  <div style="min-width: 0">
+                    <div
+                      style="
+                        text-overflow: ellipsis;
+                        overflow: hidden;
+                        white-space: nowrap;
+                      "
+                      :style="
+                        identity.commitment.toString() === user
+                          ? 'background-color: red;'
+                          : ''
+                      "
+                    >
+                      {{ user }}
+                    </div>
+                  </div>
+                </q-item-section>
               </q-item>
             </q-list>
           </q-card-section>

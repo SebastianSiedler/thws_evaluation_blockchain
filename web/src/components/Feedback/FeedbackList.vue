@@ -37,29 +37,29 @@ const sendFeedback = () => {
 </script>
 
 <template>
-  <q-list bordered separator>
+  <q-list bordered separator style="height: 240px; overflow-y: auto">
     <q-item
       v-for="{ decodedMessage, nullifier } in feedbackQuery.data.value"
       :key="nullifier"
     >
       <q-item-section>{{ decodedMessage }}</q-item-section>
     </q-item>
-    <q-item>
-      <q-item-section class="row">
-        <q-input
-          v-model="userFeedback"
-          placeholder="Feedback eingeben"
-          type="text"
-        />
-      </q-item-section>
-      <q-item-section side>
-        <q-btn
-          @click="sendFeedback"
-          :loading="client.sendFeedback.isPending.value"
-        >
-          Feedback senden
-        </q-btn>
-      </q-item-section>
-    </q-item>
   </q-list>
+  <q-item>
+    <q-item-section class="row">
+      <q-input
+        v-model="userFeedback"
+        placeholder="Feedback eingeben"
+        type="text"
+      />
+    </q-item-section>
+    <q-item-section side>
+      <q-btn
+        @click="sendFeedback"
+        :loading="client.sendFeedback.isPending.value"
+      >
+        Feedback senden
+      </q-btn>
+    </q-item-section>
+  </q-item>
 </template>
