@@ -1,23 +1,12 @@
 import { useMutation, useQuery } from '@tanstack/vue-query';
-import { createWalletClient, http } from 'viem';
-import { anvil } from 'viem/chains';
 
 import {
   FeedbackContractABI,
   FEEDBACK_CONTRACT_ADDRESS,
 } from './contracts/FeedbackContract';
 import { generateProof, Group, Identity } from '@semaphore-protocol/core';
-import {
-  Contract,
-  decodeBytes32String,
-  encodeBytes32String,
-  JsonRpcProvider,
-  toBeHex,
-  Wallet,
-} from 'ethers';
-import { SemaphoreEthers } from '@semaphore-protocol/data';
-import { privateKeyToAccount } from 'viem/accounts';
-import { SEMAPHORE_CONTRACT_ADDRESS } from './contracts/SemaphoreContract';
+import { decodeBytes32String, encodeBytes32String, toBeHex } from 'ethers';
+
 import { CreateClientArgs } from './contracts';
 
 export const getFeedbackContractClient = (args: CreateClientArgs) => {
@@ -69,83 +58,39 @@ export const getFeedbackContractClient = (args: CreateClientArgs) => {
       feedback: string;
       _identity: Identity;
     }) => {
-      console.log('sending feedback...');
       const { feedback, _identity } = args;
 
-      console.log({ _identity });
-
       const _users = [...(getUsers.data.value?.at(0)?.members ?? [])];
-      console.log({ _users });
+
       const group = new Group(_users);
-      console.log('created group', group);
 
       const message = encodeBytes32String(feedback);
-      console.log('created message', { message, feedback });
 
       const NEXT_PUBLIC_GROUP_ID = '0';
 
       const { points, merkleTreeDepth, merkleTreeRoot, nullifier } =
         await generateProof(_identity, group, message, NEXT_PUBLIC_GROUP_ID);
-      console.log('created proof', points, merkleTreeDepth, merkleTreeRoot);
 
-      // Configure the provider
-      const providerUrl = 'http://127.0.0.1:8545';
+      const txHash = await walletServerClient.writeContract({
+        address: FEEDBACK_CONTRACT_ADDRESS,
+        abi: FeedbackContractABI.abi,
+        functionName: 'sendFeedback',
+        account: account.value,
+        args: [
+          BigInt(merkleTreeDepth),
+          merkleTreeRoot,
+          nullifier,
+          BigInt(message),
+          points,
+        ],
+      });
 
-      // Configure the signer
-      const ethereumPrivateKey =
-        '0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80';
+      // Warten, bis die Transaktion bestätigt ist
+      const receipt = await publicClient.waitForTransactionReceipt({
+        hash: txHash,
+      });
 
-      const provider = new JsonRpcProvider(providerUrl);
-
-      const signer = new Wallet(ethereumPrivateKey, provider);
-      const contract = new Contract(
-        FEEDBACK_CONTRACT_ADDRESS,
-        FeedbackContractABI.abi,
-        signer,
-      );
-      console.log('sending feedback...', { feedback, message });
-      const transaction = await contract.sendFeedback(
-        merkleTreeDepth,
-        merkleTreeRoot,
-        nullifier,
-        message,
-        points,
-      );
-      console.log('sending feedback done!');
-      console.log('Transaction:', transaction);
-      const receipe = await transaction.wait();
-      console.log('Transaction Receipt:', receipe);
-
-      return receipe;
-
-      // const walletClient = createWalletClient({
-      //   chain: hardhat, // Replace with your chain, if applicable
-      //   transport: http(providerUrl),
-      //   // transport: custom(window.ethereum!),
-      //   // account,
-      // });
-
-      // console.log('writing to contract...');
-      // const txHash = await walletClient.writeContract({
-      //   address: FEEDBACK_CONTRACT_ADDRESS,
-      //   abi: FeedbackContractABI.abi,
-      //   functionName: 'sendFeedback',
-      //   account: account,
-      //   args: [
-      //     BigInt(merkleTreeDepth),
-      //     merkleTreeRoot,
-      //     nullifier,
-      //     message,
-      //     points,
-      //   ],
-      // });
-      // console.log('txHash', txHash);
-
-      // // Warten, bis die Transaktion bestätigt ist
-      // const receipt = await publicClient.waitForTransactionReceipt({
-      //   hash: txHash,
-      // });
-      // return receipt;
+      return receipt;
     },
     onError: (error) => {
       console.error('sendFeedback error', error);
