@@ -115,7 +115,7 @@ export const getFeedbackContractClient = (args: CreateClientArgs) => {
         }),
       );
       // TODO: remove
-      semaphore.getGroupMembers('0').catch(console.error).then(console.log);
+      semaphore.getGroupMembers('0').catch(console.error);
 
       return groupsWithUsers;
     },
@@ -139,9 +139,15 @@ export const getFeedbackContractClient = (args: CreateClientArgs) => {
         const proofs: GroupValidatedProof[] =
           await semaphore.getGroupValidatedProofs(groupId);
 
-        const feedback: string[] = proofs.map(({ message }) =>
-          decodeBytes32String(toBeHex(message, 32)),
-        );
+        const feedback = proofs.map(({ message, ...rest }) => {
+          const decodedMessage = decodeBytes32String(toBeHex(message, 32));
+
+          return {
+            ...rest,
+            message,
+            decodedMessage,
+          };
+        });
 
         return feedback;
       },

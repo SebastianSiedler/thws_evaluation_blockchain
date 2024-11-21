@@ -38,8 +38,11 @@ const sendFeedback = () => {
 
 <template>
   <q-list bordered separator>
-    <q-item v-for="(feedback, i) in feedbackQuery.data.value" :key="i">
-      <q-item-section>{{ feedback }}</q-item-section>
+    <q-item
+      v-for="{ decodedMessage, nullifier } in feedbackQuery.data.value"
+      :key="nullifier"
+    >
+      <q-item-section>{{ decodedMessage }}</q-item-section>
     </q-item>
     <q-item>
       <q-item-section class="row">
