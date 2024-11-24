@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+import { Ref, ref } from 'vue';
 import { getClient } from 'src/client/contracts';
 import { Identity } from '@semaphore-protocol/core';
 import { useQuasar } from 'quasar';
@@ -9,7 +9,7 @@ import FeedbackList from 'src/components/Feedback/FeedbackList.vue';
 const $q = useQuasar();
 
 const client = getClient().feedback;
-const identity = ref<Identity>(new Identity());
+const identity: Ref<Identity> = ref<Identity>(new Identity());
 
 const createIdentity = () => {
   identity.value = new Identity();
@@ -56,13 +56,11 @@ const createIdentity = () => {
                         overflow: hidden;
                         white-space: nowrap;
                       "
-                      :style="
-                        identity.commitment.toString() === user
-                          ? 'background-color: red;'
-                          : ''
-                      "
                     >
-                      {{ user }}
+                      <span v-if="user == identity.commitment.toString()">
+                        (You)
+                      </span>
+                      <span> {{ user }}</span>
                     </div>
                   </div>
                 </q-item-section>
@@ -80,7 +78,7 @@ const createIdentity = () => {
             <q-btn
               @click="
                 () => {
-                  client.joinGroup.mutate({ groupId: 0, identity: identity });
+                  client.joinGroup.mutate({ groupId: '0', identity: identity });
                 }
               "
               :loading="client.joinGroup.isPending.value"
