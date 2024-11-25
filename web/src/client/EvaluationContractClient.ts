@@ -75,6 +75,14 @@ export const getEvaluationContractClient = (args: CreateClientArgs) => {
         hash: txHash,
       });
 
+      if (receipt.status === 'reverted') {
+        const reason = await getRevertReason({
+          transactionHash: txHash,
+          publicClient: publicClient,
+        });
+        throw new Error(reason?.shortMessage ?? 'unknown error');
+      }
+
       return { receipt, evaluationId };
     },
     onError: (err) => {
