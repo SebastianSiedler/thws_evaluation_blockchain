@@ -180,10 +180,46 @@ export const getEvaluationContractClient = (args: CreateClientArgs) => {
     });
   };
 
+  const finalizeEvaluation = useMutation({
+    mutationKey: ['finalizeEvaluation'],
+    mutationFn: async (args: { groupId: string }) => {
+      const { groupId } = args;
+
+      const txHash = await walletClient.writeContract({
+        address: EVALUATION_CONTRACT_ADDRESS,
+        abi: EVALUATION_CONTRACT_ABI,
+        functionName: 'finalizeEvaluation',
+        account: account.value,
+        args: [BigInt(groupId)],
+      });
+
+      const receipt = await publicClient.waitForTransactionReceipt({
+        hash: txHash,
+      });
+
+      if (receipt.status === 'reverted') {
+        const reason = await getRevertReason({
+          transactionHash: txHash,
+          publicClient: publicClient,
+        });
+        throw new Error(reason?.shortMessage ?? 'unknown error');
+      }
+
+      return { receipt, groupId };
+    },
+    onError: (err) => {
+      console.error('finalizeEvaluation error', err);
+    },
+    onSuccess: ({ groupId }) => {
+      queryClient.invalidateQueries({ queryKey: ['getEvaluations', groupId] });
+    },
+  });
+
   return {
     createEvaluation,
     addParticipant,
     vote,
+    finalizeEvaluation,
     getEvaluationMessages,
     getEvaluationList,
     getEvaluationMembers,

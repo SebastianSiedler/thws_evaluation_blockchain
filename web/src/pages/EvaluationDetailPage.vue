@@ -5,6 +5,7 @@ import { z } from 'zod';
 import AddParticipant from 'src/components/Evaluation/AddParticipant.vue';
 import SendVote from 'src/components/Evaluation/SendVote.vue';
 import { useEvaluationStore } from 'src/stores/evaluationStore';
+import FinalizeEvaluation from 'src/components/Evaluation/FinalizeEvaluation.vue';
 
 const route = useRoute();
 
@@ -15,11 +16,15 @@ const { _identity } = useEvaluationStore();
 
 const evaluationMembers = client.getEvaluationMembers({ groupId });
 const evaluationMessages = client.getEvaluationMessages({ groupId });
+
+type Role = 'creator' | 'voter';
+const role: Role = 'creator'; // TODO: get role dynamic
 </script>
 
 <template>
   <div class="q-pa-lg">
     <div>Evaluation Detail page {{ groupId }}</div>
+    <FinalizeEvaluation :groupId="groupId" />
 
     <!-- Members -->
     <div>
@@ -33,12 +38,20 @@ const evaluationMessages = client.getEvaluationMessages({ groupId });
 
       <!-- Data -->
       <div v-if="evaluationMembers.data.value">
+        <div class="text-h6">
+          Members ({{ evaluationMembers.data.value.length }})
+        </div>
         <div v-if="evaluationMembers.data.value.length <= 0">
           No members found
         </div>
         <q-list bordered separator v-else>
           <q-item v-for="member in evaluationMembers.data.value" :key="member">
-            <q-item-section>{{ member }}</q-item-section>
+            <q-item-section>
+              <span v-if="member.toString() == _identity.commitment.toString()">
+                (You)
+              </span>
+              <span>{{ member }}</span>
+            </q-item-section>
           </q-item>
         </q-list>
       </div>
@@ -56,6 +69,9 @@ const evaluationMessages = client.getEvaluationMessages({ groupId });
 
       <!-- Data -->
       <div v-if="evaluationMessages.data.value">
+        <div class="text-h6">
+          Messages ({{ evaluationMessages.data.value.length }})
+        </div>
         <div v-if="evaluationMessages.data.value.length <= 0">
           No messages found
         </div>
