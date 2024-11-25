@@ -5,9 +5,10 @@ import {
   FEEDBACK_CONTRACT_ADDRESS,
 } from './contracts/FeedbackContract';
 import { generateProof, Group, Identity } from '@semaphore-protocol/core';
-import { decodeBytes32String, encodeBytes32String, toBeHex } from 'ethers';
+import { encodeBytes32String } from 'ethers';
 
 import { CreateClientArgs } from './contracts';
+import { getGroupMessages } from './utils';
 
 export const getFeedbackContractClient = (args: CreateClientArgs) => {
   const {
@@ -124,31 +125,11 @@ export const getFeedbackContractClient = (args: CreateClientArgs) => {
   const getFeedback = (args: { groupId: string }) => {
     const { groupId } = args;
 
+    const feedback = getGroupMessages({ semaphore, groupId });
+
     return useQuery({
       queryKey: ['getFeedback', groupId],
       queryFn: async () => {
-        type GroupValidatedProof = {
-          merkleTreeDepth: number;
-          merkleTreeRoot: string;
-          nullifier: string;
-          message: string;
-          scope: string;
-          points: string[];
-        };
-
-        const proofs: GroupValidatedProof[] =
-          await semaphore.getGroupValidatedProofs(groupId);
-
-        const feedback = proofs.map(({ message, ...rest }) => {
-          const decodedMessage = decodeBytes32String(toBeHex(message, 32));
-
-          return {
-            ...rest,
-            message,
-            decodedMessage,
-          };
-        });
-
         return feedback;
       },
     });
