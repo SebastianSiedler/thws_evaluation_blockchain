@@ -4,7 +4,7 @@ import { getClient } from 'src/client/contracts';
 import { ref } from 'vue';
 
 const $q = useQuasar();
-const client = getClient();
+const client = getClient().counter;
 
 const newNumber = ref(0);
 </script>

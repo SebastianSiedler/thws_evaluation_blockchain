@@ -76,3 +76,7 @@ $ cast --help
 6. `forge script script/Counter.s.sol:CounterScript --rpc-url <your_rpc_url> --private-key <your_private_key>` - Deploys the `Counter` contract to the specified RPC URL using the specified private key.
 
 RPC Url und private key werden beim starten von Anvil angezeigt.
+
+## todo
+
+- `cd lib/semaphore` und `pnpm dlx yarn install`
