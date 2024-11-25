@@ -57,10 +57,10 @@ contract EvaluationPlatform {
         console.log(msg.sender);
         console.log("creator: ");
         console.log(evaluations[groupId].creator);
-        require(
-            msg.sender == evaluations[groupId].creator,
-            "Only creator can add participants"
-        );
+        // require(
+        //     msg.sender == evaluations[groupId].creator,
+        //     "Only creator can add participants"
+        // );
         require(
             !evaluations[groupId].participants[identityCommitment],
             "Participant already added"
@@ -83,7 +83,7 @@ contract EvaluationPlatform {
         uint256[8] calldata points
     ) external {
         Evaluation storage evaluation = evaluations[groupId];
-        require(msg.sender != evaluation.creator, "Creator cannot vote");
+        // require(msg.sender != evaluation.creator, "Creator cannot vote");
         require(!evaluation.finalized, "Evaluation is finalized");
 
         ISemaphore.SemaphoreProof memory proof = ISemaphore.SemaphoreProof(
@@ -95,8 +95,11 @@ contract EvaluationPlatform {
             points
         );
 
-        semaphore.verifyProof(groupId, proof);
+        // prevent double voting
+        bool verifyProof = semaphore.verifyProof(groupId, proof);
+        require(verifyProof, "Invalid proof or already voted");
 
+        semaphore.validateProof(groupId, proof);
         evaluation.voteCount += 1;
     }
 
