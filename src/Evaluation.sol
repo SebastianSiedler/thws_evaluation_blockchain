@@ -66,6 +66,9 @@ contract EvaluationPlatform {
             "Participant already added"
         );
 
+        // make sure the evaluation is not finalized
+        require(!evaluations[groupId].finalized, "Evaluation is finalized");
+
         evaluations[groupId].participants[identityCommitment] = true;
         evaluations[groupId].participantList.push(identityCommitment);
 
