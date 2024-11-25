@@ -131,4 +131,24 @@ contract EvaluationPlatform {
     ) external view returns (uint256) {
         return evaluations[evaluationId].voteCount;
     }
+
+    struct EvaluationData {
+        address creator;
+        uint256 voteCount;
+        uint256[] participantList;
+        bool finalized;
+    }
+
+    function getEvaluation(
+        uint256 evaluationId
+    ) external view returns (EvaluationData memory) {
+        Evaluation storage evaluation = evaluations[evaluationId];
+        return
+            EvaluationData(
+                evaluation.creator,
+                evaluation.voteCount,
+                evaluation.participantList,
+                evaluation.finalized
+            );
+    }
 }

@@ -223,6 +223,21 @@ export const getEvaluationContractClient = (args: CreateClientArgs) => {
     },
   });
 
+  const getEvaluation = (args: { groupId: string }) => {
+    const { groupId } = args;
+    return useQuery({
+      queryKey: ['getEvaluation', groupId],
+      queryFn: async () => {
+        return publicServerClient.readContract({
+          address: EVALUATION_CONTRACT_ADDRESS,
+          abi: EVALUATION_CONTRACT_ABI,
+          functionName: 'getEvaluation',
+          args: [BigInt(groupId)],
+        });
+      },
+    });
+  };
+
   return {
     createEvaluation,
     addParticipant,
@@ -230,6 +245,7 @@ export const getEvaluationContractClient = (args: CreateClientArgs) => {
     finalizeEvaluation,
     getEvaluationMessages,
     getEvaluationList,
+    getEvaluation,
     getEvaluationMembers,
   };
 };

@@ -19,12 +19,24 @@ const evaluationMessages = client.getEvaluationMessages({ groupId });
 
 type Role = 'creator' | 'voter';
 const role: Role = 'creator'; // TODO: get role dynamic
+
+const evaluation = client.getEvaluation({ groupId });
 </script>
 
 <template>
   <div class="q-pa-lg">
     <div>Evaluation Detail page {{ groupId }}</div>
-    <FinalizeEvaluation :groupId="groupId" />
+    <FinalizeEvaluation
+      v-if="!evaluation.data.value?.finalized"
+      :groupId="groupId"
+    />
+
+    <div v-if="evaluation.data.value">
+      <div>
+        <span>Finalized: </span>
+        <span> {{ evaluation.data.value.finalized }} </span>
+      </div>
+    </div>
 
     <!-- Members -->
     <div>
@@ -90,7 +102,5 @@ const role: Role = 'creator'; // TODO: get role dynamic
     <AddParticipant :evaluationId="BigInt(groupId)" />
 
     <SendVote :groupId="groupId" />
-
-    <!-- TODO: check if identity is "creator" or "voter" and show condidtional components -->
   </div>
 </template>

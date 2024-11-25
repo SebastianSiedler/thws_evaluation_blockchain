@@ -47,6 +47,62 @@ export const EVALUATION_CONTRACT_ABI = [
   },
   {
     type: 'function',
+    name: 'getEvaluation',
+    inputs: [
+      { name: 'evaluationId', type: 'uint256', internalType: 'uint256' },
+    ],
+    outputs: [
+      {
+        name: '',
+        type: 'tuple',
+        internalType: 'struct EvaluationPlatform.EvaluationData',
+        components: [
+          { name: 'creator', type: 'address', internalType: 'address' },
+          {
+            name: 'voteCount',
+            type: 'uint256',
+            internalType: 'uint256',
+          },
+          {
+            name: 'participantList',
+            type: 'uint256[]',
+            internalType: 'uint256[]',
+          },
+          { name: 'finalized', type: 'bool', internalType: 'bool' },
+        ],
+      },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    name: 'getEvaluationList',
+    inputs: [{ name: 'user', type: 'address', internalType: 'address' }],
+    outputs: [
+      {
+        name: '',
+        type: 'tuple[]',
+        internalType: 'struct EvaluationPlatform.EvaluationListItemData[]',
+        components: [
+          {
+            name: 'evaluationId',
+            type: 'uint256',
+            internalType: 'uint256',
+          },
+          { name: 'creator', type: 'address', internalType: 'address' },
+          { name: 'finalized', type: 'bool', internalType: 'bool' },
+          {
+            name: 'participantSize',
+            type: 'uint256',
+            internalType: 'uint256',
+          },
+        ],
+      },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
     name: 'getParticipantList',
     inputs: [
       { name: 'evaluationId', type: 'uint256', internalType: 'uint256' },
