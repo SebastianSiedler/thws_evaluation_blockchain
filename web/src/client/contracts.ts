@@ -19,6 +19,7 @@ import { getFeedbackContractClient } from './FeedbackContractClient';
 import { privateKeyToAccount } from 'viem/accounts';
 import { SEMAPHORE_CONTRACT_ADDRESS } from './contracts/SemaphoreContract';
 import { SemaphoreEthers } from '@semaphore-protocol/data';
+import { getEvaluationContractClient } from './EvaluationContractClient';
 
 export type CreateClientArgs = {
   queryClient: QueryClient;
@@ -88,25 +89,20 @@ export const getClient = () => {
     address: SEMAPHORE_CONTRACT_ADDRESS,
   });
 
+  const createClientArgs = {
+    queryClient,
+    walletClient,
+    publicClient,
+    account,
+    walletServerClient,
+    publicServerClient,
+    semaphore,
+  };
+
   return {
-    counter: getCounterClient({
-      queryClient,
-      walletClient,
-      publicClient,
-      account,
-      walletServerClient,
-      publicServerClient,
-      semaphore,
-    }),
-    feedback: getFeedbackContractClient({
-      queryClient,
-      walletClient,
-      publicClient,
-      walletServerClient,
-      publicServerClient,
-      account,
-      semaphore,
-    }),
+    counter: getCounterClient(createClientArgs),
+    feedback: getFeedbackContractClient(createClientArgs),
+    evaluation: getEvaluationContractClient(createClientArgs),
     account,
     accounts,
   };
