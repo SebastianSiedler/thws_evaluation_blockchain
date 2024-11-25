@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import ViemCounterContract from 'src/components/ViemCounterContract.vue';
+
 import { onErrorCaptured, ref } from 'vue';
 
 const error = ref<Error | null>(null);

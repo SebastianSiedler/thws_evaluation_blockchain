@@ -1,6 +1,7 @@
 <script setup lang="ts">
-import { getClient } from 'src/client/contracts';
 import IdentitySelector from 'src/components/IdentitySelector.vue';
+
+import { getClient } from 'src/client/contracts';
 
 const { account, accounts } = getClient();
 </script>

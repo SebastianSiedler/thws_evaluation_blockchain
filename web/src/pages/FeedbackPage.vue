@@ -1,9 +1,12 @@
 <script setup lang="ts">
-import { Ref, ref } from 'vue';
-import { getClient } from 'src/client/contracts';
+import FeedbackList from 'src/components/Feedback/FeedbackList.vue';
+
 import { Identity } from '@semaphore-protocol/core';
 import { useQuasar } from 'quasar';
-import FeedbackList from 'src/components/Feedback/FeedbackList.vue';
+import { Ref, ref } from 'vue';
+
+import { getClient } from 'src/client/contracts';
+
 // Reaktive Variablen für UI
 
 const $q = useQuasar();

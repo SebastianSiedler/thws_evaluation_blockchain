@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import { useQuasar } from 'quasar';
-import { getClient } from 'src/client/contracts';
 import { ref } from 'vue';
+
+import { getClient } from 'src/client/contracts';
 
 const $q = useQuasar();
 const client = getClient().counter;

@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { useQuasar } from 'quasar';
+
 import { getClient } from 'src/client/contracts';
 
 const client = getClient().evaluation;

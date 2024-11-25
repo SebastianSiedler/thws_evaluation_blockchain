@@ -1,13 +1,12 @@
-import { useMutation, useQuery } from '@tanstack/vue-query';
-
-import {
-  FeedbackContractABI,
-  FEEDBACK_CONTRACT_ADDRESS,
-} from './contracts/FeedbackContract';
 import { generateProof, Group, Identity } from '@semaphore-protocol/core';
+import { useMutation, useQuery } from '@tanstack/vue-query';
 import { encodeBytes32String } from 'ethers';
 
 import { CreateClientArgs } from './contracts';
+import {
+  FEEDBACK_CONTRACT_ADDRESS,
+  FeedbackContractABI,
+} from './contracts/FeedbackContract';
 import { getGroupMessages } from './utils';
 
 export const getFeedbackContractClient = (args: CreateClientArgs) => {

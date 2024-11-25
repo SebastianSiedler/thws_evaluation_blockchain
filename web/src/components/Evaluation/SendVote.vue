@@ -1,9 +1,10 @@
 <script setup lang="ts">
 import { Identity } from '@semaphore-protocol/core';
 import { useQuasar } from 'quasar';
+import { ref } from 'vue';
+
 import { getClient } from 'src/client/contracts';
 import { useEvaluationStore } from 'src/stores/evaluationStore';
-import { ref } from 'vue';
 
 const client = getClient().evaluation;
 const $q = useQuasar();

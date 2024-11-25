@@ -1,9 +1,10 @@
 <script setup lang="ts">
-import { ref, onMounted } from 'vue';
 import { ethers } from 'ethers';
-import CounterContract from '../../../out/src/Counter.sol/Counter.json';
 import { useQuasar } from 'quasar';
+import { onMounted, ref } from 'vue';
+
 import { COUNTER_CONTRACT_ADDRESS } from 'src/client/contracts/CounterContract';
+import CounterContract from '../../../out/src/Counter.sol/Counter.json';
 
 const $q = useQuasar();
 

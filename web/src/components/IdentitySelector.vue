@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { Identity } from '@semaphore-protocol/core';
 import { storeToRefs } from 'pinia';
+
 import { useEvaluationStore } from 'src/stores/evaluationStore';
 
 const store = useEvaluationStore();

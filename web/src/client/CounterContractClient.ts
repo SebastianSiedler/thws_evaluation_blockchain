@@ -1,10 +1,10 @@
+import { useMutation, useQuery } from '@tanstack/vue-query';
+
+import type { CreateClientArgs } from './contracts';
 import {
   COUNTER_CONTRACT_ADDRESS,
   CounterContract,
 } from './contracts/CounterContract';
-
-import { useMutation, useQuery } from '@tanstack/vue-query';
-import type { CreateClientArgs } from './contracts';
 
 export const getCounterClient = (args: CreateClientArgs) => {
   const { queryClient, publicClient, walletClient, account } = args;

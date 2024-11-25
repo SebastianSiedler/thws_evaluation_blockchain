@@ -1,3 +1,7 @@
+import { Address } from 'viem';
+
+import { transactions } from '../../../../broadcast/Counter.s.sol/31337/run-latest.json';
+
 // import CounterContract from '../../../out/Counter.sol/Counter.json';
 export const CounterContract = {
   abi: [
@@ -100,9 +104,6 @@ export const CounterContract = {
   },
   id: 20,
 } as const;
-
-import { Address } from 'viem';
-import { transactions } from '../../../../broadcast/Counter.s.sol/31337/run-latest.json';
 
 // TODO: replace with json import
 // @ts-expect-error Type 'string' is not assignable to type '`0x${string}`'.ts(2322)

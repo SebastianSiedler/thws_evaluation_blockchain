@@ -1,3 +1,7 @@
+import { Address } from 'viem';
+
+import { transactions } from '../../../../broadcast/DeployEvaluation.s.sol/31337/run-latest.json';
+
 export const EVALUATION_CONTRACT_ABI = [
   {
     type: 'constructor',
@@ -172,10 +176,6 @@ export const EVALUATION_CONTRACT_ABI = [
     stateMutability: 'nonpayable',
   },
 ] as const;
-
-import { transactions } from '../../../../broadcast/DeployEvaluation.s.sol/31337/run-latest.json';
-
-import { Address } from 'viem';
 
 const address = transactions.find(
   (transaction) =>

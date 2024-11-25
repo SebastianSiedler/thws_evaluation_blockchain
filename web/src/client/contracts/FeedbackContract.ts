@@ -1,3 +1,7 @@
+import { Address } from 'viem';
+
+import { transactions } from '../../../../broadcast/DeployFeedback.s.sol/31337/run-latest.json';
+
 export const FeedbackContractABI = {
   abi: [
     {
@@ -230,10 +234,6 @@ export const FeedbackContractABI = {
   },
   id: 22,
 } as const;
-
-import { transactions } from '../../../../broadcast/DeployFeedback.s.sol/31337/run-latest.json';
-
-import { Address } from 'viem';
 
 const address = transactions.find(
   (transaction) =>

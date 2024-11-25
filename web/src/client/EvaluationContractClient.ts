@@ -1,12 +1,12 @@
-import { useMutation, useQuery } from '@tanstack/vue-query';
-
-import {
-  EVALUATION_CONTRACT_ADDRESS,
-  EVALUATION_CONTRACT_ABI,
-} from './contracts/EvaluationContract';
-import type { CreateClientArgs } from './contracts';
 import { generateProof, Group, Identity } from '@semaphore-protocol/core';
+import { useMutation, useQuery } from '@tanstack/vue-query';
 import { encodeBytes32String } from 'ethers';
+
+import type { CreateClientArgs } from './contracts';
+import {
+  EVALUATION_CONTRACT_ABI,
+  EVALUATION_CONTRACT_ADDRESS,
+} from './contracts/EvaluationContract';
 import { getGroupMessages, getRevertReason } from './utils';
 
 export const getEvaluationContractClient = (args: CreateClientArgs) => {
