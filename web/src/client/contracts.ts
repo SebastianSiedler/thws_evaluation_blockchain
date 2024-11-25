@@ -14,12 +14,11 @@ import {
 import { anvil } from 'viem/chains';
 import { useAsyncState } from '@vueuse/core';
 import { Ref, ref } from 'vue';
-import { getCounterClient } from './CounterContractClient';
-import { getFeedbackContractClient } from './FeedbackContractClient';
 import { privateKeyToAccount } from 'viem/accounts';
 import { SEMAPHORE_CONTRACT_ADDRESS } from './contracts/SemaphoreContract';
 import { SemaphoreEthers } from '@semaphore-protocol/data';
 import { getEvaluationContractClient } from './EvaluationContractClient';
+import { Identity } from '@semaphore-protocol/core';
 
 export type CreateClientArgs = {
   queryClient: QueryClient;
@@ -44,6 +43,10 @@ export type CreateClientArgs = {
 
 export const getClient = () => {
   const queryClient = useQueryClient();
+
+  if (!window.ethereum) {
+    throw new Error('No ethereum provider found');
+  }
 
   /**
    * Wallet client is used to write to contracts
@@ -100,8 +103,8 @@ export const getClient = () => {
   };
 
   return {
-    counter: getCounterClient(createClientArgs),
-    feedback: getFeedbackContractClient(createClientArgs),
+    // counter: getCounterClient(createClientArgs),
+    // feedback: getFeedbackContractClient(createClientArgs),
     evaluation: getEvaluationContractClient(createClientArgs),
     account,
     accounts,
