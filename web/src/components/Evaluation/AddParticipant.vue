@@ -24,6 +24,7 @@ const addParticipant = () => {
         message: `Added participant with identity commitment "${identityCommitment.value}" to evaluation "${props.evaluationId}"`,
         color: 'positive',
       });
+      identityCommitment.value = '';
     })
     .catch((err) => {
       $q.notify({ message: err.message, color: 'negative' });
