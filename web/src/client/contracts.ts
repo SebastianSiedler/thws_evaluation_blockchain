@@ -56,6 +56,18 @@ export const getClient = () => {
     transport: custom(window.ethereum!),
   });
 
+  // Configure the signer
+  const ethereumPrivateKey =
+    '0x59c6995e998f97a5a0044966f0945389dc9e86dae88c7a8412f4603b6b78690d';
+
+  const account = ref<Address | null>(null);
+  account.value = privateKeyToAccount(ethereumPrivateKey).address;
+  const accounts = useAsyncState(walletClient.getAddresses, [], {
+    onSuccess: (data) => {
+      // account.value = data[0];
+    },
+  });
+
   /**
    * Public client is used to read contract state
    */
@@ -69,23 +81,10 @@ export const getClient = () => {
     chain: anvil,
     transport: http(ethNetworkProviderUrl),
   });
-
-  // Configure the signer
-  const ethereumPrivateKey =
-    '0x59c6995e998f97a5a0044966f0945389dc9e86dae88c7a8412f4603b6b78690d';
-
   const walletServerClient = createWalletClient({
     chain: anvil,
     transport: http(ethNetworkProviderUrl),
-    account: privateKeyToAccount(ethereumPrivateKey),
-  });
-
-  const account = ref<Address | null>(null);
-
-  const accounts = useAsyncState(walletClient.getAddresses, [], {
-    onSuccess: (data) => {
-      account.value = data[0];
-    },
+    // account: account.value,
   });
 
   const semaphore = new SemaphoreEthers(ethNetworkProviderUrl, {
