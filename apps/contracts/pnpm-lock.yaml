@@ -8,9 +8,18 @@ importers:
 
   .:
     devDependencies:
+      '@nomicfoundation/hardhat-ignition':
+        specifier: ^0.15.8
+        version: 0.15.8(@nomicfoundation/hardhat-verify@2.0.12(hardhat@2.22.16(ts-node@10.9.2(@types/node@22.10.1)(typescript@5.7.2))(typescript@5.7.2)))(hardhat@2.22.16(ts-node@10.9.2(@types/node@22.10.1)(typescript@5.7.2))(typescript@5.7.2))
+      '@nomicfoundation/hardhat-ignition-ethers':
+        specifier: ^0.15.8
+        version: 0.15.8(@nomicfoundation/hardhat-ethers@3.0.8(ethers@6.13.4)(hardhat@2.22.16(ts-node@10.9.2(@types/node@22.10.1)(typescript@5.7.2))(typescript@5.7.2)))(@nomicfoundation/hardhat-ignition@0.15.8(@nomicfoundation/hardhat-verify@2.0.12(hardhat@2.22.16(ts-node@10.9.2(@types/node@22.10.1)(typescript@5.7.2))(typescript@5.7.2)))(hardhat@2.22.16(ts-node@10.9.2(@types/node@22.10.1)(typescript@5.7.2))(typescript@5.7.2)))(@nomicfoundation/ignition-core@0.15.8)(ethers@6.13.4)(hardhat@2.22.16(ts-node@10.9.2(@types/node@22.10.1)(typescript@5.7.2))(typescript@5.7.2))
       '@nomicfoundation/hardhat-toolbox':
         specifier: ^5.0.0
         version: 5.0.0(cfbhlfn2snojsudmudd6syo36q)
+      ethers:
+        specifier: ^6.13.4
+        version: 6.13.4
       hardhat:
         specifier: ^2.22.16
         version: 2.22.16(ts-node@10.9.2(@types/node@22.10.1)(typescript@5.7.2))(typescript@5.7.2)
