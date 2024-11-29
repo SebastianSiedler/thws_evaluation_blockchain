@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.17;
 
-import "@semaphore-protocol/contracts/interfaces/ISemaphore.sol";
+import "@semaphore/contracts/contracts/interfaces/ISemaphore.sol";
 import "forge-std/Script.sol";
 
 contract EvaluationPlatform {
