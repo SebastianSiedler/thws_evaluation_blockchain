@@ -1,6 +1,6 @@
 import { Address } from 'viem';
 
-import { transactions } from '../../../../broadcast/DeployEvaluation.s.sol/31337/run-latest.json';
+import { transactions } from 'src/../../contracts/broadcast/DeployEvaluation.s.sol/31337/run-latest.json';
 
 export const EVALUATION_CONTRACT_ABI = [
   {
