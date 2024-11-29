@@ -1,6 +1,7 @@
 import { SemaphoreEthers } from '@semaphore-protocol/data';
 import { QueryClient, useQueryClient } from '@tanstack/vue-query';
 import { useAsyncState } from '@vueuse/core';
+import { ethers } from 'ethers';
 import {
   Address,
   createPublicClient,
@@ -17,10 +18,15 @@ import { privateKeyToAccount } from 'viem/accounts';
 import { anvil } from 'viem/chains';
 import { Ref, ref } from 'vue';
 
+import {
+  EvaluationPlatform,
+  EvaluationPlatform__factory,
+} from 'src/../../types';
 import { SEMAPHORE_CONTRACT_ADDRESS } from './contracts/SemaphoreContract';
 import { getEvaluationContractClient } from './EvaluationContractClient';
 
 export type CreateClientArgs = {
+  ethNetworkProviderUrl: string;
   queryClient: QueryClient;
   walletClient: WalletClient<
     CustomTransport, // transport extends Transport = Transport,
@@ -99,6 +105,7 @@ export const getClient = () => {
     walletServerClient,
     publicServerClient,
     semaphore,
+    ethNetworkProviderUrl,
   };
 
   return {

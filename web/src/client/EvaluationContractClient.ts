@@ -1,7 +1,12 @@
 import { generateProof, Group, Identity } from '@semaphore-protocol/core';
 import { useMutation, useQuery } from '@tanstack/vue-query';
-import { encodeBytes32String } from 'ethers';
+import { encodeBytes32String, ethers, isError } from 'ethers';
+import { ref, Ref } from 'vue';
 
+import {
+  EvaluationPlatform,
+  EvaluationPlatform__factory,
+} from 'src/../../types';
 import { useEvaluationStore } from 'src/stores/evaluationStore';
 import type { CreateClientArgs } from './contracts';
 import {
@@ -19,7 +24,21 @@ export const getEvaluationContractClient = (args: CreateClientArgs) => {
     publicServerClient,
     semaphore,
     account,
+    ethNetworkProviderUrl,
   } = args;
+
+  // const provider = new ethers.BrowserProvider(window.ethereum!);
+  const provider = new ethers.JsonRpcProvider(ethNetworkProviderUrl);
+
+  const ethersEvaluationContract: Ref<EvaluationPlatform> =
+    ref<EvaluationPlatform>();
+
+  provider.getSigner().then((signer) => {
+    ethersEvaluationContract.value = EvaluationPlatform__factory.connect(
+      EVALUATION_CONTRACT_ADDRESS,
+      signer,
+    );
+  });
 
   const evaluationStore = useEvaluationStore();
 
@@ -71,27 +90,38 @@ export const getEvaluationContractClient = (args: CreateClientArgs) => {
     }) => {
       const { evaluationId, identityCommitment } = args;
 
-      const txHash = await walletClient.writeContract({
-        address: EVALUATION_CONTRACT_ADDRESS,
-        abi: EVALUATION_CONTRACT_ABI,
-        functionName: 'addParticipant',
-        account: account.value,
-        args: [evaluationId, identityCommitment],
-      });
-
-      const receipt = await publicClient.waitForTransactionReceipt({
-        hash: txHash,
-      });
-
-      if (receipt.status === 'reverted') {
-        const reason = await getRevertReason({
-          transactionHash: txHash,
-          publicClient: publicClient,
+      await ethersEvaluationContract.value
+        .addParticipant(evaluationId, identityCommitment)
+        .catch((err) => {
+          if (isError(err, 'CALL_EXCEPTION')) {
+            const errorReason = err.reason;
+            throw new Error(errorReason ?? 'unknown error');
+          }
         });
-        throw new Error(reason?.shortMessage ?? 'unknown error');
-      }
 
-      return { receipt, evaluationId };
+      return { evaluationId };
+
+      // const txHash = await walletClient.writeContract({
+      //   address: EVALUATION_CONTRACT_ADDRESS,
+      //   abi: EVALUATION_CONTRACT_ABI,
+      //   functionName: 'addParticipant',
+      //   account: account.value,
+      //   args: [evaluationId, identityCommitment],
+      // });
+
+      // const receipt = await publicClient.waitForTransactionReceipt({
+      //   hash: txHash,
+      // });
+
+      // if (receipt.status === 'reverted') {
+      //   const reason = await getRevertReason({
+      //     transactionHash: txHash,
+      //     publicClient: publicClient,
+      //   });
+      //   throw new Error(reason?.shortMessage ?? 'unknown error');
+      // }
+
+      // return { receipt, evaluationId };
     },
     onError: (err) => {
       console.error('addParticipant error', err);
