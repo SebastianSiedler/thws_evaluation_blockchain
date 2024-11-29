@@ -25,15 +25,15 @@ export const getEvaluationContractClient = (args: CreateClientArgs) => {
 
   const createEvaluation = useMutation({
     mutationKey: ['createEvaluation'],
-    mutationFn: async (args: {}) => {
-      const {} = args;
+    mutationFn: async (args: { name: string }) => {
+      const { name } = args;
 
       const txHash = await walletClient.writeContract({
         address: EVALUATION_CONTRACT_ADDRESS,
         abi: EVALUATION_CONTRACT_ABI,
         functionName: 'createEvaluation',
         account: account.value,
-        args: [],
+        args: [name],
       });
 
       const receipt = await publicClient.waitForTransactionReceipt({
@@ -54,7 +54,12 @@ export const getEvaluationContractClient = (args: CreateClientArgs) => {
       console.error('createEvaluation error', err);
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['getEvaluations'] });
+      queryClient.invalidateQueries({
+        queryKey: ['getEvaluations'],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ['getCreatorEvaluations'],
+      });
     },
   });
 

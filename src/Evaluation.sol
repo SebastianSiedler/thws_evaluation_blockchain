@@ -14,6 +14,7 @@ contract EvaluationPlatform {
         mapping(uint256 => bool) participants; // Tracks participants
         uint256[] participantList; // List of participants (identityCommitments)
         bool finalized; // Whether the evaluation is finalized
+        string name;
     }
 
     struct Student {
@@ -30,13 +31,14 @@ contract EvaluationPlatform {
         semaphore = ISemaphore(_semaphore);
     }
 
-    function createEvaluation() external returns (uint256) {
+    function createEvaluation(string memory name) external returns (uint256) {
         uint256 groupId = semaphore.createGroup();
 
         console.log("createEvaluation: ");
 
         evaluations[groupId].creator = msg.sender;
         evaluations[groupId].finalized = false;
+        evaluations[groupId].name = name;
 
         creatorAddressEvaluations[msg.sender].push(groupId);
 
@@ -112,6 +114,7 @@ contract EvaluationPlatform {
         uint256 voteCount;
         bool finalized;
         uint256 groupId;
+        string name;
     }
 
     function getCreatorEvaluationList(
@@ -127,7 +130,8 @@ contract EvaluationPlatform {
             evaluationList[i] = EvaluationListItem(
                 evaluation.voteCount,
                 evaluation.finalized,
-                groupIds[i]
+                groupIds[i],
+                evaluation.name
             );
         }
 
@@ -147,7 +151,8 @@ contract EvaluationPlatform {
             evaluationList[i] = EvaluationListItem(
                 evaluation.voteCount,
                 evaluation.finalized,
-                groupIds[i]
+                groupIds[i],
+                evaluation.name
             );
         }
 

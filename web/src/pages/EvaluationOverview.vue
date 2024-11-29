@@ -1,15 +1,17 @@
 <script setup lang="ts">
 import { useQuasar } from 'quasar';
+import { ref } from 'vue';
 
 import { getClient } from 'src/client/contracts';
 
 const client = getClient().evaluation;
+const newEvaluationName = ref('');
 
 const $q = useQuasar();
 
 const createNewEvaluation = () => {
   client.createEvaluation
-    .mutateAsync({})
+    .mutateAsync({ name: newEvaluationName.value })
     .then(() => {
       $q.notify({
         message: 'Evaluation created',
@@ -50,7 +52,10 @@ const createNewEvaluation = () => {
         </q-list>
       </div>
 
+      <q-input v-model="newEvaluationName" />
+
       <q-btn
+        :disable="newEvaluationName.length <= 0"
         @click="createNewEvaluation"
         :loading="client.createEvaluation.isPending.value"
       >
@@ -78,12 +83,12 @@ const createNewEvaluation = () => {
         </div>
         <q-list v-else separator bordered>
           <q-item
-            v-for="{ groupId } in client.getParticipantEvaluationList.data
+            v-for="{ groupId, name } in client.getParticipantEvaluationList.data
               .value"
             :key="groupId"
             :to="'/evaluation/' + groupId"
           >
-            <q-item-section>{{ groupId }}</q-item-section>
+            <q-item-section>{{ groupId }} - {{ name }}</q-item-section>
           </q-item>
         </q-list>
       </div>
@@ -109,11 +114,12 @@ const createNewEvaluation = () => {
         </div>
         <q-list v-else separator bordered>
           <q-item
-            v-for="{ groupId } in client.getCreatorEvaluationList.data.value"
+            v-for="{ groupId, name } in client.getCreatorEvaluationList.data
+              .value"
             :key="groupId"
             :to="'/evaluation/' + groupId"
           >
-            <q-item-section>{{ groupId }}</q-item-section>
+            <q-item-section>{{ groupId }} - {{ name }}</q-item-section>
           </q-item>
         </q-list>
       </div>
