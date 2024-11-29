@@ -1,0 +1,19 @@
+{
+  "name": "thws_evaluation_blockchain",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "typechain-generate": "pnpm typechain --target ethers-v6 --out-dir ./types --discriminate-types 'out/**/!(*.t|test).sol/!(*.abi).json'",
+    "build": "forge build && pnpm run typechain-generate"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@typechain/ethers-v6": "^0.5.1",
+    "ethers": "^6.13.4",
+    "typechain": "^8.3.2"
+  }
+}
