@@ -2,6 +2,7 @@ import { generateProof, Group, Identity } from '@semaphore-protocol/core';
 import { useMutation, useQuery } from '@tanstack/vue-query';
 import { encodeBytes32String } from 'ethers';
 
+import { useEvaluationStore } from 'src/stores/evaluationStore';
 import type { CreateClientArgs } from './contracts';
 import {
   EVALUATION_CONTRACT_ABI,
@@ -19,6 +20,8 @@ export const getEvaluationContractClient = (args: CreateClientArgs) => {
     semaphore,
     account,
   } = args;
+
+  const evaluationStore = useEvaluationStore();
 
   const createEvaluation = useMutation({
     mutationKey: ['createEvaluation'],
@@ -238,6 +241,30 @@ export const getEvaluationContractClient = (args: CreateClientArgs) => {
     });
   };
 
+  const getCreatorEvaluationList = useQuery({
+    queryKey: ['getCreatorEvaluations'],
+    queryFn: async () => {
+      return publicServerClient.readContract({
+        address: EVALUATION_CONTRACT_ADDRESS,
+        abi: EVALUATION_CONTRACT_ABI,
+        functionName: 'getCreatorEvaluationList',
+        args: [account.value!],
+      });
+    },
+  });
+
+  const getParticipantEvaluationList = useQuery({
+    queryKey: ['getParticipantEvaluations'],
+    queryFn: async () => {
+      return publicServerClient.readContract({
+        address: EVALUATION_CONTRACT_ADDRESS,
+        abi: EVALUATION_CONTRACT_ABI,
+        functionName: 'getParticipantEvaluationList',
+        args: [evaluationStore._identity.commitment],
+      });
+    },
+  });
+
   return {
     createEvaluation,
     addParticipant,
@@ -247,5 +274,7 @@ export const getEvaluationContractClient = (args: CreateClientArgs) => {
     getEvaluationList,
     getEvaluation,
     getEvaluationMembers,
+    getCreatorEvaluationList,
+    getParticipantEvaluationList,
   };
 };

@@ -16,19 +16,15 @@ contract EvaluationPlatform {
         bool finalized; // Whether the evaluation is finalized
     }
 
-    mapping(uint256 => Evaluation) public evaluations; // Maps evaluation IDs to their data
-    mapping(address => uint256[]) public userEvaluations; // Maps user to evaluations they are part of
+    struct Student {
+        uint256 identityCommitment;
+        string name;
+        string matNr;
+    }
 
-    // event EvaluationCreated(
-    //     uint256 indexed evaluationId,
-    //     address indexed creator,
-    //     uint256 groupId
-    // );
-    // event ParticipantAdded(
-    //     uint256 indexed evaluationId,
-    //     uint256 identityCommitment
-    // );
-    // event Voted(uint256 indexed evaluationId, uint256 identityCommitment);
+    mapping(uint256 => Evaluation) public evaluations; // Maps evaluation IDs to their data
+    mapping(address => uint256[]) public creatorAddressEvaluations; // creatorAddress => groupId[]
+    mapping(uint256 => uint256[]) public participantICEvaluation; // participantIdentityCommit => groupId[]
 
     constructor(address _semaphore) {
         semaphore = ISemaphore(_semaphore);
@@ -42,21 +38,15 @@ contract EvaluationPlatform {
         evaluations[groupId].creator = msg.sender;
         evaluations[groupId].finalized = false;
 
-        userEvaluations[msg.sender].push(groupId);
+        creatorAddressEvaluations[msg.sender].push(groupId);
 
         return groupId;
-
-        // emit EvaluationCreated(groupId, msg.sender, groupId);
     }
 
     function addParticipant(
         uint256 groupId,
         uint256 identityCommitment
     ) external {
-        console.log("sender: ");
-        console.log(msg.sender);
-        console.log("creator: ");
-        console.log(evaluations[groupId].creator);
         // require(
         //     msg.sender == evaluations[groupId].creator,
         //     "Only creator can add participants"
@@ -71,10 +61,9 @@ contract EvaluationPlatform {
 
         evaluations[groupId].participants[identityCommitment] = true;
         evaluations[groupId].participantList.push(identityCommitment);
+        participantICEvaluation[identityCommitment].push(groupId);
 
         semaphore.addMember(groupId, identityCommitment);
-
-        // emit ParticipantAdded(evaluationId, identityCommitment);
     }
 
     function vote(
@@ -86,7 +75,6 @@ contract EvaluationPlatform {
         uint256[8] calldata points
     ) external {
         Evaluation storage evaluation = evaluations[groupId];
-        // require(msg.sender != evaluation.creator, "Creator cannot vote");
         require(!evaluation.finalized, "Evaluation is finalized");
 
         ISemaphore.SemaphoreProof memory proof = ISemaphore.SemaphoreProof(
@@ -120,16 +108,50 @@ contract EvaluationPlatform {
         return evaluations[evaluationId].participantList;
     }
 
-    function getUserEvaluations(
-        address user
-    ) external view returns (uint256[] memory) {
-        return userEvaluations[user];
+    struct EvaluationListItem {
+        uint256 voteCount;
+        bool finalized;
+        uint256 groupId;
     }
 
-    function getVoteCount(
-        uint256 evaluationId
-    ) external view returns (uint256) {
-        return evaluations[evaluationId].voteCount;
+    function getCreatorEvaluationList(
+        address creatorAddress
+    ) external view returns (EvaluationListItem[] memory) {
+        uint256[] memory groupIds = creatorAddressEvaluations[creatorAddress];
+        EvaluationListItem[] memory evaluationList = new EvaluationListItem[](
+            groupIds.length
+        );
+
+        for (uint256 i = 0; i < groupIds.length; i++) {
+            Evaluation storage evaluation = evaluations[groupIds[i]];
+            evaluationList[i] = EvaluationListItem(
+                evaluation.voteCount,
+                evaluation.finalized,
+                groupIds[i]
+            );
+        }
+
+        return evaluationList;
+    }
+
+    function getParticipantEvaluationList(
+        uint256 identityCommit
+    ) external view returns (EvaluationListItem[] memory) {
+        uint256[] memory groupIds = participantICEvaluation[identityCommit];
+        EvaluationListItem[] memory evaluationList = new EvaluationListItem[](
+            groupIds.length
+        );
+
+        for (uint256 i = 0; i < groupIds.length; i++) {
+            Evaluation storage evaluation = evaluations[groupIds[i]];
+            evaluationList[i] = EvaluationListItem(
+                evaluation.voteCount,
+                evaluation.finalized,
+                groupIds[i]
+            );
+        }
+
+        return evaluationList;
     }
 
     struct EvaluationData {

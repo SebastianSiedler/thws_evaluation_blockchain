@@ -31,6 +31,16 @@ export const EVALUATION_CONTRACT_ABI = [
   },
   {
     type: 'function',
+    name: 'creatorAddressEvaluations',
+    inputs: [
+      { name: '', type: 'address', internalType: 'address' },
+      { name: '', type: 'uint256', internalType: 'uint256' },
+    ],
+    outputs: [{ name: '', type: 'uint256', internalType: 'uint256' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
     name: 'evaluations',
     inputs: [{ name: '', type: 'uint256', internalType: 'uint256' }],
     outputs: [
@@ -48,6 +58,34 @@ export const EVALUATION_CONTRACT_ABI = [
     ],
     outputs: [],
     stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    name: 'getCreatorEvaluationList',
+    inputs: [
+      {
+        name: 'creatorAddress',
+        type: 'address',
+        internalType: 'address',
+      },
+    ],
+    outputs: [
+      {
+        name: '',
+        type: 'tuple[]',
+        internalType: 'struct EvaluationPlatform.EvaluationListItem[]',
+        components: [
+          {
+            name: 'voteCount',
+            type: 'uint256',
+            internalType: 'uint256',
+          },
+          { name: 'finalized', type: 'bool', internalType: 'bool' },
+          { name: 'groupId', type: 'uint256', internalType: 'uint256' },
+        ],
+      },
+    ],
+    stateMutability: 'view',
   },
   {
     type: 'function',
@@ -80,26 +118,27 @@ export const EVALUATION_CONTRACT_ABI = [
   },
   {
     type: 'function',
-    name: 'getEvaluationList',
-    inputs: [{ name: 'user', type: 'address', internalType: 'address' }],
+    name: 'getParticipantEvaluationList',
+    inputs: [
+      {
+        name: 'identityCommit',
+        type: 'uint256',
+        internalType: 'uint256',
+      },
+    ],
     outputs: [
       {
         name: '',
         type: 'tuple[]',
-        internalType: 'struct EvaluationPlatform.EvaluationListItemData[]',
+        internalType: 'struct EvaluationPlatform.EvaluationListItem[]',
         components: [
           {
-            name: 'evaluationId',
+            name: 'voteCount',
             type: 'uint256',
             internalType: 'uint256',
           },
-          { name: 'creator', type: 'address', internalType: 'address' },
           { name: 'finalized', type: 'bool', internalType: 'bool' },
-          {
-            name: 'participantSize',
-            type: 'uint256',
-            internalType: 'uint256',
-          },
+          { name: 'groupId', type: 'uint256', internalType: 'uint256' },
         ],
       },
     ],
@@ -116,16 +155,10 @@ export const EVALUATION_CONTRACT_ABI = [
   },
   {
     type: 'function',
-    name: 'getUserEvaluations',
-    inputs: [{ name: 'user', type: 'address', internalType: 'address' }],
-    outputs: [{ name: '', type: 'uint256[]', internalType: 'uint256[]' }],
-    stateMutability: 'view',
-  },
-  {
-    type: 'function',
-    name: 'getVoteCount',
+    name: 'participantICEvaluation',
     inputs: [
-      { name: 'evaluationId', type: 'uint256', internalType: 'uint256' },
+      { name: '', type: 'uint256', internalType: 'uint256' },
+      { name: '', type: 'uint256', internalType: 'uint256' },
     ],
     outputs: [{ name: '', type: 'uint256', internalType: 'uint256' }],
     stateMutability: 'view',
@@ -137,16 +170,6 @@ export const EVALUATION_CONTRACT_ABI = [
     outputs: [
       { name: '', type: 'address', internalType: 'contract ISemaphore' },
     ],
-    stateMutability: 'view',
-  },
-  {
-    type: 'function',
-    name: 'userEvaluations',
-    inputs: [
-      { name: '', type: 'address', internalType: 'address' },
-      { name: '', type: 'uint256', internalType: 'uint256' },
-    ],
-    outputs: [{ name: '', type: 'uint256', internalType: 'uint256' }],
     stateMutability: 'view',
   },
   {
