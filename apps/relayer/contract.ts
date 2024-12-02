@@ -5,19 +5,21 @@ import { z } from "zod";
 
 const c = initContract();
 
-const PostSchema = z.object({
-  id: z.string(),
-  title: z.string(),
-  body: z.string(),
+export const PostVoteSchema = z.object({
+  groupId: z.string(),
+  identityPk: z.string(),
+  vote: z.string(),
 });
+export type PostVote = z.infer<typeof PostVoteSchema>;
 
 export const contract = c.router({
-  getPost: {
-    method: "GET",
-    path: `/posts/:id`,
+  vote: {
+    method: "POST",
+    path: "/vote/",
+    body: PostVoteSchema,
     responses: {
-      200: PostSchema.nullable(),
+      200: null,
     },
-    summary: "Get a post by id",
+    summary: "Vote",
   },
 });
