@@ -5,7 +5,7 @@ import cors from "@fastify/cors";
 import { evaluationContractPlatform } from "@acme/contracts/clients/ethers/evaluation";
 import { EvaluationPlatform } from "@acme/contracts/typechain-types";
 import { SemaphoreEthers } from "@semaphore-protocol/data";
-import { SEMAPHORE_CONTRACT_ADDRESS } from "@acme/contracts/addresses/SemaphoreContract";
+import { SEMAPHORE_CONTRACT_ADDRESS } from "@acme/contracts/deployed_addresses.json";
 import { generateProof, Group, Identity } from "@semaphore-protocol/core";
 import { encodeBytes32String } from "ethers";
 import { semaphore } from "@acme/contracts/clients/ethers/semaphore";

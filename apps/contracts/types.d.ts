@@ -1,3 +1,5 @@
+import { Eip1193Provider } from "ethers";
+
 interface Window {
-  ethereum?: import('ethers/providers').Eip1193Provider;
+  ethereum?: Eip1193Provider;
 }

@@ -18,6 +18,11 @@
     // Disallow features that require cross-file awareness
     "isolatedModules": true,
 
-    "strict": true
+    "strict": true,
+
+    "noEmit": true,
+
+    // ignore type checking for libraries e.g. node_modules
+    "skipLibCheck": true
   }
 }

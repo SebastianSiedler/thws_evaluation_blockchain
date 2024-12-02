@@ -24,10 +24,12 @@ export const evaluationContractPlatform = {
     };
   },
   getBrowserContract: () => {
+    // @ts-ignore TODO: find out, why window.ethereum is not defined
     if (!window?.ethereum) {
       throw new Error("No ethereum provider found");
     }
 
+    // @ts-ignore
     const browserProvider = new ethers.BrowserProvider(window?.ethereum);
 
     const browserContract: EvaluationPlatform =

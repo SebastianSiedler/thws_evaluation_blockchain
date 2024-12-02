@@ -5,7 +5,8 @@
   "type": "module",
   "main": "index.js",
   "scripts": {
-    "dev": "pnpm tsx --watch ./index.ts"
+    "dev": "pnpm tsx --watch ./index.ts",
+    "build": "pnpm tsc"
   },
   "keywords": [],
   "author": "",
