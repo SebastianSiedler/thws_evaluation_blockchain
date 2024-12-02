@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { Identity } from '@semaphore-protocol/core';
 import { useQuasar } from 'quasar';
 import { ref } from 'vue';
 

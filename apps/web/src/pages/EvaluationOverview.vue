@@ -23,8 +23,6 @@ const createNewEvaluation = () => {
       $q.notify({ message: err.message, color: 'negative' });
     });
 };
-
-relayerClient.getPost({ params: { id: String(1) } }).then(console.log);
 </script>
 
 <template>

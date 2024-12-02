@@ -8,6 +8,7 @@ import {
   EVALUATION_CONTRACT_ABI,
   EVALUATION_CONTRACT_ADDRESS,
 } from './contracts/EvaluationContract';
+import { relayerClient } from './relayer';
 import { getGroupMessages, getRevertReason } from './utils';
 
 export const getEvaluationContractClient = (args: CreateClientArgs) => {
@@ -110,50 +111,15 @@ export const getEvaluationContractClient = (args: CreateClientArgs) => {
       _identity: Identity;
       groupId: string;
     }) => {
-      const { vote, _identity, groupId } = args;
-      console.log({ args });
-
-      const _users = await semaphore.getGroupMembers(groupId);
-      console.log({ _users });
-      const group = new Group(_users);
-
-      const message = encodeBytes32String(vote);
-
-      console.log('generating proof: ', { _identity, group, message, groupId });
-      //         await generateProof(_identity, group, message, NEXT_PUBLIC_GROUP_ID);
-      const proof = await generateProof(_identity, group, message, groupId);
-      console.log({ proof });
-
-      console.log(message, proof.message);
-
-      const txHash = await walletClient.writeContract({
-        address: EVALUATION_CONTRACT_ADDRESS,
-        abi: EVALUATION_CONTRACT_ABI,
-        functionName: 'vote',
-        account: account.value,
-        args: [
-          BigInt(groupId),
-          BigInt(proof.merkleTreeDepth),
-          proof.merkleTreeRoot,
-          proof.nullifier,
-          BigInt(message),
-          proof.points,
-        ],
+      await relayerClient.vote({
+        body: {
+          groupId: args.groupId,
+          identityPk: args._identity.export(),
+          vote: args.vote,
+        },
       });
 
-      const receipt = await publicClient.waitForTransactionReceipt({
-        hash: txHash,
-      });
-
-      if (receipt.status === 'reverted') {
-        const reason = await getRevertReason({
-          transactionHash: txHash,
-          publicClient: publicClient,
-        });
-        throw new Error(reason?.shortMessage ?? 'unknown error');
-      }
-
-      return { receipt, groupId };
+      return { groupId: args.groupId };
     },
     onError: (err) => {
       console.error('vote error', err);
