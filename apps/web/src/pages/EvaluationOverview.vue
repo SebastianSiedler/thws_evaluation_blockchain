@@ -3,6 +3,7 @@ import { useQuasar } from 'quasar';
 import { ref } from 'vue';
 
 import { getClient } from 'src/client/contracts';
+import { relayerClient } from 'src/client/relayer';
 
 const client = getClient().evaluation;
 const newEvaluationName = ref('');
@@ -22,6 +23,8 @@ const createNewEvaluation = () => {
       $q.notify({ message: err.message, color: 'negative' });
     });
 };
+
+relayerClient.getPost({ params: { id: String(1) } }).then(console.log);
 </script>
 
 <template>
