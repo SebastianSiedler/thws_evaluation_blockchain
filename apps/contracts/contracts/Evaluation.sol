@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.17;
 
-import "@semaphore/contracts/contracts/interfaces/ISemaphore.sol";
-import "forge-std/Script.sol";
+import "@semaphore-protocol/contracts/interfaces/ISemaphore.sol";
+import "hardhat/console.sol";
 
 contract EvaluationPlatform {
     ISemaphore public semaphore;

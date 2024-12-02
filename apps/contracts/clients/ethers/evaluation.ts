@@ -3,7 +3,7 @@ import {
   EvaluationPlatform__factory,
 } from "../../typechain-types";
 import { ethers } from "ethers";
-import { EVALUATION_CONTRACT_ADDRESS } from "../../addresses/EvaluationContract";
+import { EVALUATION_CONTRACT_ADDRESS } from "../../deployed_addresses.json";
 
 export const evaluationContractPlatform = {
   getRpcContract: () => {
