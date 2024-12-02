@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { useQuasar } from 'quasar';
 
-import { getClient } from 'src/client/contracts';
+import { getEvaluationContractClient } from 'src/client/EvaluationContractClient';
 
-const client = getClient().evaluation;
+const client = getEvaluationContractClient();
 const $q = useQuasar();
 
 const props = defineProps<{

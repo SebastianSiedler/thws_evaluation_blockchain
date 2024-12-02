@@ -5,15 +5,40 @@ import {
 import { ethers } from "ethers";
 import { EVALUATION_CONTRACT_ADDRESS } from "../../addresses/EvaluationContract";
 
-export const getEvaluationContract = async () => {
-  const provider = new ethers.JsonRpcProvider("http://localhost:8545"); //TODO: Replace with your network URL
+export const evaluationContractPlatform = {
+  getRpcContract: () => {
+    const rpcProvider = new ethers.JsonRpcProvider("http://localhost:8545"); //TODO: Replace with your network URL
 
-  const signer = await provider.getSigner();
+    // Configure the signer //TODO: .env
+    const ethereumPrivateKey =
+      "0x59c6995e998f97a5a0044966f0945389dc9e86dae88c7a8412f4603b6b78690d";
 
-  const contract: EvaluationPlatform = EvaluationPlatform__factory.connect(
-    EVALUATION_CONTRACT_ADDRESS,
-    signer
-  );
+    const wallet = new ethers.Wallet(ethereumPrivateKey, rpcProvider);
+    const rpcContract: EvaluationPlatform = EvaluationPlatform__factory.connect(
+      EVALUATION_CONTRACT_ADDRESS,
+      wallet
+    );
+    return {
+      rpcContract,
+      rpcProvider,
+    };
+  },
+  getBrowserContract: () => {
+    if (!window?.ethereum) {
+      throw new Error("No ethereum provider found");
+    }
 
-  return { contract, provider, signer };
+    const browserProvider = new ethers.BrowserProvider(window?.ethereum);
+
+    const browserContract: EvaluationPlatform =
+      EvaluationPlatform__factory.connect(
+        EVALUATION_CONTRACT_ADDRESS,
+        browserProvider
+      );
+
+    return {
+      browserContract,
+      browserProvider,
+    };
+  },
 };

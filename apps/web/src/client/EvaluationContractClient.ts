@@ -1,26 +1,17 @@
-import { generateProof, Group, Identity } from '@semaphore-protocol/core';
-import { useMutation, useQuery } from '@tanstack/vue-query';
-import { encodeBytes32String } from 'ethers';
+import { evaluationContractPlatform } from '@acme/contracts/clients/ethers/evaluation';
+import { semaphore } from '@acme/contracts/clients/ethers/semaphore';
+import { Identity } from '@semaphore-protocol/core';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/vue-query';
+import { isError } from 'ethers';
 
 import { useEvaluationStore } from 'src/stores/evaluationStore';
-import type { CreateClientArgs } from './contracts';
-import {
-  EVALUATION_CONTRACT_ABI,
-  EVALUATION_CONTRACT_ADDRESS,
-} from './contracts/EvaluationContract';
 import { relayerClient } from './relayer';
-import { getGroupMessages, getRevertReason } from './utils';
+import { getGroupMessages } from './utils';
 
-export const getEvaluationContractClient = (args: CreateClientArgs) => {
-  const {
-    queryClient,
-    publicClient,
-    // walletClient,
-    walletServerClient: walletClient,
-    publicServerClient,
-    semaphore,
-    account,
-  } = args;
+export const getEvaluationContractClient = () => {
+  const { rpcContract } = evaluationContractPlatform.getRpcContract();
+  const { browserProvider } = evaluationContractPlatform.getBrowserContract();
+  const queryClient = useQueryClient();
 
   const evaluationStore = useEvaluationStore();
 
@@ -29,30 +20,18 @@ export const getEvaluationContractClient = (args: CreateClientArgs) => {
     mutationFn: async (args: { name: string }) => {
       const { name } = args;
 
-      const txHash = await walletClient.writeContract({
-        address: EVALUATION_CONTRACT_ADDRESS,
-        abi: EVALUATION_CONTRACT_ABI,
-        functionName: 'createEvaluation',
-        account: account.value,
-        args: [name],
-      });
+      const txHash = await rpcContract.createEvaluation(name);
+      const receipt = await txHash.wait();
 
-      const receipt = await publicClient.waitForTransactionReceipt({
-        hash: txHash,
-      });
-
-      if (receipt.status === 'reverted') {
-        const reason = await getRevertReason({
-          transactionHash: txHash,
-          publicClient: publicClient,
-        });
-        throw new Error(reason?.shortMessage ?? 'unknown error');
-      }
-
-      return receipt;
+      return {
+        receipt,
+      };
     },
     onError: (err) => {
-      console.error('createEvaluation error', err);
+      if (isError(err, 'CALL_EXCEPTION')) {
+        throw new Error(err.reason ?? 'Transaction failed');
+      }
+      console.error(err);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({
@@ -72,29 +51,19 @@ export const getEvaluationContractClient = (args: CreateClientArgs) => {
     }) => {
       const { evaluationId, identityCommitment } = args;
 
-      const txHash = await walletClient.writeContract({
-        address: EVALUATION_CONTRACT_ADDRESS,
-        abi: EVALUATION_CONTRACT_ABI,
-        functionName: 'addParticipant',
-        account: account.value,
-        args: [evaluationId, identityCommitment],
-      });
+      const txHash = await rpcContract.addParticipant(
+        evaluationId,
+        identityCommitment,
+      );
 
-      const receipt = await publicClient.waitForTransactionReceipt({
-        hash: txHash,
-      });
-
-      if (receipt.status === 'reverted') {
-        const reason = await getRevertReason({
-          transactionHash: txHash,
-          publicClient: publicClient,
-        });
-        throw new Error(reason?.shortMessage ?? 'unknown error');
-      }
+      const receipt = await txHash.wait();
 
       return { receipt, evaluationId };
     },
     onError: (err) => {
+      if (isError(err, 'CALL_EXCEPTION')) {
+        throw new Error(err.reason ?? 'Transaction failed');
+      }
       console.error('addParticipant error', err);
     },
     onSuccess: ({ evaluationId }) => {
@@ -122,7 +91,10 @@ export const getEvaluationContractClient = (args: CreateClientArgs) => {
       return { groupId: args.groupId };
     },
     onError: (err) => {
-      console.error('vote error', err);
+      if (isError(err, 'CALL_EXCEPTION')) {
+        throw new Error(err.reason ?? 'Transaction failed');
+      }
+      console.error(err);
     },
     onSuccess: ({ groupId }) => {
       queryClient.invalidateQueries({ queryKey: ['getEvaluations', groupId] });
@@ -167,25 +139,9 @@ export const getEvaluationContractClient = (args: CreateClientArgs) => {
     mutationFn: async (args: { groupId: string }) => {
       const { groupId } = args;
 
-      const txHash = await walletClient.writeContract({
-        address: EVALUATION_CONTRACT_ADDRESS,
-        abi: EVALUATION_CONTRACT_ABI,
-        functionName: 'finalizeEvaluation',
-        account: account.value,
-        args: [BigInt(groupId)],
-      });
+      const txHash = await rpcContract.finalizeEvaluation(BigInt(groupId));
 
-      const receipt = await publicClient.waitForTransactionReceipt({
-        hash: txHash,
-      });
-
-      if (receipt.status === 'reverted') {
-        const reason = await getRevertReason({
-          transactionHash: txHash,
-          publicClient: publicClient,
-        });
-        throw new Error(reason?.shortMessage ?? 'unknown error');
-      }
+      const receipt = await txHash.wait();
 
       return { receipt, groupId };
     },
@@ -202,12 +158,8 @@ export const getEvaluationContractClient = (args: CreateClientArgs) => {
     return useQuery({
       queryKey: ['getEvaluation', groupId],
       queryFn: async () => {
-        return publicServerClient.readContract({
-          address: EVALUATION_CONTRACT_ADDRESS,
-          abi: EVALUATION_CONTRACT_ABI,
-          functionName: 'getEvaluation',
-          args: [BigInt(groupId)],
-        });
+        const evaluationData = await rpcContract.getEvaluation(BigInt(groupId));
+        return evaluationData;
       },
     });
   };
@@ -215,24 +167,22 @@ export const getEvaluationContractClient = (args: CreateClientArgs) => {
   const getCreatorEvaluationList = useQuery({
     queryKey: ['getCreatorEvaluations'],
     queryFn: async () => {
-      return publicServerClient.readContract({
-        address: EVALUATION_CONTRACT_ADDRESS,
-        abi: EVALUATION_CONTRACT_ABI,
-        functionName: 'getCreatorEvaluationList',
-        args: [account.value!],
-      });
+      const result = await rpcContract.getCreatorEvaluationList(
+        (await browserProvider.provider.getSigner()).getAddress(),
+      );
+
+      return result;
     },
   });
 
   const getParticipantEvaluationList = useQuery({
     queryKey: ['getParticipantEvaluations'],
     queryFn: async () => {
-      return publicServerClient.readContract({
-        address: EVALUATION_CONTRACT_ADDRESS,
-        abi: EVALUATION_CONTRACT_ABI,
-        functionName: 'getParticipantEvaluationList',
-        args: [evaluationStore._identity.commitment],
-      });
+      const evaluationList = await rpcContract.getParticipantEvaluationList(
+        evaluationStore._identity.commitment,
+      );
+
+      return evaluationList;
     },
   });
 

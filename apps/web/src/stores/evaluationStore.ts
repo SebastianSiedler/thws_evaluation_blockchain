@@ -1,6 +1,7 @@
 import { Identity } from '@semaphore-protocol/core';
 import { useLocalStorage } from '@vueuse/core';
 import { defineStore } from 'pinia';
+import { ref } from 'vue';
 
 export const useEvaluationStore = defineStore('evaluation', () => {
   const _identity = useLocalStorage<Identity>(

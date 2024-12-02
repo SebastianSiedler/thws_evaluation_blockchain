@@ -1,11 +1,11 @@
 <script setup lang="ts">
-import { getClient } from 'src/client/contracts';
+import { getEvaluationContractClient } from 'src/client/EvaluationContractClient';
 
 const props = defineProps<{
   groupId: string;
 }>();
 
-const { evaluation: client } = getClient();
+const client = getEvaluationContractClient();
 
 const evaluationMessages = client.getEvaluationMessages({
   groupId: props.groupId,

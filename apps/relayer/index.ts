@@ -2,12 +2,13 @@ import Fastify from "fastify";
 import { initServer } from "@ts-rest/fastify";
 import { contract } from "./contract";
 import cors from "@fastify/cors";
-import { getEvaluationContract } from "@acme/contracts/clients/ethers/evaluation";
+import { evaluationContractPlatform } from "@acme/contracts/clients/ethers/evaluation";
 import { EvaluationPlatform } from "@acme/contracts/typechain-types";
 import { SemaphoreEthers } from "@semaphore-protocol/data";
 import { SEMAPHORE_CONTRACT_ADDRESS } from "@acme/contracts/addresses/SemaphoreContract";
 import { generateProof, Group, Identity } from "@semaphore-protocol/core";
 import { encodeBytes32String } from "ethers";
+import { semaphore } from "@acme/contracts/clients/ethers/semaphore";
 
 const app = Fastify();
 let evaluationContract: EvaluationPlatform;
@@ -17,11 +18,6 @@ app.register(cors, {
 });
 
 const s = initServer();
-const ethNetworkProviderUrl = "http://127.0.0.1:8545"; // TODO: .env
-
-const semaphore = new SemaphoreEthers(ethNetworkProviderUrl, {
-  address: SEMAPHORE_CONTRACT_ADDRESS,
-});
 
 export const router = s.router(contract, {
   vote: async ({ body }) => {
@@ -69,13 +65,14 @@ export const router = s.router(contract, {
 app.register(s.plugin(router));
 
 const start = async () => {
-  const { contract } = await getEvaluationContract();
-  evaluationContract = contract;
+  const { rpcContract } = evaluationContractPlatform.getRpcContract();
+  evaluationContract = rpcContract;
 
   try {
     console.log("Starting server...", { port: 3000 });
     await app.listen({ port: 3000 });
   } catch (err) {
+    console.error(err);
     app.log.error(err);
     process.exit(1);
   }
