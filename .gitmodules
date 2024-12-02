@@ -1,15 +1,15 @@
-[submodule "lib/forge-std"]
-	path = lib/forge-std
+[submodule "apps/contracts/lib/forge-std"]
+	path = apps/contracts/lib/forge-std
 	url = https://github.com/foundry-rs/forge-std
-[submodule "lib/semaphore"]
-	path = lib/semaphore
+[submodule "apps/contracts/lib/semaphore"]
+	path = apps/contracts/lib/semaphore
 	url = https://github.com/semaphore-protocol/semaphore
-[submodule "lib/openzeppelin-contracts"]
-	path = lib/openzeppelin-contracts
+[submodule "apps/contracts/lib/openzeppelin-contracts"]
+	path = apps/contracts/lib/openzeppelin-contracts
 	url = https://github.com/OpenZeppelin/openzeppelin-contracts
-[submodule "lib/poseidon-solidity"]
-	path = lib/poseidon-solidity
+[submodule "apps/contracts/lib/poseidon-solidity"]
+	path = apps/contracts/lib/poseidon-solidity
 	url = https://github.com/chancehudson/poseidon-solidity
-[submodule "lib/zk-kit.solidity"]
-	path = lib/zk-kit.solidity
+[submodule "apps/contracts/lib/zk-kit.solidity"]
+	path = apps/contracts/lib/zk-kit.solidity
 	url = https://github.com/privacy-scaling-explorations/zk-kit.solidity
