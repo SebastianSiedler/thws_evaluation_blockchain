@@ -1,0 +1,12 @@
+{
+  "name": "thws_evaluation_blockchain",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "pnpm run --recursive --parallel dev"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}

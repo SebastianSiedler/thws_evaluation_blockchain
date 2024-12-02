@@ -1,6 +1,5 @@
+import { transactions } from '@acme/contracts/broadcast/DeployEvaluation.s.sol/31337/run-latest.json';
 import { Address } from 'viem';
-
-import { transactions } from 'src/../../contracts/broadcast/DeployEvaluation.s.sol/31337/run-latest.json';
 
 const address = transactions.find(
   (transaction) =>
