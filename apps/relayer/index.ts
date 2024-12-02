@@ -2,7 +2,7 @@ import Fastify from "fastify";
 import { initServer } from "@ts-rest/fastify";
 import { contract } from "./contract";
 import cors from "@fastify/cors";
-import { getEvaluationContract } from "./contracts/evaluation";
+import { getEvaluationContract } from "@acme/contracts/clients/ethers/evaluation";
 import { EvaluationPlatform } from "@acme/contracts/typechain-types";
 import { SemaphoreEthers } from "@semaphore-protocol/data";
 import { SEMAPHORE_CONTRACT_ADDRESS } from "@acme/contracts/addresses/SemaphoreContract";
@@ -69,7 +69,8 @@ export const router = s.router(contract, {
 app.register(s.plugin(router));
 
 const start = async () => {
-  evaluationContract = await getEvaluationContract();
+  const { contract } = await getEvaluationContract();
+  evaluationContract = contract;
 
   try {
     console.log("Starting server...", { port: 3000 });

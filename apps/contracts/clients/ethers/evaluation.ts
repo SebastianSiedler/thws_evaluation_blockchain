@@ -1,9 +1,9 @@
 import {
   EvaluationPlatform,
   EvaluationPlatform__factory,
-} from "@acme/contracts/typechain-types";
+} from "../../typechain-types";
 import { ethers } from "ethers";
-import { EVALUATION_CONTRACT_ADDRESS } from "@acme/contracts/addresses/EvaluationContract";
+import { EVALUATION_CONTRACT_ADDRESS } from "../../addresses/EvaluationContract";
 
 export const getEvaluationContract = async () => {
   const provider = new ethers.JsonRpcProvider("http://localhost:8545"); //TODO: Replace with your network URL
@@ -15,5 +15,5 @@ export const getEvaluationContract = async () => {
     signer
   );
 
-  return contract;
+  return { contract, provider, signer };
 };
