@@ -85,7 +85,7 @@ const createNewEvaluation = () => {
           <q-item
             v-for="{ groupId, name } in client.getParticipantEvaluationList.data
               .value"
-            :key="groupId"
+            :key="groupId.toString()"
             :to="'/evaluation/' + groupId"
           >
             <q-item-section>{{ groupId }} - {{ name }}</q-item-section>
@@ -116,7 +116,7 @@ const createNewEvaluation = () => {
           <q-item
             v-for="{ groupId, name } in client.getCreatorEvaluationList.data
               .value"
-            :key="groupId"
+            :key="groupId.toString()"
             :to="'/evaluation/' + groupId"
           >
             <q-item-section>{{ groupId }} - {{ name }}</q-item-section>

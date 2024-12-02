@@ -34,7 +34,7 @@ export type CreateClientArgs = {
   walletServerClient: WalletClient<
     HttpTransport,
     typeof anvil,
-    PrivateKeyAccount,
+    // PrivateKeyAccount,
     undefined
   >;
   semaphore: SemaphoreEthers;
@@ -91,7 +91,7 @@ export const getClient = () => {
     address: SEMAPHORE_CONTRACT_ADDRESS,
   });
 
-  const createClientArgs = {
+  const createClientArgs: CreateClientArgs = {
     queryClient,
     walletClient,
     publicClient,
