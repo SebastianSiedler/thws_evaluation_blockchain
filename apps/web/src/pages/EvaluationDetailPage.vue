@@ -8,13 +8,13 @@ import SendVote from 'src/components/Evaluation/SendVote.vue';
 import { useRoute } from 'vue-router';
 import { z } from 'zod';
 
-import { getClient } from 'src/client/contracts';
+import { getEvaluationContractClient } from 'src/client/EvaluationContractClient';
 
 const route = useRoute();
 
 const groupId = z.string().parse(route.params.id);
 
-const { evaluation: client } = getClient();
+const client = getEvaluationContractClient();
 
 type Role = 'creator' | 'voter';
 const role: Role = 'creator'; // TODO: get role dynamic

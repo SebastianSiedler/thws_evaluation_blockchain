@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { getClient } from 'src/client/contracts';
+import { getEvaluationContractClient } from 'src/client/EvaluationContractClient';
 import { useEvaluationStore } from 'src/stores/evaluationStore';
 
 const props = defineProps<{
@@ -8,7 +8,7 @@ const props = defineProps<{
 
 const { _identity } = useEvaluationStore();
 
-const { evaluation: client } = getClient();
+const client = getEvaluationContractClient();
 
 const evaluationMembers = client.getEvaluationMembers({
   groupId: props.groupId,

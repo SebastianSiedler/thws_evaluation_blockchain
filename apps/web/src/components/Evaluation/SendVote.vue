@@ -2,10 +2,10 @@
 import { useQuasar } from 'quasar';
 import { ref } from 'vue';
 
-import { getClient } from 'src/client/contracts';
+import { getEvaluationContractClient } from 'src/client/EvaluationContractClient';
 import { useEvaluationStore } from 'src/stores/evaluationStore';
 
-const client = getClient().evaluation;
+const client = getEvaluationContractClient();
 const $q = useQuasar();
 
 const message = ref('');
