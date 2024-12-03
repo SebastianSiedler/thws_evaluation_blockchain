@@ -2,11 +2,13 @@
   "name": "@acme/relayer",
   "version": "1.0.0",
   "description": "",
-  "type": "module",
+  "type": "commonjs",
   "main": "index.js",
   "scripts": {
     "dev": "pnpm tsx --watch ./index.ts",
-    "build": "pnpm tsc"
+    "build": "pnpm tsc && pnpm compile",
+    "compile": "pnpm esbuild ./index.ts --outfile=dist/index.js --bundle --platform=node",
+    "start": "pnpm node ./index.js"
   },
   "keywords": [],
   "author": "",
@@ -19,12 +21,16 @@
     "@ts-rest/fastify": "^3.51.0",
     "ethers": "^6.13.4",
     "fastify": "^5.1.0",
+    "tsx": "^4.19.2",
     "zod": "^3.23.8"
   },
   "devDependencies": {
     "@fastify/cors": "^10.0.1",
     "@types/node": "^20.17.1",
-    "prettier": "^3.3.3",
-    "tsx": "^4.19.2"
-  }
+    "esbuild": "^0.24.0",
+    "prettier": "^3.4.1"
+  },
+  "files": [
+    "dist"
+  ]
 }
