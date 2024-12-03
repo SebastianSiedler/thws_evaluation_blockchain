@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import IdentityAvatar from 'src/components/IdentityAvatar.vue';
 import IdentitySelector from 'src/components/IdentitySelector.vue';
 
 // import { getClient } from 'src/client/contracts';
@@ -16,9 +17,15 @@ import IdentitySelector from 'src/components/IdentitySelector.vue';
           :loading="accounts.isLoading.value"
         />
       </div> -->
-      <IdentitySelector />
+      <!-- <IdentitySelector /> -->
       <q-toolbar>
-        <q-toolbar-title>THWS Evaluation</q-toolbar-title>
+        <q-toolbar-title
+          @click="() => $router.push('/')"
+          class="cursor-pointer"
+        >
+          THWS Evaluation
+        </q-toolbar-title>
+        <IdentityAvatar />
       </q-toolbar>
     </q-header>
 
