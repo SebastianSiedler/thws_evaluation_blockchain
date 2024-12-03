@@ -23,6 +23,8 @@ contract EvaluationPlatform {
         string matNr;
     }
 
+    event EvaluationCreated(uint256 groupId, address creator);
+
     mapping(uint256 => Evaluation) public evaluations; // Maps evaluation IDs to their data
     mapping(address => uint256[]) public creatorAddressEvaluations; // creatorAddress => groupId[]
     mapping(uint256 => uint256[]) public participantICEvaluation; // participantIdentityCommit => groupId[]
@@ -41,6 +43,8 @@ contract EvaluationPlatform {
         evaluations[groupId].name = name;
 
         creatorAddressEvaluations[msg.sender].push(groupId);
+
+        emit EvaluationCreated(groupId, msg.sender);
 
         return groupId;
     }
@@ -164,6 +168,7 @@ contract EvaluationPlatform {
         uint256 voteCount;
         uint256[] participantList;
         bool finalized;
+        string name;
     }
 
     function getEvaluation(
@@ -175,7 +180,8 @@ contract EvaluationPlatform {
                 evaluation.creator,
                 evaluation.voteCount,
                 evaluation.participantList,
-                evaluation.finalized
+                evaluation.finalized,
+                evaluation.name
             );
     }
 }

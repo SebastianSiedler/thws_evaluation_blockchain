@@ -1,5 +1,6 @@
 {
   "name": "@acme/contracts",
+  "type": "commonjs",
   "scripts": {
     "dev": "pnpm concurrently --kill-others-on-fail --names hardhat-node,deploy -c green,blue \"pnpm hardhat node\" \"sleep 1 && pnpm deploy-contract --network localhost\"",
     "compile": "hardhat compile",
@@ -19,9 +20,9 @@
     "@nomicfoundation/hardhat-network-helpers": "^1.0.0",
     "@nomicfoundation/hardhat-toolbox": "^4.0.0",
     "@nomicfoundation/hardhat-verify": "^2.0.0",
-    "@semaphore-protocol/core": "4.5.0",
+    "@semaphore-protocol/core": "4.7.0",
     "@semaphore-protocol/hardhat": "4.5.0",
-    "@semaphore-protocol/utils": "4.5.0",
+    "@semaphore-protocol/utils": "4.7.0",
     "@typechain/ethers-v6": "^0.5.0",
     "@typechain/hardhat": "^9.0.0",
     "@types/chai": "^4.2.0",
@@ -48,7 +49,7 @@
     "typescript": "^5.3.3"
   },
   "dependencies": {
-    "@semaphore-protocol/contracts": "4.5.0",
+    "@semaphore-protocol/contracts": "4.7.0",
     "concurrently": "^9.1.0",
     "hardhat": "^2.20.1"
   }

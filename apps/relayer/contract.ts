@@ -19,6 +19,7 @@ export const contract = c.router({
     body: PostVoteSchema,
     responses: {
       200: null,
+      500: c.type<{ message: string }>(),
     },
     summary: "Vote",
   },

@@ -80,7 +80,7 @@ export const getEvaluationContractClient = () => {
       _identity: Identity;
       groupId: string;
     }) => {
-      await relayerClient.vote({
+      const response = await relayerClient.vote({
         body: {
           groupId: args.groupId,
           identityPk: args._identity.export(),
@@ -88,13 +88,14 @@ export const getEvaluationContractClient = () => {
         },
       });
 
+      if (response.status === 500) {
+        throw new Error(response.body.message);
+      }
+
       return { groupId: args.groupId };
     },
     onError: (err) => {
-      if (isError(err, 'CALL_EXCEPTION')) {
-        throw new Error(err.reason ?? 'Transaction failed');
-      }
-      console.error(err);
+      console.error('vote error: ', err);
     },
     onSuccess: ({ groupId }) => {
       queryClient.invalidateQueries({ queryKey: ['getEvaluations', groupId] });
