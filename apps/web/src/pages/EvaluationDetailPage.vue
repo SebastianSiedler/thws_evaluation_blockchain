@@ -5,10 +5,12 @@ import MembersList from 'src/components/Evaluation/MembersList.vue';
 import MessageList from 'src/components/Evaluation/MessageList.vue';
 import SendVote from 'src/components/Evaluation/SendVote.vue';
 
+import { computed } from 'vue';
 import { useRoute } from 'vue-router';
 import { z } from 'zod';
 
 import { getEvaluationContractClient } from 'src/client/EvaluationContractClient';
+import { useEvaluationStore } from 'src/stores/evaluationStore';
 
 const route = useRoute();
 
@@ -16,25 +18,33 @@ const groupId = z.string().parse(route.params.id);
 
 const client = getEvaluationContractClient();
 
-type Role = 'creator' | 'voter';
-const role: Role = 'creator'; // TODO: get role dynamic
+const store = useEvaluationStore();
+
+const members = client.getEvaluationMembers({ groupId });
+const isGroupMember = computed(() => {
+  return members.data.value?.includes(
+    store._identity?.commitment ?? BigInt(-1),
+  );
+});
 
 const evaluation = client.getEvaluation({ groupId });
+
+const isEvaluationAdmin = computed(() => {
+  return store.wallet.state?.includes(evaluation.data.value?.creator ?? '');
+});
 </script>
 
 <template>
-  <div class="q-pa-lg">
-    <div>Evaluation Detail page {{ groupId }}</div>
+  <div class="q-pa-lg" v-if="evaluation.data.value">
+    <div class="text-h4">{{ evaluation.data.value?.name }}</div>
     <FinalizeEvaluation
-      v-if="!evaluation.data.value?.finalized"
+      v-if="!evaluation.data.value?.finalized && isEvaluationAdmin"
       :groupId="groupId"
     />
 
-    <div v-if="evaluation.data.value">
-      <div>
-        <span>Finalized: </span>
-        <span> {{ evaluation.data.value.finalized }} </span>
-      </div>
+    <div>
+      <span>Finalized: </span>
+      <span> {{ evaluation.data.value.finalized }} </span>
     </div>
 
     <!-- Members -->
@@ -44,8 +54,26 @@ const evaluation = client.getEvaluation({ groupId });
     <MessageList :groupId="groupId" />
 
     <!-- Add Participant -->
-    <AddParticipant :evaluationId="BigInt(groupId)" />
+    <AddParticipant :evaluationId="BigInt(groupId)" v-if="isEvaluationAdmin" />
 
-    <SendVote :groupId="groupId" />
+    <SendVote
+      :groupId="groupId"
+      v-if="isGroupMember"
+      :identity="store._identity!"
+    />
+    <p v-else>
+      Unable to vote because you are not part of this group. Ask the group admin
+      to add you identity to the group
+    </p>
   </div>
+  <div v-else-if="evaluation.isLoading.value">Loading...</div>
+
+  <div v-else-if="evaluation.error.value">
+    <q-banner>
+      <div class="text-h6">Error</div>
+      <div>{{ evaluation.error.value }}</div>
+    </q-banner>
+  </div>
+
+  <div v-else>Unknown Error</div>
 </template>

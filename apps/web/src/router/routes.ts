@@ -7,7 +7,7 @@ const routes: RouteRecordRaw[] = [
     children: [
       {
         path: '',
-        redirect: 'evaluation',
+        redirect: '/evaluation',
       },
       {
         path: 'evaluation',
@@ -16,6 +16,10 @@ const routes: RouteRecordRaw[] = [
       {
         path: 'evaluation/:id',
         component: () => import('pages/EvaluationDetailPage.vue'),
+      },
+      {
+        path: 'login',
+        component: () => import('pages/IdentityLoginPage.vue'),
       },
     ],
   },
