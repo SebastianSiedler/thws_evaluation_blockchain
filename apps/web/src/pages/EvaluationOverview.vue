@@ -1,8 +1,12 @@
 <script setup lang="ts">
+import CreatorEvaluationList from 'src/components/Evaluation/CreatorEvaluationList.vue';
+import ParticipantEvaluationList from 'src/components/Evaluation/ParticipantEvaluationList.vue';
+
 import { useQuasar } from 'quasar';
 import { ref } from 'vue';
 
 import { getEvaluationContractClient } from 'src/client/EvaluationContractClient';
+import { useEvaluationStore } from 'src/stores/evaluationStore';
 
 const client = getEvaluationContractClient();
 const newEvaluationName = ref('');
@@ -22,6 +26,8 @@ const createNewEvaluation = () => {
       $q.notify({ message: err.message, color: 'negative' });
     });
 };
+
+const store = useEvaluationStore();
 </script>
 
 <template>
@@ -63,66 +69,22 @@ const createNewEvaluation = () => {
       </q-btn>
     </div>
 
-    <div>
-      <div class="text-h6">Participant Evaluations (IdentityCommit)</div>
-
-      <!-- Loading -->
-      <div v-if="client.getParticipantEvaluationList.isLoading.value">
-        Loading...
-      </div>
-
-      <!-- Error -->
-      <div v-if="client.getParticipantEvaluationList.isError.value">
-        Error: {{ client.getParticipantEvaluationList.error.value }}
-      </div>
-
-      <!-- Data -->
-      <div v-if="client.getParticipantEvaluationList.data.value">
-        <div v-if="client.getParticipantEvaluationList.data.value.length <= 0">
-          No evaluations found
-        </div>
-        <q-list v-else separator bordered>
-          <q-item
-            v-for="{ groupId, name } in client.getParticipantEvaluationList.data
-              .value"
-            :key="groupId.toString()"
-            :to="'/evaluation/' + groupId"
-          >
-            <q-item-section>{{ groupId }} - {{ name }}</q-item-section>
-          </q-item>
-        </q-list>
-      </div>
+    <ParticipantEvaluationList
+      v-if="store._identity"
+      :identity="store._identity"
+    />
+    <div v-else>
+      Sign in with your identity to get a view of all evaluations, where you can
+      vote
     </div>
 
-    <div>
-      <div class="text-h6">Creator Evaluations (WalletAddress)</div>
-
-      <!-- Loading -->
-      <div v-if="client.getCreatorEvaluationList.isLoading.value">
-        Loading...
-      </div>
-
-      <!-- Error -->
-      <div v-if="client.getCreatorEvaluationList.isError.value">
-        Error: {{ client.getCreatorEvaluationList.error.value }}
-      </div>
-
-      <!-- Data -->
-      <div v-if="client.getCreatorEvaluationList.data.value">
-        <div v-if="client.getCreatorEvaluationList.data.value.length <= 0">
-          No evaluations found
-        </div>
-        <q-list v-else separator bordered>
-          <q-item
-            v-for="{ groupId, name } in client.getCreatorEvaluationList.data
-              .value"
-            :key="groupId.toString()"
-            :to="'/evaluation/' + groupId"
-          >
-            <q-item-section>{{ groupId }} - {{ name }}</q-item-section>
-          </q-item>
-        </q-list>
-      </div>
+    <CreatorEvaluationList
+      v-if="store.wallet.state"
+      :walletAddress="store.wallet.state[0]"
+    />
+    <div v-else>
+      Sign in with your wallet (eth wallet in meta mask) to get a view of all
+      evaluations, where you can alter you evaluations
     </div>
   </div>
 </template>

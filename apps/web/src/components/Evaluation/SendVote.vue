@@ -1,19 +1,18 @@
 <script setup lang="ts">
+import { Identity } from '@semaphore-protocol/core';
 import { useQuasar } from 'quasar';
 import { ref } from 'vue';
 
 import { getEvaluationContractClient } from 'src/client/EvaluationContractClient';
-import { useEvaluationStore } from 'src/stores/evaluationStore';
 
 const client = getEvaluationContractClient();
 const $q = useQuasar();
 
 const message = ref('');
 
-const store = useEvaluationStore();
-
 const props = defineProps<{
   groupId: string;
+  identity: Identity;
 }>();
 
 const sendVote = () => {
@@ -21,7 +20,7 @@ const sendVote = () => {
     .mutateAsync({
       vote: message.value,
       groupId: props.groupId,
-      _identity: store._identity,
+      _identity: props.identity,
     })
     .then(() => {
       $q.notify({

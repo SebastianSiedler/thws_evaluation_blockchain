@@ -2,7 +2,7 @@ import { evaluationContractPlatform } from '@acme/contracts/clients/ethers/evalu
 import { semaphore } from '@acme/contracts/clients/ethers/semaphore';
 import { Identity } from '@semaphore-protocol/core';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/vue-query';
-import { isError } from 'ethers';
+import { AddressLike, isError } from 'ethers';
 
 import { useEvaluationStore } from 'src/stores/evaluationStore';
 import { relayerClient } from './relayer';
@@ -11,6 +11,7 @@ import { getGroupMessages } from './utils';
 export const getEvaluationContractClient = () => {
   const { rpcContract } = evaluationContractPlatform.getRpcContract();
   const { browserProvider } = evaluationContractPlatform.getBrowserContract();
+
   const queryClient = useQueryClient();
 
   const evaluationStore = useEvaluationStore();
@@ -130,7 +131,7 @@ export const getEvaluationContractClient = () => {
       queryKey: ['getEvaluationMembers', groupId],
       queryFn: async () => {
         const groupMembers = await semaphore.getGroupMembers(groupId);
-        return groupMembers;
+        return groupMembers.map((x) => BigInt(x));
       },
     });
   };
@@ -165,27 +166,32 @@ export const getEvaluationContractClient = () => {
     });
   };
 
-  const getCreatorEvaluationList = useQuery({
-    queryKey: ['getCreatorEvaluations'],
-    queryFn: async () => {
-      const result = await rpcContract.getCreatorEvaluationList(
-        (await browserProvider.provider.getSigner()).getAddress(),
-      );
+  const getCreatorEvaluationList = (msgSenderAddress: AddressLike) => {
+    return useQuery({
+      queryKey: ['getCreatorEvaluations', msgSenderAddress],
+      queryFn: async () => {
+        return await rpcContract.getCreatorEvaluationList(msgSenderAddress);
+      },
+    });
+  };
 
-      return result;
-    },
-  });
+  /**
+   * Get the list of evaluations where the participant is a member
+   */
+  const getParticipantEvaluationList = (args: {
+    identityCommitment: string;
+  }) => {
+    return useQuery({
+      queryKey: ['getParticipantEvaluations', args.identityCommitment],
+      queryFn: async () => {
+        const evaluationList = await rpcContract.getParticipantEvaluationList(
+          args.identityCommitment,
+        );
 
-  const getParticipantEvaluationList = useQuery({
-    queryKey: ['getParticipantEvaluations'],
-    queryFn: async () => {
-      const evaluationList = await rpcContract.getParticipantEvaluationList(
-        evaluationStore._identity.commitment,
-      );
-
-      return evaluationList;
-    },
-  });
+        return evaluationList;
+      },
+    });
+  };
 
   return {
     createEvaluation,

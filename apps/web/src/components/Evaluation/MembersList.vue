@@ -34,9 +34,12 @@ const evaluationMembers = client.getEvaluationMembers({
         No members found
       </div>
       <q-list bordered separator v-else>
-        <q-item v-for="member in evaluationMembers.data.value" :key="member">
+        <q-item
+          v-for="member in evaluationMembers.data.value"
+          :key="member.toString()"
+        >
           <q-item-section>
-            <span v-if="member.toString() == _identity.commitment.toString()">
+            <span v-if="member.toString() == _identity?.commitment.toString()">
               (You)
             </span>
             <span>{{ member }}</span>

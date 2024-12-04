@@ -1,10 +1,5 @@
 <script setup lang="ts">
 import IdentityAvatar from 'src/components/IdentityAvatar.vue';
-import IdentitySelector from 'src/components/IdentitySelector.vue';
-
-// import { getClient } from 'src/client/contracts';
-
-// const { account, accounts } = getClient();
 </script>
 
 <template>
