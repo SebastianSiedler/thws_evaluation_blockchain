@@ -1,9 +1,10 @@
 import { SemaphoreEthers } from '@semaphore-protocol/data';
 
-import { SEMAPHORE_CONTRACT_ADDRESS } from '../../deployed_addresses.json';
-
-export const getSemaphore = (args: { VITE_ETH_NETWORK_URL: string }) => {
+export const getSemaphore = (args: {
+  VITE_ETH_NETWORK_URL: string;
+  VITE_SEMAPHORE_CONTRACT_ADDRESS: string;
+}) => {
   return new SemaphoreEthers(args.VITE_ETH_NETWORK_URL, {
-    address: SEMAPHORE_CONTRACT_ADDRESS,
+    address: args.VITE_SEMAPHORE_CONTRACT_ADDRESS,
   });
 };

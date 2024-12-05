@@ -6,7 +6,7 @@ import { defineStore } from 'pinia';
 import { computed } from 'vue';
 import { z } from 'zod';
 
-const AddressSchema = z.custom<string>(isAddress, 'Invalid eth Address');
+export const AddressSchema = z.custom<string>(isAddress, 'Invalid eth Address');
 
 export const useEvaluationStore = defineStore('evaluation', () => {
   const _identity = useLocalStorage<Identity | undefined>(

@@ -1,5 +1,8 @@
 import { createEnv } from '@t3-oss/env-core';
+import { isAddress } from 'ethers';
 import { z } from 'zod';
+
+export const AddressSchema = z.custom<string>(isAddress, 'Invalid eth Address');
 
 export const env = createEnv({
   /**
@@ -19,6 +22,9 @@ export const env = createEnv({
 
     VITE_ETH_DAPP_PORT: z.coerce.number().min(1).max(65535),
     VITE_WEB_DAPP_URL: z.string().url(),
+
+    VITE_EVALUATION_CONTRACT_ADDRESS: AddressSchema,
+    VITE_SEMAPHORE_CONTRACT_ADDRESS: AddressSchema,
   },
 
   /**

@@ -14,14 +14,25 @@ export const getEvaluationContractClient = () => {
   const { rpcContract } = evaluationContractPlatform.getRpcContract({
     VITE_ETH_NETWORK_URL: env.VITE_ETH_NETWORK_URL,
     VITE_ETH_RELAYER_PK: env.VITE_ETH_RELAYER_PK,
+    VITE_EVALUATION_CONTRACT_ADDRESS: env.VITE_EVALUATION_CONTRACT_ADDRESS,
   });
 
   const semaphore = getSemaphore({
-    VITE_ETH_NETWORK_URL: env.VITE_ETH_NETWORK_URL,
+    // VITE_ETH_NETWORK_URL: env.VITE_ETH_NETWORK_URL,
+    // VITE_SEMAPHORE_CONTRACT_ADDRESS: env.VITE_SEMAPHORE_CONTRACT_ADDRESS,
+    VITE_SEMAPHORE_CONTRACT_ADDRESS:
+      '0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0',
+    VITE_ETH_NETWORK_URL: 'http://127.0.0.1:8545',
   });
 
   const browserContract = useAsyncState(
-    evaluationContractPlatform.getBrowserContract,
+    async () => {
+      console.log('evaluation: ', env.VITE_EVALUATION_CONTRACT_ADDRESS);
+      console.log('semaphore: ', env.VITE_SEMAPHORE_CONTRACT_ADDRESS);
+      return await evaluationContractPlatform.getBrowserContract({
+        VITE_EVALUATION_CONTRACT_ADDRESS: env.VITE_EVALUATION_CONTRACT_ADDRESS,
+      });
+    },
     null,
     {
       throwError: true,

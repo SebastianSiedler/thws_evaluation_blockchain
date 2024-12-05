@@ -1,6 +1,5 @@
 import { ethers } from 'ethers';
 
-import { EVALUATION_CONTRACT_ADDRESS } from '../../deployed_addresses.json';
 import {
   EvaluationPlatform,
   EvaluationPlatform__factory,
@@ -10,12 +9,13 @@ export const evaluationContractPlatform = {
   getRpcContract: (args: {
     VITE_ETH_NETWORK_URL: string;
     VITE_ETH_RELAYER_PK: string;
+    VITE_EVALUATION_CONTRACT_ADDRESS: string;
   }) => {
     const rpcProvider = new ethers.JsonRpcProvider(args.VITE_ETH_NETWORK_URL);
 
     const wallet = new ethers.Wallet(args.VITE_ETH_RELAYER_PK, rpcProvider);
     const rpcContract: EvaluationPlatform = EvaluationPlatform__factory.connect(
-      EVALUATION_CONTRACT_ADDRESS,
+      args.VITE_EVALUATION_CONTRACT_ADDRESS,
       wallet,
     );
     return {
@@ -23,7 +23,9 @@ export const evaluationContractPlatform = {
       rpcProvider,
     };
   },
-  getBrowserContract: async () => {
+  getBrowserContract: async (args: {
+    VITE_EVALUATION_CONTRACT_ADDRESS: string;
+  }) => {
     if (!window?.ethereum) {
       throw new Error('No ethereum provider found');
     }
@@ -32,7 +34,7 @@ export const evaluationContractPlatform = {
 
     const browserContract: EvaluationPlatform =
       EvaluationPlatform__factory.connect(
-        EVALUATION_CONTRACT_ADDRESS,
+        args.VITE_EVALUATION_CONTRACT_ADDRESS,
         await browserProvider.getSigner(),
       );
 

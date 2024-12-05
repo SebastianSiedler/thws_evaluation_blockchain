@@ -1,6 +1,5 @@
 import { evaluationContractPlatform } from '@acme/contracts/clients/ethers/evaluation';
 import { getSemaphore } from '@acme/contracts/clients/ethers/semaphore';
-import { SEMAPHORE_CONTRACT_ADDRESS } from '@acme/contracts/deployed_addresses.json';
 import { EvaluationPlatform } from '@acme/contracts/typechain-types';
 import cors from '@fastify/cors';
 import { generateProof, Group, Identity } from '@semaphore-protocol/core';
@@ -24,6 +23,7 @@ const s = initServer();
 
 const semaphore = getSemaphore({
   VITE_ETH_NETWORK_URL: env.VITE_ETH_NETWORK_URL,
+  VITE_SEMAPHORE_CONTRACT_ADDRESS: env.VITE_SEMAPHORE_CONTRACT_ADDRESS,
 });
 
 export const router = s.router(contract, {
@@ -98,6 +98,7 @@ const start = async () => {
   const { rpcContract } = evaluationContractPlatform.getRpcContract({
     VITE_ETH_RELAYER_PK: env.VITE_ETH_RELAYER_PK,
     VITE_ETH_NETWORK_URL: env.VITE_ETH_NETWORK_URL,
+    VITE_EVALUATION_CONTRACT_ADDRESS: env.VITE_EVALUATION_CONTRACT_ADDRESS,
   });
   evaluationContract = rpcContract;
 
