@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.17;
 
-import "@semaphore-protocol/contracts/interfaces/ISemaphore.sol";
-import "hardhat/console.sol";
+import '@semaphore-protocol/contracts/interfaces/ISemaphore.sol';
+import 'hardhat/console.sol';
 
 contract EvaluationPlatform {
     ISemaphore public semaphore;
@@ -36,7 +36,7 @@ contract EvaluationPlatform {
     function createEvaluation(string memory name) external returns (uint256) {
         uint256 groupId = semaphore.createGroup();
 
-        console.log("createEvaluation: ");
+        console.log('createEvaluation: ');
 
         evaluations[groupId].creator = msg.sender;
         evaluations[groupId].finalized = false;
@@ -59,11 +59,11 @@ contract EvaluationPlatform {
         // );
         require(
             !evaluations[groupId].participants[identityCommitment],
-            "Participant already added"
+            'Participant already added'
         );
 
         // make sure the evaluation is not finalized
-        require(!evaluations[groupId].finalized, "Evaluation is finalized");
+        require(!evaluations[groupId].finalized, 'Evaluation is finalized');
 
         evaluations[groupId].participants[identityCommitment] = true;
         evaluations[groupId].participantList.push(identityCommitment);
@@ -81,7 +81,7 @@ contract EvaluationPlatform {
         uint256[8] calldata points
     ) external {
         Evaluation storage evaluation = evaluations[groupId];
-        require(!evaluation.finalized, "Evaluation is finalized");
+        require(!evaluation.finalized, 'Evaluation is finalized');
 
         ISemaphore.SemaphoreProof memory proof = ISemaphore.SemaphoreProof(
             merkleTreeDepth,
@@ -94,7 +94,7 @@ contract EvaluationPlatform {
 
         // prevent double voting
         bool verifyProof = semaphore.verifyProof(groupId, proof);
-        require(verifyProof, "Invalid proof or already voted");
+        require(verifyProof, 'Invalid proof or already voted');
 
         semaphore.validateProof(groupId, proof);
         evaluation.voteCount += 1;
@@ -103,7 +103,7 @@ contract EvaluationPlatform {
     function finalizeEvaluation(uint256 evaluationId) external {
         require(
             msg.sender == evaluations[evaluationId].creator,
-            "Only creator can finalize"
+            'Only creator can finalize'
         );
         evaluations[evaluationId].finalized = true;
     }

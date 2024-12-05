@@ -1,26 +1,27 @@
-import { loadFixture } from "@nomicfoundation/hardhat-toolbox/network-helpers";
+import { loadFixture } from '@nomicfoundation/hardhat-toolbox/network-helpers';
 import {
+  generateProof,
   Group,
   Identity,
-  generateProof,
   verifyProof,
-} from "@semaphore-protocol/core";
-import { expect, assert } from "chai";
-import { encodeBytes32String, isError } from "ethers";
-import { ethers, run } from "hardhat";
+} from '@semaphore-protocol/core';
+import { assert, expect } from 'chai';
+import { encodeBytes32String, isError } from 'ethers';
+import { ethers, run } from 'hardhat';
+
 // @ts-ignore: typechain folder will be generated after contracts compilation
 // eslint-disable-next-line
-import { EvaluationPlatform, ISemaphore } from "../typechain-types";
+import { EvaluationPlatform, ISemaphore } from '../typechain-types';
 
-describe("Feedback", () => {
+describe('Feedback', () => {
   async function deployEvaluationPlatformFixture() {
-    const { semaphore } = await run("deploy:semaphore", {
+    const { semaphore } = await run('deploy:semaphore', {
       logs: false,
     });
 
     const semaphoreContract: ISemaphore = semaphore;
 
-    const evaluationPlatform: EvaluationPlatform = await run("deploy", {
+    const evaluationPlatform: EvaluationPlatform = await run('deploy', {
       logs: false,
       semaphore: await semaphoreContract.getAddress(),
     });
@@ -28,18 +29,18 @@ describe("Feedback", () => {
     return { semaphore: semaphoreContract, evaluationPlatform };
   }
 
-  it("should deploy successfully", async () => {
+  it('should deploy successfully', async () => {
     const { semaphore, evaluationPlatform } = await loadFixture(
-      deployEvaluationPlatformFixture
+      deployEvaluationPlatformFixture,
     );
 
     expect(await semaphore.getAddress()).to.be.properAddress;
     expect(await evaluationPlatform.getAddress()).to.be.properAddress;
   });
 
-  it("should allow creating an evaluation", async () => {
+  it('should allow creating an evaluation', async () => {
     let { evaluationPlatform } = await loadFixture(
-      deployEvaluationPlatformFixture
+      deployEvaluationPlatformFixture,
     );
 
     const [creator] = await ethers.getSigners();
@@ -48,25 +49,25 @@ describe("Feedback", () => {
 
     expect(
       // .connect(creator)
-      await evaluationPlatform.createEvaluation("Test Evaluation")
+      await evaluationPlatform.createEvaluation('Test Evaluation'),
     )
-      .to.emit(evaluationPlatform, "EvaluationCreated")
+      .to.emit(evaluationPlatform, 'EvaluationCreated')
       .withArgs(groupId, creator.address);
 
     const evaluation = await evaluationPlatform.getEvaluation(groupId);
     expect(evaluation.creator).to.equal(creator.address);
-    expect(evaluation.name).to.equal("Test Evaluation");
+    expect(evaluation.name).to.equal('Test Evaluation');
     expect(evaluation.voteCount).to.equal(0);
     expect(evaluation.finalized).to.be.false;
   });
 
-  it("should allow adding participants", async () => {
+  it('should allow adding participants', async () => {
     const { evaluationPlatform, semaphore } = await loadFixture(
-      deployEvaluationPlatformFixture
+      deployEvaluationPlatformFixture,
     );
 
     const [creator] = await ethers.getSigners();
-    const tx = await evaluationPlatform.createEvaluation("Test Evaluation");
+    const tx = await evaluationPlatform.createEvaluation('Test Evaluation');
     const receipt = await tx.wait();
 
     const groupId = 0;
@@ -82,12 +83,12 @@ describe("Feedback", () => {
     expect(participantList).to.include(identityCommitment);
   });
 
-  it("should prevent adding duplicate participants", async () => {
+  it('should prevent adding duplicate participants', async () => {
     const { evaluationPlatform } = await loadFixture(
-      deployEvaluationPlatformFixture
+      deployEvaluationPlatformFixture,
     );
 
-    const tx = await evaluationPlatform.createEvaluation("Test Evaluation");
+    const tx = await evaluationPlatform.createEvaluation('Test Evaluation');
     const receipt = await tx.wait();
 
     const groupId = 0;
@@ -97,23 +98,23 @@ describe("Feedback", () => {
     await evaluationPlatform.addParticipant(groupId, identityCommitment);
 
     await expect(
-      evaluationPlatform.addParticipant(groupId, identityCommitment)
-    ).to.be.revertedWith("Participant already added");
+      evaluationPlatform.addParticipant(groupId, identityCommitment),
+    ).to.be.revertedWith('Participant already added');
   });
 
-  it("should allow voting with valid proof", async () => {
+  it('should allow voting with valid proof', async () => {
     const { evaluationPlatform, semaphore } = await loadFixture(
-      deployEvaluationPlatformFixture
+      deployEvaluationPlatformFixture,
     );
 
-    const tx = await evaluationPlatform.createEvaluation("Test Evaluation");
+    const tx = await evaluationPlatform.createEvaluation('Test Evaluation');
     const receipt = await tx.wait();
 
     const groupId = 0;
 
     const identity = new Identity();
     await evaluationPlatform.addParticipant(groupId, identity.commitment);
-    const message = encodeBytes32String("vote");
+    const message = encodeBytes32String('vote');
 
     const group = new Group([identity.commitment]);
 
@@ -127,7 +128,7 @@ describe("Feedback", () => {
       proof.merkleTreeRoot,
       proof.nullifier,
       BigInt(message),
-      proof.points
+      proof.points,
     );
 
     const txReceipt = await txResponse.wait();
@@ -136,12 +137,12 @@ describe("Feedback", () => {
     expect(evaluation.voteCount).to.equal(1);
   });
 
-  it("should prevent double voting", async () => {
+  it('should prevent double voting', async () => {
     const { evaluationPlatform, semaphore } = await loadFixture(
-      deployEvaluationPlatformFixture
+      deployEvaluationPlatformFixture,
     );
 
-    const tx = await evaluationPlatform.createEvaluation("Test Evaluation");
+    const tx = await evaluationPlatform.createEvaluation('Test Evaluation');
     const receipt = await tx.wait();
 
     const groupId = 0;
@@ -149,7 +150,7 @@ describe("Feedback", () => {
     const identity = new Identity();
     await evaluationPlatform.addParticipant(groupId, identity.commitment);
 
-    const message = encodeBytes32String("vote");
+    const message = encodeBytes32String('vote');
 
     const group = new Group([identity.commitment]);
 
@@ -163,13 +164,13 @@ describe("Feedback", () => {
       proof.merkleTreeRoot,
       proof.nullifier,
       BigInt(message),
-      proof.points
+      proof.points,
     );
 
     const txReceipt = await txResponse.wait();
 
     if (txReceipt?.status !== 1) {
-      throw new Error("Transaction failed");
+      throw new Error('Transaction failed');
     }
 
     // TODO:
@@ -195,17 +196,17 @@ describe("Feedback", () => {
         proof.merkleTreeRoot,
         proof.nullifier,
         BigInt(message),
-        proof.points
+        proof.points,
       )
       .catch((e) => {});
   });
 
-  it("should allow finalizing an evaluation", async () => {
+  it('should allow finalizing an evaluation', async () => {
     const { evaluationPlatform } = await loadFixture(
-      deployEvaluationPlatformFixture
+      deployEvaluationPlatformFixture,
     );
 
-    const tx = await evaluationPlatform.createEvaluation("Test Evaluation");
+    const tx = await evaluationPlatform.createEvaluation('Test Evaluation');
     const receipt = await tx.wait();
 
     const groupId = 0;

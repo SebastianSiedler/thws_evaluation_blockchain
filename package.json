@@ -5,7 +5,9 @@
   "main": "index.js",
   "scripts": {
     "dev": "pnpm run --recursive --parallel dev",
-    "build": "pnpm run --recursive --parallel build"
+    "build": "pnpm run --recursive --parallel build",
+    "format:write": "pnpm run --recursive --parallel format:write",
+    "format:check": "pnpm run --recursive --parallel format:check"
   },
   "keywords": [],
   "author": "",

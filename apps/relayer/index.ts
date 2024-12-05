@@ -1,27 +1,28 @@
-import Fastify from "fastify";
-import { initServer } from "@ts-rest/fastify";
-import { contract } from "./contract";
-import cors from "@fastify/cors";
-import { evaluationContractPlatform } from "@acme/contracts/clients/ethers/evaluation";
-import { EvaluationPlatform } from "@acme/contracts/typechain-types";
-import { SemaphoreEthers } from "@semaphore-protocol/data";
-import { SEMAPHORE_CONTRACT_ADDRESS } from "@acme/contracts/deployed_addresses.json";
-import { generateProof, Group, Identity } from "@semaphore-protocol/core";
-import { encodeBytes32String, isError } from "ethers";
-import { semaphore } from "@acme/contracts/clients/ethers/semaphore";
+import { evaluationContractPlatform } from '@acme/contracts/clients/ethers/evaluation';
+import { semaphore } from '@acme/contracts/clients/ethers/semaphore';
+import { SEMAPHORE_CONTRACT_ADDRESS } from '@acme/contracts/deployed_addresses.json';
+import { EvaluationPlatform } from '@acme/contracts/typechain-types';
+import cors from '@fastify/cors';
+import { generateProof, Group, Identity } from '@semaphore-protocol/core';
+import { SemaphoreEthers } from '@semaphore-protocol/data';
+import { initServer } from '@ts-rest/fastify';
+import { encodeBytes32String, isError } from 'ethers';
+import Fastify from 'fastify';
+
+import { contract } from './contract';
 
 const app = Fastify();
 let evaluationContract: EvaluationPlatform;
 
 app.register(cors, {
-  origin: "*", //TODO: .env only :9000
+  origin: '*', //TODO: .env only :9000
 });
 
 const s = initServer();
 
 export const router = s.router(contract, {
   vote: async ({ body }) => {
-    console.log("vote");
+    console.log('vote');
     const { vote, identityPk, groupId } = body;
 
     const _users = await semaphore.getGroupMembers(groupId);
@@ -31,7 +32,7 @@ export const router = s.router(contract, {
     const message = encodeBytes32String(vote);
 
     const _identity = Identity.import(identityPk);
-    console.log("received identity", _identity.commitment.toString());
+    console.log('received identity', _identity.commitment.toString());
 
     const proof = await generateProof(_identity, group, message, groupId);
     // console.log({ proof });
@@ -45,25 +46,25 @@ export const router = s.router(contract, {
         proof.merkleTreeRoot,
         proof.nullifier,
         BigInt(message),
-        proof.points
+        proof.points,
       )
       .catch((err) => {
         console.error(err);
-        if (isError(err, "CALL_EXCEPTION")) {
-          console.log("CALL_EXCEPTION", "asdfasdf");
+        if (isError(err, 'CALL_EXCEPTION')) {
+          console.log('CALL_EXCEPTION', 'asdfasdf');
           console.log(err.info?.error);
           if (
             err.info?.error?.message?.indexOf(
-              "Semaphore__YouAreUsingTheSameNullifierTwice"
+              'Semaphore__YouAreUsingTheSameNullifierTwice',
             ) !== -1
           ) {
-            throw new Error("You have already voted!");
+            throw new Error('You have already voted!');
           }
           throw new Error(
             err.reason ??
               err.shortMessage ??
               err.message ??
-              "Unkown CALL_EXCEPTION"
+              'Unkown CALL_EXCEPTION',
           );
         } else {
           throw err;
@@ -75,7 +76,7 @@ export const router = s.router(contract, {
     console.log({ txReceipt });
 
     if (txReceipt?.status !== 1) {
-      throw new Error("Transaction failed");
+      throw new Error('Transaction failed');
     }
 
     return {
@@ -92,7 +93,7 @@ const start = async () => {
   evaluationContract = rpcContract;
 
   try {
-    console.log("Starting server...", { port: 3000 });
+    console.log('Starting server...', { port: 3000 });
     await app.listen({ port: 3000 });
   } catch (err) {
     console.error(err);

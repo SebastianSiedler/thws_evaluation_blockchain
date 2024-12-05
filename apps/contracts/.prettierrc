@@ -1,0 +1,15 @@
+{
+  "singleQuote": true,
+  "semi": true,
+  "plugins": [
+    "prettier-plugin-solidity",
+    "@ianvs/prettier-plugin-sort-imports"
+  ],
+  "importOrder": [
+    "<BUILTIN_MODULES>",
+    "<THIRD_PARTY_MODULES>",
+    "",
+    "^src/(.*)$",
+    "^[.]"
+  ]
+}

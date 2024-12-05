@@ -1,7 +1,7 @@
 // contract.ts
 
-import { initContract } from "@ts-rest/core";
-import { z } from "zod";
+import { initContract } from '@ts-rest/core';
+import { z } from 'zod';
 
 const c = initContract();
 
@@ -14,13 +14,13 @@ export type PostVote = z.infer<typeof PostVoteSchema>;
 
 export const contract = c.router({
   vote: {
-    method: "POST",
-    path: "/vote/",
+    method: 'POST',
+    path: '/vote/',
     body: PostVoteSchema,
     responses: {
       200: null,
       500: c.type<{ message: string }>(),
     },
-    summary: "Vote",
+    summary: 'Vote',
   },
 });
