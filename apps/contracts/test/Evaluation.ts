@@ -39,7 +39,7 @@ describe('Feedback', () => {
   });
 
   it('should allow creating an evaluation', async () => {
-    let { evaluationPlatform } = await loadFixture(
+    const { evaluationPlatform } = await loadFixture(
       deployEvaluationPlatformFixture,
     );
 

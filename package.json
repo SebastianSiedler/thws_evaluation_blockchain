@@ -7,7 +7,9 @@
     "dev": "pnpm run --recursive --parallel dev",
     "build": "pnpm run --recursive --parallel build",
     "format:write": "pnpm run --recursive --parallel format:write",
-    "format:check": "pnpm run --recursive --parallel format:check"
+    "format:check": "pnpm run --recursive --parallel format:check",
+    "lint": "pnpm run --recursive --parallel lint",
+    "test": "pnpm run --recursive --parallel test"
   },
   "keywords": [],
   "author": "",

@@ -8,7 +8,7 @@ import {
 
 export const evaluationContractPlatform = {
   getRpcContract: () => {
-    const rpcProvider = new ethers.JsonRpcProvider('http://localhost:8545'); //TODO: Replace with your network URL .env
+    const rpcProvider = new ethers.JsonRpcProvider('http://localhost:8545'); // TODO: Replace with your network URL .env
 
     // Configure the signer //TODO: .env
     const ethereumPrivateKey =

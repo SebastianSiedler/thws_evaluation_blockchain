@@ -12,7 +12,9 @@
     "scripts/**/*",
     "tasks/**/*",
     "test/**/*",
-    "typechain-types/**/*"
+    "typechain-types/**/*",
+    "clients/**/*",
+    "contracts/**/*"
   ],
   "files": ["./hardhat.config.ts", "./types.d.ts"]
 }

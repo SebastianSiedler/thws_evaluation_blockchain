@@ -15,7 +15,7 @@ const config: HardhatUserConfig = {
   defaultNetwork: process.env.DEFAULT_NETWORK || 'hardhat',
   networks: {
     hardhat: {
-      chainId: 31337, //TODO: to .env
+      chainId: 31337, // TODO: to .env
       allowUnlimitedContractSize: true,
       initialBaseFeePerGas: 0, // Disable EIP-1559 base fee
     },
