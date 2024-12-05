@@ -2,6 +2,7 @@ import { evaluationContractPlatform } from '@acme/contracts/clients/ethers/evalu
 import { semaphore } from '@acme/contracts/clients/ethers/semaphore';
 import { Identity } from '@semaphore-protocol/core';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/vue-query';
+import { useAsyncState } from '@vueuse/core';
 import { AddressLike, isError } from 'ethers';
 
 import { useEvaluationStore } from 'src/stores/evaluationStore';
@@ -10,7 +11,14 @@ import { getGroupMessages } from './utils';
 
 export const getEvaluationContractClient = () => {
   const { rpcContract } = evaluationContractPlatform.getRpcContract();
-  const { browserProvider } = evaluationContractPlatform.getBrowserContract();
+
+  const browserContract = useAsyncState(
+    evaluationContractPlatform.getBrowserContract,
+    null,
+    {
+      throwError: true,
+    },
+  );
 
   const queryClient = useQueryClient();
 
@@ -21,7 +29,12 @@ export const getEvaluationContractClient = () => {
     mutationFn: async (args: { name: string }) => {
       const { name } = args;
 
-      const txHash = await rpcContract.createEvaluation(name);
+      const browserContractState = browserContract.state.value?.browserContract;
+      if (!browserContractState) {
+        throw new Error('No ethereum provider found');
+      }
+
+      const txHash = await browserContractState.createEvaluation(name);
       const receipt = await txHash.wait();
 
       return {

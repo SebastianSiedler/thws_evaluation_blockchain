@@ -23,19 +23,17 @@ export const evaluationContractPlatform = {
       rpcProvider,
     };
   },
-  getBrowserContract: () => {
-    // @ts-ignore TODO: find out, why window.ethereum is not defined
+  getBrowserContract: async () => {
     if (!window?.ethereum) {
       throw new Error("No ethereum provider found");
     }
 
-    // @ts-ignore
     const browserProvider = new ethers.BrowserProvider(window?.ethereum);
 
     const browserContract: EvaluationPlatform =
       EvaluationPlatform__factory.connect(
         EVALUATION_CONTRACT_ADDRESS,
-        browserProvider
+        await browserProvider.getSigner()
       );
 
     return {
