@@ -1,45 +1,33 @@
-name: CI
-
+name: pnpm CI
 on:
   push:
-  pull_request:
-  workflow_dispatch:
-
-env:
-  FOUNDRY_PROFILE: ci
 
 jobs:
-  check:
+  build:
+    runs-on: ubuntu-22.04
     strategy:
-      fail-fast: true
-
-    name: Foundry project
-    runs-on: ubuntu-latest
+      matrix:
+        node-version: [20]
     steps:
       - uses: actions/checkout@v4
+      - name: Enable Corepack
+        run: corepack enable
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
         with:
-          submodules: recursive
+          node-version: ${{ matrix.node-version }}
+          cache: "pnpm"
+      - name: Install dependencies
+        run: pnpm install --shamefully-hoist
 
-      - name: Install Foundry
-        uses: foundry-rs/foundry-toolchain@v1
-        with:
-          version: nightly
+      - name: Check Formatting with Prettier
+        run: pnpm run format:check
 
-      - name: Show Forge version
-        run: |
-          forge --version
+      - name: Lint with ESLint
+        run: pnpm run lint
 
-      - name: Run Forge fmt
-        run: |
-          forge fmt --check
-        id: fmt
+      - name: Run Tests
+        run: pnpm run test
 
-      - name: Run Forge build
-        run: |
-          forge build --sizes
-        id: build
-
-      - name: Run Forge tests
-        run: |
-          forge test -vvv
-        id: test
+      - name: Build
+        run: pnpm run build
