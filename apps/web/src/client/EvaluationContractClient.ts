@@ -1,16 +1,24 @@
 import { evaluationContractPlatform } from '@acme/contracts/clients/ethers/evaluation';
-import { semaphore } from '@acme/contracts/clients/ethers/semaphore';
+import { getSemaphore } from '@acme/contracts/clients/ethers/semaphore';
 import { Identity } from '@semaphore-protocol/core';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/vue-query';
 import { useAsyncState } from '@vueuse/core';
 import { AddressLike, isError } from 'ethers';
 
+import { env } from 'src/boot/env';
 import { useEvaluationStore } from 'src/stores/evaluationStore';
 import { relayerClient } from './relayer';
 import { getGroupMessages } from './utils';
 
 export const getEvaluationContractClient = () => {
-  const { rpcContract } = evaluationContractPlatform.getRpcContract();
+  const { rpcContract } = evaluationContractPlatform.getRpcContract({
+    VITE_ETH_NETWORK_URL: env.VITE_ETH_NETWORK_URL,
+    VITE_ETH_RELAYER_PK: env.VITE_ETH_RELAYER_PK,
+  });
+
+  const semaphore = getSemaphore({
+    VITE_ETH_NETWORK_URL: env.VITE_ETH_NETWORK_URL,
+  });
 
   const browserContract = useAsyncState(
     evaluationContractPlatform.getBrowserContract,

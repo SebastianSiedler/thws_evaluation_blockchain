@@ -7,14 +7,13 @@ import {
 } from '../../typechain-types';
 
 export const evaluationContractPlatform = {
-  getRpcContract: () => {
-    const rpcProvider = new ethers.JsonRpcProvider('http://localhost:8545'); // TODO: Replace with your network URL .env
+  getRpcContract: (args: {
+    VITE_ETH_NETWORK_URL: string;
+    VITE_ETH_RELAYER_PK: string;
+  }) => {
+    const rpcProvider = new ethers.JsonRpcProvider(args.VITE_ETH_NETWORK_URL);
 
-    // Configure the signer //TODO: .env
-    const ethereumPrivateKey =
-      '0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80';
-
-    const wallet = new ethers.Wallet(ethereumPrivateKey, rpcProvider);
+    const wallet = new ethers.Wallet(args.VITE_ETH_RELAYER_PK, rpcProvider);
     const rpcContract: EvaluationPlatform = EvaluationPlatform__factory.connect(
       EVALUATION_CONTRACT_ADDRESS,
       wallet,

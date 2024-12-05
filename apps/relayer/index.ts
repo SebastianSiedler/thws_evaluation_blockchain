@@ -1,5 +1,5 @@
 import { evaluationContractPlatform } from '@acme/contracts/clients/ethers/evaluation';
-import { semaphore } from '@acme/contracts/clients/ethers/semaphore';
+import { getSemaphore } from '@acme/contracts/clients/ethers/semaphore';
 import { SEMAPHORE_CONTRACT_ADDRESS } from '@acme/contracts/deployed_addresses.json';
 import { EvaluationPlatform } from '@acme/contracts/typechain-types';
 import cors from '@fastify/cors';
@@ -10,15 +10,21 @@ import { encodeBytes32String, isError } from 'ethers';
 import Fastify from 'fastify';
 
 import { contract } from './contract';
+import { env } from './env';
 
 const app = Fastify();
 let evaluationContract: EvaluationPlatform;
 
 app.register(cors, {
-  origin: '*', //TODO: .env only :9000
+  // allow only request from env.VITE_WEB_DAPP_URL
+  origin: env.VITE_WEB_DAPP_URL,
 });
 
 const s = initServer();
+
+const semaphore = getSemaphore({
+  VITE_ETH_NETWORK_URL: env.VITE_ETH_NETWORK_URL,
+});
 
 export const router = s.router(contract, {
   vote: async ({ body }) => {
@@ -89,12 +95,16 @@ export const router = s.router(contract, {
 app.register(s.plugin(router));
 
 const start = async () => {
-  const { rpcContract } = evaluationContractPlatform.getRpcContract();
+  const { rpcContract } = evaluationContractPlatform.getRpcContract({
+    VITE_ETH_RELAYER_PK: env.VITE_ETH_RELAYER_PK,
+    VITE_ETH_NETWORK_URL: env.VITE_ETH_NETWORK_URL,
+  });
   evaluationContract = rpcContract;
 
   try {
-    console.log('Starting server...', { port: 3000 });
-    await app.listen({ port: 3000 });
+    const PORT = env.VITE_RELAYER_PORT;
+    console.log('Starting server...', { port: PORT });
+    await app.listen({ port: PORT });
   } catch (err) {
     console.error(err);
     app.log.error(err);

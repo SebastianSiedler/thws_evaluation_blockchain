@@ -8,14 +8,24 @@ import { HardhatUserConfig } from 'hardhat/config';
 
 import './tasks/deploy';
 
-dotenvConfig({ path: resolve(__dirname, '../../.env') });
+import { z } from 'zod';
+
+const envRaw = dotenvConfig({ path: resolve(__dirname, '../../.env') });
+
+export const env = z
+  .object({
+    VITE_ETH_CHAIN_ID: z.coerce.number().min(1),
+    VITE_ETH_RELAYER_PK: z.string().min(1),
+    VITE_ETH_NETWORK_URL: z.string().url(),
+  })
+  .parse(process.env);
 
 const config: HardhatUserConfig = {
   solidity: '0.8.23',
   defaultNetwork: process.env.DEFAULT_NETWORK || 'hardhat',
   networks: {
     hardhat: {
-      chainId: 31337, // TODO: to .env
+      chainId: env.VITE_ETH_CHAIN_ID,
       allowUnlimitedContractSize: true,
       initialBaseFeePerGas: 0, // Disable EIP-1559 base fee
     },

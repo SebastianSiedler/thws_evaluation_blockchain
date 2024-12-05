@@ -6,6 +6,9 @@
 import { fileURLToPath } from 'node:url';
 import { configure } from 'quasar/wrappers';
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import { env } from 'src/boot/env';
+
 export default configure((ctx) => {
   return {
     // https://v2.quasar.dev/quasar-cli-vite/prefetch-feature

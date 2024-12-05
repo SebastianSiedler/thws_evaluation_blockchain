@@ -2,13 +2,14 @@
   "name": "@acme/relayer",
   "version": "1.0.0",
   "description": "",
-  "type": "commonjs",
+  "type": "module",
   "main": "index.js",
   "scripts": {
-    "dev": "pnpm tsx --watch ./index.ts",
-    "build": "pnpm tsc && pnpm compile",
-    "compile": "pnpm esbuild ./index.ts --outfile=dist/index.js --bundle --platform=node",
-    "start": "pnpm node ./index.js",
+    "with-env": "pnpm dotenv -e ../../.env --",
+    "dev": "pnpm with-env pnpm tsx --watch ./index.ts",
+    "build": "pnpm with-env pnpm tsc && pnpm compile",
+    "compile": "pnpm with-env pnpm esbuild ./index.ts --outfile=dist/index.js --bundle --platform=node",
+    "start": "pnpm with-env pnpm node ./index.js",
     "format:write": "pnpm prettier --write . --ignore-path .gitignore",
     "format:check": "pnpm prettier --check . --ignore-path .gitignore"
   },
@@ -19,6 +20,7 @@
     "@acme/contracts": "workspace:*",
     "@semaphore-protocol/core": "^4.7.0",
     "@semaphore-protocol/data": "^4.7.0",
+    "@t3-oss/env-core": "0.10.1",
     "@ts-rest/core": "^3.51.0",
     "@ts-rest/fastify": "^3.51.0",
     "ethers": "^6.13.4",
@@ -27,8 +29,8 @@
     "zod": "^3.23.8"
   },
   "devDependencies": {
-    "@ianvs/prettier-plugin-sort-imports": "^4.4.0",
     "@fastify/cors": "^10.0.1",
+    "@ianvs/prettier-plugin-sort-imports": "^4.4.0",
     "@types/node": "^20.17.1",
     "esbuild": "^0.24.0",
     "prettier": "^3.4.1"

@@ -2,9 +2,10 @@
   "name": "@acme/contracts",
   "type": "commonjs",
   "scripts": {
-    "dev": "pnpm concurrently --kill-others-on-fail --names hardhat-node,deploy -c green,blue \"pnpm hardhat node\" \"sleep 1 && pnpm deploy-contract --network localhost\"",
-    "compile": "hardhat compile",
-    "deploy-contract": "pnpm compile && hardhat deploy",
+    "with-env": "pnpm dotenv -e ../../.env --",
+    "dev": "pnpm with-env pnpm concurrently --kill-others-on-fail --names hardhat-node,deploy -c green,blue \"pnpm hardhat node\" \"sleep 1 && pnpm deploy-contract --network localhost\"",
+    "compile": "pnpm with-env hardhat compile",
+    "deploy-contract": "pnpm with-env pnpm compile && hardhat deploy",
     "verify": "hardhat verify",
     "test": "hardhat test",
     "test:report-gas": "REPORT_GAS=true hardhat test",
@@ -52,6 +53,7 @@
   "dependencies": {
     "@semaphore-protocol/contracts": "4.7.0",
     "concurrently": "^9.1.0",
-    "hardhat": "^2.20.1"
+    "hardhat": "^2.20.1",
+    "zod": "^3.23.8"
   }
 }

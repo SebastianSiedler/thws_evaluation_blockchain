@@ -6,7 +6,11 @@ settings:
 
 importers:
 
-  .: {}
+  .:
+    devDependencies:
+      dotenv-cli:
+        specifier: ^7.4.4
+        version: 7.4.4
 
   apps/contracts:
     dependencies:
@@ -19,6 +23,9 @@ importers:
       hardhat:
         specifier: ^2.20.1
         version: 2.22.16(ts-node@10.9.2(@types/node@20.17.9)(typescript@5.7.2))(typescript@5.7.2)
+      zod:
+        specifier: ^3.23.8
+        version: 3.23.8
     devDependencies:
       '@ianvs/prettier-plugin-sort-imports':
         specifier: ^4.4.0
@@ -131,6 +138,9 @@ importers:
       '@semaphore-protocol/data':
         specifier: ^4.7.0
         version: 4.7.0
+      '@t3-oss/env-core':
+        specifier: 0.10.1
+        version: 0.10.1(typescript@5.7.2)(zod@3.23.8)
       '@ts-rest/core':
         specifier: ^3.51.0
         version: 3.51.0(@types/node@20.17.9)(zod@3.23.8)
@@ -183,15 +193,15 @@ importers:
       '@semaphore-protocol/data':
         specifier: ^4.7.0
         version: 4.7.0
+      '@t3-oss/env-core':
+        specifier: 0.10.1
+        version: 0.10.1(typescript@5.6.3)(zod@3.23.8)
       '@tanstack/vue-query':
         specifier: ^5.59.20
         version: 5.62.2(vue@3.5.13(typescript@5.6.3))
       '@ts-rest/core':
         specifier: ^3.51.0
         version: 3.51.0(@types/node@20.17.9)(zod@3.23.8)
-      '@ts-rest/vue-query':
-        specifier: ^3.51.0
-        version: 3.51.0(@tanstack/vue-query@5.62.2(vue@3.5.13(typescript@5.6.3)))(@ts-rest/core@3.51.0(@types/node@20.17.9)(zod@3.23.8))(zod@3.23.8)
       '@vueuse/core':
         specifier: ^11.1.0
         version: 11.3.0(vue@3.5.13(typescript@5.6.3))
@@ -1402,6 +1412,15 @@ packages:
     resolution: {integrity: sha512-+PmQX0PiAYPMeVYe237LJAYvOMYW1j2rH5YROyS3b4CTVJum34HfRvKvAzozHAQG0TnHNdUfY9nCeUyRAs//cw==}
     engines: {node: '>=14.16'}
 
+  '@t3-oss/env-core@0.10.1':
+    resolution: {integrity: sha512-GcKZiCfWks5CTxhezn9k5zWX3sMDIYf6Kaxy2Gx9YEQftFcz8hDRN56hcbylyAO3t4jQnQ5ifLawINsNgCDpOg==}
+    peerDependencies:
+      typescript: '>=5.0.0'
+      zod: ^3.0.0
+    peerDependenciesMeta:
+      typescript:
+        optional: true
+
   '@tanstack/match-sorter-utils@8.19.4':
     resolution: {integrity: sha512-Wo1iKt2b9OT7d+YGhvEPD3DXvPv2etTusIMhMUoG7fbhmxcXCtIjJDEygy91Y2JFlwGyjqiBPRozme7UD8hoqg==}
     engines: {node: '>=12'}
@@ -1434,16 +1453,6 @@ packages:
     peerDependencies:
       '@ts-rest/core': ~3.51.0
       fastify: ^4.0.0
-      zod: ^3.22.3
-    peerDependenciesMeta:
-      zod:
-        optional: true
-
-  '@ts-rest/vue-query@3.51.0':
-    resolution: {integrity: sha512-DIiZZI7vgpB/9IbS1I8FJCjLLArvHYVkJlHklitl43V4ezjxJqieHf1b/lxnVvN8r2jcNDEAqMP6bhz8LXyc7w==}
-    peerDependencies:
-      '@tanstack/vue-query': ^4.0.0
-      '@ts-rest/core': ~3.51.0
       zod: ^3.22.3
     peerDependenciesMeta:
       zod:
@@ -2493,6 +2502,14 @@ packages:
   dot-prop@9.0.0:
     resolution: {integrity: sha512-1gxPBJpI/pcjQhKgIU91II6Wkay+dLcN3M6rf2uwP8hRur3HtQXjVrdAK3sjC0piaEuxzMwjXChcETiJl47lAQ==}
     engines: {node: '>=18'}
+
+  dotenv-cli@7.4.4:
+    resolution: {integrity: sha512-XkBYCG0tPIes+YZr4SpfFv76SQrV/LeCE8CI7JSEMi3VR9MvTihCGTOtbIexD6i2mXF+6px7trb1imVCXSNMDw==}
+    hasBin: true
+
+  dotenv-expand@10.0.0:
+    resolution: {integrity: sha512-GopVGCpVS1UKH75VKHGuQFqS1Gusej0z4FyQkPdwjil2gNIv+LNsqBlboOzpJFZKVT95GkCyWJbBSdFEFUWI2A==}
+    engines: {node: '>=12'}
 
   dotenv-expand@11.0.7:
     resolution: {integrity: sha512-zIHwmZPRshsCdpMDyVsqGmgyP0yT8GAgXUnkdAoJisxvf33k7yO6OuoKmcTGuXPWSsm8Oh88nZicRLA9Y0rUeA==}
@@ -6481,6 +6498,18 @@ snapshots:
     dependencies:
       defer-to-connect: 2.0.1
 
+  '@t3-oss/env-core@0.10.1(typescript@5.6.3)(zod@3.23.8)':
+    dependencies:
+      zod: 3.23.8
+    optionalDependencies:
+      typescript: 5.6.3
+
+  '@t3-oss/env-core@0.10.1(typescript@5.7.2)(zod@3.23.8)':
+    dependencies:
+      zod: 3.23.8
+    optionalDependencies:
+      typescript: 5.7.2
+
   '@tanstack/match-sorter-utils@8.19.4':
     dependencies:
       remove-accents: 0.5.0
@@ -6504,13 +6533,6 @@ snapshots:
     dependencies:
       '@ts-rest/core': 3.51.0(@types/node@20.17.9)(zod@3.23.8)
       fastify: 5.1.0
-    optionalDependencies:
-      zod: 3.23.8
-
-  '@ts-rest/vue-query@3.51.0(@tanstack/vue-query@5.62.2(vue@3.5.13(typescript@5.6.3)))(@ts-rest/core@3.51.0(@types/node@20.17.9)(zod@3.23.8))(zod@3.23.8)':
-    dependencies:
-      '@tanstack/vue-query': 5.62.2(vue@3.5.13(typescript@5.6.3))
-      '@ts-rest/core': 3.51.0(@types/node@20.17.9)(zod@3.23.8)
     optionalDependencies:
       zod: 3.23.8
 
@@ -7757,6 +7779,15 @@ snapshots:
   dot-prop@9.0.0:
     dependencies:
       type-fest: 4.29.1
+
+  dotenv-cli@7.4.4:
+    dependencies:
+      cross-spawn: 7.0.6
+      dotenv: 16.4.6
+      dotenv-expand: 10.0.0
+      minimist: 1.2.8
+
+  dotenv-expand@10.0.0: {}
 
   dotenv-expand@11.0.7:
     dependencies:
