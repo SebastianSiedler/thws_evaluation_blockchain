@@ -30,7 +30,8 @@ const isGroupMember = computed(() => {
 const evaluation = client.getEvaluation({ groupId });
 
 const isEvaluationAdmin = computed(() => {
-  return store.wallet.state?.includes(evaluation.data.value?.creator ?? '');
+  const creatorAddress = evaluation.data.value?.creator.toLowerCase() ?? '';
+  return store.wallet.state?.includes(creatorAddress);
 });
 </script>
 
@@ -55,6 +56,7 @@ const isEvaluationAdmin = computed(() => {
 
     <!-- Add Participant -->
     <AddParticipant :evaluationId="BigInt(groupId)" v-if="isEvaluationAdmin" />
+    <p v-else>Only an admin is allowed to add participants to this group</p>
 
     <SendVote
       :groupId="groupId"
