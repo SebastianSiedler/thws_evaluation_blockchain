@@ -8,8 +8,8 @@
     "with-env": "pnpm dotenv -e ../../.env --",
     "dev": "pnpm with-env pnpm tsx --watch ./index.ts",
     "build": "pnpm with-env pnpm tsc && pnpm compile",
-    "compile": "pnpm with-env pnpm esbuild ./index.ts --outfile=dist/index.js --bundle --platform=node",
-    "start": "pnpm with-env pnpm node ./index.js",
+    "compile": "pnpm with-env pnpm esbuild ./index.ts --outfile=dist/index.cjs --bundle --platform=node",
+    "start": "pnpm with-env pnpm node ./dist/index.cjs",
     "format:write": "pnpm prettier --write . --ignore-path .gitignore",
     "format:check": "pnpm prettier --check . --ignore-path .gitignore"
   },
