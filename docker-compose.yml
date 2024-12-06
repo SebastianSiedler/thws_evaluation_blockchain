@@ -5,33 +5,37 @@ services:
       context: .
       target: web-production-stage
     restart: unless-stopped
-    # env_file:
-    #   - ./front-facing/.env
+    env_file:
+      - .env
     ports:
       - "9000:80"
-    networks:
-      - thws-evaluation-blockchain-network
+    # networks:
+    #   - thws-evaluation-blockchain-network
 
   relayer:
     container_name: relayer
     build:
       context: .
       target: relayer-production-stage
+    env_file:
+      - .env
     ports:
       - 3000:3000
-    networks:
-      - thws-evaluation-blockchain-network
+    # networks:
+    #   - thws-evaluation-blockchain-network
 
   hardhat:
     container_name: hardhat
     build:
       context: .
       target: hardhat-production-stage
+    env_file:
+      - .env
     ports:
       - 8545:8545
-    networks:
-      - thws-evaluation-blockchain-network
+    # networks:
+    #   - thws-evaluation-blockchain-network
 
-networks:
-  thws-evaluation-blockchain-network:
-    name: thws-evaluation-blockchain-network
+    # networks:
+    #   thws-evaluation-blockchain-network:
+    #     name: thws-evaluation-blockchain-network

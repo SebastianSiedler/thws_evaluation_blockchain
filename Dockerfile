@@ -21,8 +21,7 @@ CMD [ "pnpm", "start" ]
 FROM base AS hardhat-production-stage
 COPY --from=build /usr/src/app /usr/src/app
 WORKDIR /usr/src/app/apps/contracts
-RUN ls -alt
-CMD [ "pnpm", "hardhat", "node"]
+CMD [ "pnpm", "dev"]
 # COPY --from=build /prod/contracts /prod/contracts
 # WORKDIR /prod/contracts
 # EXPOSE 8545
