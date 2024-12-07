@@ -4,13 +4,13 @@ import '@semaphore-protocol/hardhat';
 import { resolve } from 'path';
 import { getHardhatNetworks } from '@semaphore-protocol/utils';
 import { config as dotenvConfig } from 'dotenv';
+import { expand } from 'dotenv-expand';
 import { HardhatUserConfig } from 'hardhat/config';
+import { z } from 'zod';
 
 import './tasks/deploy';
 
-import { z } from 'zod';
-
-const envRaw = dotenvConfig({ path: resolve(__dirname, '../../.env') });
+const envRaw = expand(dotenvConfig({ path: resolve(__dirname, '../../.env') }));
 
 export const env = z
   .object({
@@ -18,7 +18,7 @@ export const env = z
     VITE_ETH_RELAYER_PK: z.string().min(1),
     VITE_ETH_NETWORK_URL: z.string().url(),
   })
-  .parse(process.env);
+  .parse(envRaw.parsed);
 
 const config: HardhatUserConfig = {
   solidity: '0.8.23',
