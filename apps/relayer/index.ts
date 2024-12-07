@@ -28,31 +28,31 @@ const semaphore = getSemaphore({
 });
 
 export const router = s.router(contract, {
-  vote: async ({ body }) => {
+  vote: async ({ body: proof }) => {
     try {
-      console.log('vote');
-      const { vote, identityPk, groupId } = body;
+      // console.log('vote');
+      // const { vote, identityPk, groupId } = body;
 
-      const _users = await semaphore.getGroupMembers(groupId);
-      console.log({ _users });
-      const group = new Group(_users);
+      // const _users = await semaphore.getGroupMembers(groupId);
+      // console.log({ _users });
+      // const group = new Group(_users);
 
-      const message = encodeBytes32String(vote);
+      // const message = encodeBytes32String(vote);
 
-      const _identity = Identity.import(identityPk);
-      console.log('received identity', _identity.commitment.toString());
+      // const _identity = Identity.import(identityPk);
+      // console.log('received identity', _identity.commitment.toString());
 
-      const proof = await generateProof(_identity, group, message, groupId);
-      // console.log({ proof });
+      // const proof = await generateProof(_identity, group, message, groupId);
+      // // console.log({ proof });
 
       // console.log(message, proof.message);
       const txResponse = await evaluationContract
         .vote(
-          groupId,
+          proof.scope,
           proof.merkleTreeDepth,
           proof.merkleTreeRoot,
           proof.nullifier,
-          BigInt(message),
+          BigInt(proof.message),
           proof.points,
         )
         .catch((err) => {
@@ -91,7 +91,7 @@ export const router = s.router(contract, {
         body: null,
       };
     } catch (err) {
-      console.error(err);
+      app.log.error(err);
       return {
         status: 400,
         body: {

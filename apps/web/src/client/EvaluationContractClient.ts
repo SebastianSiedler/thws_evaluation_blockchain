@@ -1,9 +1,9 @@
 import { evaluationContractPlatform } from '@acme/contracts/clients/ethers/evaluation';
 import { getSemaphore } from '@acme/contracts/clients/ethers/semaphore';
-import { Identity } from '@semaphore-protocol/core';
+import { generateProof, Group, Identity } from '@semaphore-protocol/core';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/vue-query';
 import { useAsyncState } from '@vueuse/core';
-import { AddressLike, isError } from 'ethers';
+import { AddressLike, encodeBytes32String, isError } from 'ethers';
 
 import { env } from 'src/boot/env';
 import { useEvaluationStore } from 'src/stores/evaluationStore';
@@ -52,7 +52,8 @@ export const getEvaluationContractClient = () => {
         throw new Error('No ethereum provider found');
       }
 
-      const txHash = await browserContractState.createEvaluation(name);
+      // const txHash = await browserContractState.createEvaluation(name);
+      const txHash = await rpcContract.createEvaluation(name);
       const receipt = await txHash.wait();
 
       return {
@@ -112,12 +113,24 @@ export const getEvaluationContractClient = () => {
       _identity: Identity;
       groupId: string;
     }) => {
+      console.log('vote');
+      const { vote, _identity, groupId } = args;
+
+      const _users = await semaphore.getGroupMembers(groupId);
+      console.log({ _users });
+      const group = new Group(_users);
+
+      const message = encodeBytes32String(vote);
+
+      console.log('received identity', _identity.commitment.toString());
+
+      const proof = await generateProof(_identity, group, message, groupId);
+      // console.log({ proof });
+
+      console.log(message, proof.message);
+
       const response = await relayerClient.vote({
-        body: {
-          groupId: args.groupId,
-          identityPk: args._identity.export(),
-          vote: args.vote,
-        },
+        body: proof,
       });
 
       if (response.status === 500) {

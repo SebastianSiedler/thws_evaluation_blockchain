@@ -7,7 +7,7 @@ settings:
 importers:
 
   .:
-    devDependencies:
+    dependencies:
       dotenv-cli:
         specifier: ^7.4.4
         version: 7.4.4
@@ -15,8 +15,8 @@ importers:
   apps/contracts:
     dependencies:
       '@semaphore-protocol/contracts':
-        specifier: 4.7.0
-        version: 4.7.0
+        specifier: ^4.7.1
+        version: 4.7.1
       concurrently:
         specifier: ^9.1.0
         version: 9.1.0
@@ -46,14 +46,14 @@ importers:
         specifier: ^2.0.0
         version: 2.0.12(hardhat@2.22.16(ts-node@10.9.2(@types/node@20.17.9)(typescript@5.7.2))(typescript@5.7.2))
       '@semaphore-protocol/core':
-        specifier: 4.7.0
-        version: 4.7.0
+        specifier: ^4.7.1
+        version: 4.7.1
       '@semaphore-protocol/hardhat':
         specifier: 4.5.0
         version: 4.5.0(hardhat@2.22.16(ts-node@10.9.2(@types/node@20.17.9)(typescript@5.7.2))(typescript@5.7.2))
       '@semaphore-protocol/utils':
-        specifier: 4.7.0
-        version: 4.7.0
+        specifier: ^4.7.1
+        version: 4.7.1
       '@typechain/ethers-v6':
         specifier: ^0.5.0
         version: 0.5.1(ethers@6.13.4)(typechain@8.3.2(typescript@5.7.2))(typescript@5.7.2)
@@ -133,11 +133,11 @@ importers:
         specifier: workspace:*
         version: link:../contracts
       '@semaphore-protocol/core':
-        specifier: ^4.7.0
-        version: 4.7.0
+        specifier: ^4.7.1
+        version: 4.7.1
       '@semaphore-protocol/data':
-        specifier: ^4.7.0
-        version: 4.7.0
+        specifier: ^4.7.1
+        version: 4.7.1
       '@t3-oss/env-core':
         specifier: 0.10.1
         version: 0.10.1(typescript@5.7.2)(zod@3.23.8)
@@ -188,11 +188,11 @@ importers:
         specifier: ^1.16.12
         version: 1.16.14
       '@semaphore-protocol/core':
-        specifier: ^4.7.0
-        version: 4.7.0
+        specifier: ^4.7.1
+        version: 4.7.1
       '@semaphore-protocol/data':
-        specifier: ^4.7.0
-        version: 4.7.0
+        specifier: ^4.7.1
+        version: 4.7.1
       '@t3-oss/env-core':
         specifier: 0.10.1
         version: 0.10.1(typescript@5.6.3)(zod@3.23.8)
@@ -1338,34 +1338,34 @@ packages:
   '@semaphore-protocol/contracts@4.5.0':
     resolution: {integrity: sha512-YjkSskbPiV7orqSoLAPRPwLgeRcI7KrvbYfV6aS9PcC2gwBReiwbV4WFLMHx1y7TCUWOPL3klKTuVP9L/TFPcw==}
 
-  '@semaphore-protocol/contracts@4.7.0':
-    resolution: {integrity: sha512-+ICsjK7JEQX14IDSmqDd3UVWM8ALM3o/GhfbJ0l66eR7rMT5iPrPDFfUoy9pi8nJZ+5Pj13eyLgO7te6nAtnoQ==}
+  '@semaphore-protocol/contracts@4.7.1':
+    resolution: {integrity: sha512-hORi3/GTM2b9y5GYTdGs/WggF6N8FLYYGmYCvA1XdNJ++GadyrsjE/JB4n/GdhuHufmH2MKTP/MxTO62tIhs7Q==}
 
-  '@semaphore-protocol/core@4.7.0':
-    resolution: {integrity: sha512-yhHORYoE5sea7lWE2E19Pxdr6Ub13A7elCjjzhmfnlQUwHBUN1Fhi+0O/9neXJIk86BFQMgwB6Xe5+s3eDjI2w==}
+  '@semaphore-protocol/core@4.7.1':
+    resolution: {integrity: sha512-rvo/GEoiW5ah+jtvGLp6Fk0nZztRKRbDklQZNmp66aZt4/XYuIRuDnIfNR3MKyEZ75xabI9YxfQsVyp2bbsvtw==}
 
-  '@semaphore-protocol/data@4.7.0':
-    resolution: {integrity: sha512-DA6+Uf6u9Q4i8nTdfQNp9T7oeOtZY9No7dJmqyRliGjuSG/H/6v4VuzxJLtmfF1cviKPyt9vfdgfHA34kKw6IQ==}
+  '@semaphore-protocol/data@4.7.1':
+    resolution: {integrity: sha512-kqDEg1TVTNTzpbaD7y+n+MUltIvtghEQmcYs92vJ7LIAa3JvC/O6rl2himFgP9RPewcTcxT5gO4pTY7/FD1PwA==}
 
-  '@semaphore-protocol/group@4.7.0':
-    resolution: {integrity: sha512-Hn8jwn5dmGIpjNEWKwYGUymhIBQcT8SEBPNbyPItmoQgESqxGF+mKRyeqE4i+1v7Qz8EVT6mxY6A7UuVlF1wcQ==}
+  '@semaphore-protocol/group@4.7.1':
+    resolution: {integrity: sha512-vNYGrsXJjGuD2yyify0DUubzmljVkzVz0LQM22AGKCYrdHGuc2bthBMF977FtgiiQLUuLXhvUDD1R8UvxZbQvA==}
 
   '@semaphore-protocol/hardhat@4.5.0':
     resolution: {integrity: sha512-Acd+h7B3c+sHesQnxzRMldh6XkPrHsRtG7mBgxRrgOJM976eeSD04r6Rcrp0eYs1nvgdQ0MxXR5PYc2rYuZaZA==}
     peerDependencies:
       hardhat: ^2.19.4
 
-  '@semaphore-protocol/identity@4.7.0':
-    resolution: {integrity: sha512-5C3c76jmIpWdNtWrL/q6wsW+SIK/IrtmBvRsdUuUfsSuHUiMelwvq/mVKrWkDQdMW74ASDDhjr+wyt8W8cZ5Pw==}
+  '@semaphore-protocol/identity@4.7.1':
+    resolution: {integrity: sha512-5baffUSz7XT9O6BbxHX/qJ00lbaaPyBjssKa+ywKc8MdTrYOFGcc6RK/GitBoZYQv4ViKEuiX82lvjBqd5BLMw==}
 
-  '@semaphore-protocol/proof@4.7.0':
-    resolution: {integrity: sha512-E10KExWl8/NG5lLwQWPTFBgqhRgVz779tFDJizx4rbgadXbTCNAFgA1jdUjAgaHOTwKEG3HxFWT46rgiuqPTRw==}
+  '@semaphore-protocol/proof@4.7.1':
+    resolution: {integrity: sha512-nzGw/FoXcjstKZy7T9uylkuK60jJ7EaOvd1knLkBXjhnzydgK/uGacXHn2hV/R/bngCnDqW/nE6BKxWQ59lUYw==}
     peerDependencies:
-      '@semaphore-protocol/group': 4.7.0
-      '@semaphore-protocol/identity': 4.7.0
+      '@semaphore-protocol/group': 4.7.1
+      '@semaphore-protocol/identity': 4.7.1
 
-  '@semaphore-protocol/utils@4.7.0':
-    resolution: {integrity: sha512-u7kanYAFxYRN+hpxK1eNKlp4r/Ew48x2qIwAvF4qm+WiShZDWoJZZ0vZ3vnx/1YNWiJKgIKNN6rh86K3w8t9Rg==}
+  '@semaphore-protocol/utils@4.7.1':
+    resolution: {integrity: sha512-9PBhqyQsHwTI09CKcLih2CAainNaURk0LGHKtP+Rzd/xWE7vQCYxbeg/9kH9dISyLPSIfcImLup0v1VqKqZ8jQ==}
 
   '@sentry/core@5.30.0':
     resolution: {integrity: sha512-TmfrII8w1PQZSZgPpUESqjB+jC6MvZJZdLtE/0hZ+SrnKhW3x5WlYLvTXZpcWePYBku7rl2wn1RZu6uT0qCTeg==}
@@ -6367,22 +6367,22 @@ snapshots:
     dependencies:
       '@zk-kit/lean-imt.sol': 2.0.0
 
-  '@semaphore-protocol/contracts@4.7.0':
+  '@semaphore-protocol/contracts@4.7.1':
     dependencies:
       '@zk-kit/lean-imt.sol': 2.0.0
 
-  '@semaphore-protocol/core@4.7.0':
+  '@semaphore-protocol/core@4.7.1':
     dependencies:
-      '@semaphore-protocol/group': 4.7.0
-      '@semaphore-protocol/identity': 4.7.0
-      '@semaphore-protocol/proof': 4.7.0(@semaphore-protocol/group@4.7.0)(@semaphore-protocol/identity@4.7.0)
+      '@semaphore-protocol/group': 4.7.1
+      '@semaphore-protocol/identity': 4.7.1
+      '@semaphore-protocol/proof': 4.7.1(@semaphore-protocol/group@4.7.1)(@semaphore-protocol/identity@4.7.1)
     transitivePeerDependencies:
       - bufferutil
       - utf-8-validate
 
-  '@semaphore-protocol/data@4.7.0':
+  '@semaphore-protocol/data@4.7.1':
     dependencies:
-      '@semaphore-protocol/utils': 4.7.0
+      '@semaphore-protocol/utils': 4.7.1
       axios: 1.6.6
       ethers: 6.11.0
     transitivePeerDependencies:
@@ -6390,7 +6390,7 @@ snapshots:
       - debug
       - utf-8-validate
 
-  '@semaphore-protocol/group@4.7.0':
+  '@semaphore-protocol/group@4.7.1':
     dependencies:
       '@zk-kit/lean-imt': 2.2.1
       '@zk-kit/utils': 1.2.1
@@ -6408,18 +6408,18 @@ snapshots:
       - supports-color
       - utf-8-validate
 
-  '@semaphore-protocol/identity@4.7.0':
+  '@semaphore-protocol/identity@4.7.1':
     dependencies:
       '@zk-kit/baby-jubjub': 1.0.3
       '@zk-kit/eddsa-poseidon': 1.0.4
       '@zk-kit/utils': 1.2.1
       poseidon-lite: 0.3.0
 
-  '@semaphore-protocol/proof@4.7.0(@semaphore-protocol/group@4.7.0)(@semaphore-protocol/identity@4.7.0)':
+  '@semaphore-protocol/proof@4.7.1(@semaphore-protocol/group@4.7.1)(@semaphore-protocol/identity@4.7.1)':
     dependencies:
-      '@semaphore-protocol/group': 4.7.0
-      '@semaphore-protocol/identity': 4.7.0
-      '@semaphore-protocol/utils': 4.7.0
+      '@semaphore-protocol/group': 4.7.1
+      '@semaphore-protocol/identity': 4.7.1
+      '@semaphore-protocol/utils': 4.7.1
       '@zk-kit/artifacts': 1.8.0
       '@zk-kit/utils': 1.2.1
       ethers: 6.10.0
@@ -6428,7 +6428,7 @@ snapshots:
       - bufferutil
       - utf-8-validate
 
-  '@semaphore-protocol/utils@4.7.0':
+  '@semaphore-protocol/utils@4.7.1':
     dependencies:
       ethers: 6.13.4
     transitivePeerDependencies:
