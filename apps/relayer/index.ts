@@ -16,7 +16,8 @@ let evaluationContract: EvaluationPlatform;
 
 app.register(cors, {
   // allow only request from env.VITE_WEB_DAPP_URL
-  origin: env.VITE_WEB_DAPP_URL,
+  // origin: env.VITE_WEB_DAPP_URL,
+  origin: '*', // TODO: .env
 });
 
 const s = initServer();
@@ -28,67 +29,76 @@ const semaphore = getSemaphore({
 
 export const router = s.router(contract, {
   vote: async ({ body }) => {
-    console.log('vote');
-    const { vote, identityPk, groupId } = body;
+    try {
+      console.log('vote');
+      const { vote, identityPk, groupId } = body;
 
-    const _users = await semaphore.getGroupMembers(groupId);
-    console.log({ _users });
-    const group = new Group(_users);
+      const _users = await semaphore.getGroupMembers(groupId);
+      console.log({ _users });
+      const group = new Group(_users);
 
-    const message = encodeBytes32String(vote);
+      const message = encodeBytes32String(vote);
 
-    const _identity = Identity.import(identityPk);
-    console.log('received identity', _identity.commitment.toString());
+      const _identity = Identity.import(identityPk);
+      console.log('received identity', _identity.commitment.toString());
 
-    const proof = await generateProof(_identity, group, message, groupId);
-    // console.log({ proof });
+      const proof = await generateProof(_identity, group, message, groupId);
+      // console.log({ proof });
 
-    // console.log(message, proof.message);
-
-    const txResponse = await evaluationContract
-      .vote(
-        groupId,
-        proof.merkleTreeDepth,
-        proof.merkleTreeRoot,
-        proof.nullifier,
-        BigInt(message),
-        proof.points,
-      )
-      .catch((err) => {
-        console.error(err);
-        if (isError(err, 'CALL_EXCEPTION')) {
-          console.log('CALL_EXCEPTION', 'asdfasdf');
-          console.log(err.info?.error);
-          if (
-            err.info?.error?.message?.indexOf(
-              'Semaphore__YouAreUsingTheSameNullifierTwice',
-            ) !== -1
-          ) {
-            throw new Error('You have already voted!');
+      // console.log(message, proof.message);
+      const txResponse = await evaluationContract
+        .vote(
+          groupId,
+          proof.merkleTreeDepth,
+          proof.merkleTreeRoot,
+          proof.nullifier,
+          BigInt(message),
+          proof.points,
+        )
+        .catch((err) => {
+          console.error(err);
+          if (isError(err, 'CALL_EXCEPTION')) {
+            console.log('CALL_EXCEPTION', 'asdfasdf');
+            console.log(err.info?.error);
+            if (
+              err.info?.error?.message?.indexOf(
+                'Semaphore__YouAreUsingTheSameNullifierTwice',
+              ) !== -1
+            ) {
+              throw new Error('You have already voted!');
+            }
+            throw new Error(
+              err.reason ??
+                err.shortMessage ??
+                err.message ??
+                'Unkown CALL_EXCEPTION',
+            );
+          } else {
+            throw err;
           }
-          throw new Error(
-            err.reason ??
-              err.shortMessage ??
-              err.message ??
-              'Unkown CALL_EXCEPTION',
-          );
-        } else {
-          throw err;
-        }
-      });
+        });
 
-    const txReceipt = await txResponse.wait();
+      const txReceipt = await txResponse.wait();
 
-    console.log({ txReceipt });
+      console.log({ txReceipt });
 
-    if (txReceipt?.status !== 1) {
-      throw new Error('Transaction failed');
+      if (txReceipt?.status !== 1) {
+        throw new Error('Transaction failed');
+      }
+
+      return {
+        status: 200,
+        body: null,
+      };
+    } catch (err) {
+      console.error(err);
+      return {
+        status: 400,
+        body: {
+          message: 'error',
+        },
+      };
     }
-
-    return {
-      status: 200,
-      body: null,
-    };
   },
 });
 
@@ -104,8 +114,11 @@ const start = async () => {
 
   try {
     const PORT = env.VITE_RELAYER_PORT;
-    console.log('Starting server...', { port: PORT });
-    await app.listen({ port: PORT });
+    console.log('Starting server...', {
+      address: env.VITE_RELAYER_ADDRESS,
+      port: PORT,
+    });
+    await app.listen({ host: env.VITE_RELAYER_ADDRESS, port: PORT }); // TODO: .env
   } catch (err) {
     console.error(err);
     app.log.error(err);

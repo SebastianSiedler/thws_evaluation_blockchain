@@ -18,6 +18,7 @@ export const env = createEnv({
 
     VITE_ETH_RELAYER_PK: z.string().min(1),
     VITE_RELAYER_PORT: z.coerce.number().min(1).max(65535),
+    VITE_RELAYER_ADDRESS: z.string(),
     VITE_RELAYER_URL: z.string().url(),
 
     VITE_ETH_DAPP_PORT: z.coerce.number().min(1).max(65535),

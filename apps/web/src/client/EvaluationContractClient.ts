@@ -20,9 +20,8 @@ export const getEvaluationContractClient = () => {
   const semaphore = getSemaphore({
     // VITE_ETH_NETWORK_URL: env.VITE_ETH_NETWORK_URL,
     // VITE_SEMAPHORE_CONTRACT_ADDRESS: env.VITE_SEMAPHORE_CONTRACT_ADDRESS,
-    VITE_SEMAPHORE_CONTRACT_ADDRESS:
-      '0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0',
-    VITE_ETH_NETWORK_URL: 'http://127.0.0.1:8545',
+    VITE_SEMAPHORE_CONTRACT_ADDRESS: env.VITE_SEMAPHORE_CONTRACT_ADDRESS,
+    VITE_ETH_NETWORK_URL: env.VITE_ETH_NETWORK_URL,
   });
 
   const browserContract = useAsyncState(
