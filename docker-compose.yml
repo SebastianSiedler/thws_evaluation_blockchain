@@ -6,7 +6,7 @@ services:
       target: web-production-stage
     restart: unless-stopped
     env_file:
-      - .env
+      - .env.docker
     ports:
       - "9000:80"
     # networks:
@@ -18,7 +18,7 @@ services:
       context: .
       target: relayer-production-stage
     env_file:
-      - .env
+      - .env.docker
     ports:
       - 3000:3000
     # networks:
@@ -30,7 +30,7 @@ services:
       context: .
       target: hardhat-production-stage
     env_file:
-      - .env
+      - .env.docker
     ports:
       - 8545:8545
     # networks:
