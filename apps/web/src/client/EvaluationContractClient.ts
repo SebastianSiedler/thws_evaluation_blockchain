@@ -214,7 +214,19 @@ export const getEvaluationContractClient = () => {
     return useQuery({
       queryKey: ['getCreatorEvaluations', msgSenderAddress],
       queryFn: async () => {
-        return await rpcContract.getCreatorEvaluationList(msgSenderAddress);
+        const evaluationList =
+          await rpcContract.getCreatorEvaluationList(msgSenderAddress);
+
+        // some keys are BigInt, so we need to convert them to string,
+        // to make them JSON serializable
+        return evaluationList.map((item) => {
+          const { groupId, ...rest } = item;
+
+          return {
+            groupId: groupId.toString(),
+            ...rest,
+          };
+        });
       },
     });
   };
