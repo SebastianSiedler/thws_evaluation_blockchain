@@ -220,11 +220,13 @@ export const getEvaluationContractClient = () => {
         // some keys are BigInt, so we need to convert them to string,
         // to make them JSON serializable
         return evaluationList.map((item) => {
-          const { groupId, ...rest } = item;
+          const { groupId, name, length, finalized } = item;
 
           return {
             groupId: groupId.toString(),
-            ...rest,
+            length,
+            finalized,
+            name,
           };
         });
       },
