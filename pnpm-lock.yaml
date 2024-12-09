@@ -15,8 +15,8 @@ importers:
   apps/contracts:
     dependencies:
       '@semaphore-protocol/contracts':
-        specifier: ^4.7.0
-        version: 4.7.1
+        specifier: ^4.7.2
+        version: 4.7.2
       concurrently:
         specifier: ^9.1.0
         version: 9.1.0
@@ -46,14 +46,14 @@ importers:
         specifier: ^2.0.0
         version: 2.0.12(hardhat@2.22.16(ts-node@10.9.2(@types/node@20.17.9)(typescript@5.7.2))(typescript@5.7.2))
       '@semaphore-protocol/core':
-        specifier: ^4.7.0
-        version: 4.7.1
+        specifier: ^4.7.2
+        version: 4.7.2
       '@semaphore-protocol/hardhat':
         specifier: 4.5.0
         version: 4.5.0(hardhat@2.22.16(ts-node@10.9.2(@types/node@20.17.9)(typescript@5.7.2))(typescript@5.7.2))
       '@semaphore-protocol/utils':
-        specifier: ^4.7.0
-        version: 4.7.1
+        specifier: ^4.7.2
+        version: 4.7.2
       '@typechain/ethers-v6':
         specifier: ^0.5.0
         version: 0.5.1(ethers@6.13.4)(typechain@8.3.2(typescript@5.7.2))(typescript@5.7.2)
@@ -133,11 +133,11 @@ importers:
         specifier: workspace:*
         version: link:../contracts
       '@semaphore-protocol/core':
-        specifier: ^4.7.0
-        version: 4.7.1
+        specifier: ^4.7.2
+        version: 4.7.2
       '@semaphore-protocol/data':
-        specifier: ^4.7.0
-        version: 4.7.1
+        specifier: ^4.7.2
+        version: 4.7.2
       '@t3-oss/env-core':
         specifier: 0.10.1
         version: 0.10.1(typescript@5.7.2)(zod@3.23.8)
@@ -188,11 +188,11 @@ importers:
         specifier: ^1.16.12
         version: 1.16.14
       '@semaphore-protocol/core':
-        specifier: ^4.7.0
-        version: 4.7.1
+        specifier: ^4.7.2
+        version: 4.7.2
       '@semaphore-protocol/data':
-        specifier: ^4.7.0
-        version: 4.7.1
+        specifier: ^4.7.2
+        version: 4.7.2
       '@t3-oss/env-core':
         specifier: 0.10.1
         version: 0.10.1(typescript@5.6.3)(zod@3.23.8)
@@ -1338,34 +1338,34 @@ packages:
   '@semaphore-protocol/contracts@4.5.0':
     resolution: {integrity: sha512-YjkSskbPiV7orqSoLAPRPwLgeRcI7KrvbYfV6aS9PcC2gwBReiwbV4WFLMHx1y7TCUWOPL3klKTuVP9L/TFPcw==}
 
-  '@semaphore-protocol/contracts@4.7.1':
-    resolution: {integrity: sha512-hORi3/GTM2b9y5GYTdGs/WggF6N8FLYYGmYCvA1XdNJ++GadyrsjE/JB4n/GdhuHufmH2MKTP/MxTO62tIhs7Q==}
+  '@semaphore-protocol/contracts@4.7.2':
+    resolution: {integrity: sha512-a4GxVKJRJaup421fn4mlcfUC/e0hlICkHcLG9z9v5d+M0VPyF+xfg1cUBJ82l4SbXTfPFkovdtrNAZUUlVaLVQ==}
 
-  '@semaphore-protocol/core@4.7.1':
-    resolution: {integrity: sha512-rvo/GEoiW5ah+jtvGLp6Fk0nZztRKRbDklQZNmp66aZt4/XYuIRuDnIfNR3MKyEZ75xabI9YxfQsVyp2bbsvtw==}
+  '@semaphore-protocol/core@4.7.2':
+    resolution: {integrity: sha512-bWec8FK/Z94gYqIj0Elmcizbz9VTfKGG7EHkloi3dXPcAsdcjXO0eRPWru2lpC7XhebpUb6k4Kcq+eWYbJvpLQ==}
 
-  '@semaphore-protocol/data@4.7.1':
-    resolution: {integrity: sha512-kqDEg1TVTNTzpbaD7y+n+MUltIvtghEQmcYs92vJ7LIAa3JvC/O6rl2himFgP9RPewcTcxT5gO4pTY7/FD1PwA==}
+  '@semaphore-protocol/data@4.7.2':
+    resolution: {integrity: sha512-pzD7EHcX9F5q3TfIctPEJQZPzyHPdzLKMylFOs7Iqq+r8+J9prk6Zy67QojU2JPrpQBtj8Eu9+0QH1qD18OiUw==}
 
-  '@semaphore-protocol/group@4.7.1':
-    resolution: {integrity: sha512-vNYGrsXJjGuD2yyify0DUubzmljVkzVz0LQM22AGKCYrdHGuc2bthBMF977FtgiiQLUuLXhvUDD1R8UvxZbQvA==}
+  '@semaphore-protocol/group@4.7.2':
+    resolution: {integrity: sha512-J5dRhAabh1PlsI2w7HyKGOqpwCyXCAYS0jVAvkP6EGbbTsIaTXny9swQU2SmVtowlI71nzBCcH9IPAgt7huoGQ==}
 
   '@semaphore-protocol/hardhat@4.5.0':
     resolution: {integrity: sha512-Acd+h7B3c+sHesQnxzRMldh6XkPrHsRtG7mBgxRrgOJM976eeSD04r6Rcrp0eYs1nvgdQ0MxXR5PYc2rYuZaZA==}
     peerDependencies:
       hardhat: ^2.19.4
 
-  '@semaphore-protocol/identity@4.7.1':
-    resolution: {integrity: sha512-5baffUSz7XT9O6BbxHX/qJ00lbaaPyBjssKa+ywKc8MdTrYOFGcc6RK/GitBoZYQv4ViKEuiX82lvjBqd5BLMw==}
+  '@semaphore-protocol/identity@4.7.2':
+    resolution: {integrity: sha512-chNxrmlhTQ2peJTYnN4UaFFBYefmo0PUSeo0Wa8GcKC+CfG+uAlPlgZyOU/Pz4sV35UnfRfgqEvcq6tnaN5uFw==}
 
-  '@semaphore-protocol/proof@4.7.1':
-    resolution: {integrity: sha512-nzGw/FoXcjstKZy7T9uylkuK60jJ7EaOvd1knLkBXjhnzydgK/uGacXHn2hV/R/bngCnDqW/nE6BKxWQ59lUYw==}
+  '@semaphore-protocol/proof@4.7.2':
+    resolution: {integrity: sha512-a/7Ad53QS9Z9lHkGrVtK7EHrqglzGXi1kaBn8XE4qCxiYR2CsoLr1tZW2s1UwYCobHFZn5HnNMKTEhR0fTHIew==}
     peerDependencies:
-      '@semaphore-protocol/group': 4.7.1
-      '@semaphore-protocol/identity': 4.7.1
+      '@semaphore-protocol/group': 4.7.2
+      '@semaphore-protocol/identity': 4.7.2
 
-  '@semaphore-protocol/utils@4.7.1':
-    resolution: {integrity: sha512-9PBhqyQsHwTI09CKcLih2CAainNaURk0LGHKtP+Rzd/xWE7vQCYxbeg/9kH9dISyLPSIfcImLup0v1VqKqZ8jQ==}
+  '@semaphore-protocol/utils@4.7.2':
+    resolution: {integrity: sha512-S7t5aU2qCsyXC3vlDdDEC71RO/udEeTOrD0Sp5FqISvccA89LFkVNZuttVZar8uyKEs+E3FyAhcQs9YlzNoPhQ==}
 
   '@sentry/core@5.30.0':
     resolution: {integrity: sha512-TmfrII8w1PQZSZgPpUESqjB+jC6MvZJZdLtE/0hZ+SrnKhW3x5WlYLvTXZpcWePYBku7rl2wn1RZu6uT0qCTeg==}
@@ -1749,8 +1749,8 @@ packages:
   '@zk-kit/lean-imt.sol@2.0.0':
     resolution: {integrity: sha512-e9pAm+IXveLPy7b1h05ipIo6U44vp8g/2E+Ocx3PIloMu7lgTXFkIeZj/qZ/iLgEMsF74T0dsg7aVIT0B0nsDA==}
 
-  '@zk-kit/lean-imt@2.2.1':
-    resolution: {integrity: sha512-Zq5yunUYu+ztp9RR5nuqiG1GpK1wjUoAjC0+x/MB95sI/Ns7zCxpzxo/Om9E0gme74Y3jO9KM5UUh3f9tqU++w==}
+  '@zk-kit/lean-imt@2.2.2':
+    resolution: {integrity: sha512-rscIPEgBBcu9vP/DJ3J+3187G/ObKETl343G5enPawNT81oeQSdHx3e2ZapTC+GfrZ/AS2AHHUOpRS1FfdSwjg==}
 
   '@zk-kit/utils@1.2.1':
     resolution: {integrity: sha512-H2nTsyWdicVOyvqC5AjgU7tsTgmR6PDrruFJNmlmdhKp7RxEia/E1B1swMZjaasYa2QMp4Zc6oB7cWchty7B2Q==}
@@ -6367,22 +6367,22 @@ snapshots:
     dependencies:
       '@zk-kit/lean-imt.sol': 2.0.0
 
-  '@semaphore-protocol/contracts@4.7.1':
+  '@semaphore-protocol/contracts@4.7.2':
     dependencies:
       '@zk-kit/lean-imt.sol': 2.0.0
 
-  '@semaphore-protocol/core@4.7.1':
+  '@semaphore-protocol/core@4.7.2':
     dependencies:
-      '@semaphore-protocol/group': 4.7.1
-      '@semaphore-protocol/identity': 4.7.1
-      '@semaphore-protocol/proof': 4.7.1(@semaphore-protocol/group@4.7.1)(@semaphore-protocol/identity@4.7.1)
+      '@semaphore-protocol/group': 4.7.2
+      '@semaphore-protocol/identity': 4.7.2
+      '@semaphore-protocol/proof': 4.7.2(@semaphore-protocol/group@4.7.2)(@semaphore-protocol/identity@4.7.2)
     transitivePeerDependencies:
       - bufferutil
       - utf-8-validate
 
-  '@semaphore-protocol/data@4.7.1':
+  '@semaphore-protocol/data@4.7.2':
     dependencies:
-      '@semaphore-protocol/utils': 4.7.1
+      '@semaphore-protocol/utils': 4.7.2
       axios: 1.6.6
       ethers: 6.11.0
     transitivePeerDependencies:
@@ -6390,9 +6390,9 @@ snapshots:
       - debug
       - utf-8-validate
 
-  '@semaphore-protocol/group@4.7.1':
+  '@semaphore-protocol/group@4.7.2':
     dependencies:
-      '@zk-kit/lean-imt': 2.2.1
+      '@zk-kit/lean-imt': 2.2.2
       '@zk-kit/utils': 1.2.1
       poseidon-lite: 0.3.0
 
@@ -6408,18 +6408,18 @@ snapshots:
       - supports-color
       - utf-8-validate
 
-  '@semaphore-protocol/identity@4.7.1':
+  '@semaphore-protocol/identity@4.7.2':
     dependencies:
       '@zk-kit/baby-jubjub': 1.0.3
       '@zk-kit/eddsa-poseidon': 1.0.4
       '@zk-kit/utils': 1.2.1
       poseidon-lite: 0.3.0
 
-  '@semaphore-protocol/proof@4.7.1(@semaphore-protocol/group@4.7.1)(@semaphore-protocol/identity@4.7.1)':
+  '@semaphore-protocol/proof@4.7.2(@semaphore-protocol/group@4.7.2)(@semaphore-protocol/identity@4.7.2)':
     dependencies:
-      '@semaphore-protocol/group': 4.7.1
-      '@semaphore-protocol/identity': 4.7.1
-      '@semaphore-protocol/utils': 4.7.1
+      '@semaphore-protocol/group': 4.7.2
+      '@semaphore-protocol/identity': 4.7.2
+      '@semaphore-protocol/utils': 4.7.2
       '@zk-kit/artifacts': 1.8.0
       '@zk-kit/utils': 1.2.1
       ethers: 6.10.0
@@ -6428,7 +6428,7 @@ snapshots:
       - bufferutil
       - utf-8-validate
 
-  '@semaphore-protocol/utils@4.7.1':
+  '@semaphore-protocol/utils@4.7.2':
     dependencies:
       ethers: 6.13.4
     transitivePeerDependencies:
@@ -6976,7 +6976,7 @@ snapshots:
     dependencies:
       poseidon-solidity: 0.0.5
 
-  '@zk-kit/lean-imt@2.2.1':
+  '@zk-kit/lean-imt@2.2.2':
     dependencies:
       '@zk-kit/utils': 1.2.1
 
