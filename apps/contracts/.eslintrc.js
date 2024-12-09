@@ -1,0 +1,30 @@
+module.exports = {
+  root: true,
+  env: {
+    es6: true,
+  },
+  // "extends": ["airbnb-base", "airbnb-typescript/base", "prettier"],
+  parser: '@typescript-eslint/parser',
+  parserOptions: {
+    ecmaVersion: 6,
+    sourceType: 'module',
+    tsconfigRootDir: __dirname,
+    project: ['./tsconfig.json', './packages/**/tsconfig.json'],
+  },
+  plugins: ['@typescript-eslint'],
+  rules: {
+    'no-underscore-dangle': 'off',
+    'import/no-extraneous-dependencies': 'off',
+    'no-bitwise': 'off',
+    'no-await-in-loop': 'off',
+    'no-restricted-syntax': 'off',
+    'no-console': ['warn', { allow: ['info', 'warn', 'error', 'log'] }],
+    '@typescript-eslint/lines-between-class-members': 'off',
+    'no-param-reassign': 'off',
+    '@typescript-eslint/no-unused-vars': 'warn',
+    '@typescript-eslint/no-unused-expressions': 'warn',
+    'import/prefer-default-export': 'off',
+    'import/extensions': 'off',
+    'arrow-body-style': 'off',
+  },
+};

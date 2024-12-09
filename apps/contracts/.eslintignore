@@ -14,5 +14,7 @@ typechain-types
 .DS_Store
 *.pem
 
+.eslintrc.js
+
 
 
