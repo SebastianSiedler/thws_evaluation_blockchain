@@ -20,7 +20,7 @@
     "@acme/contracts": "workspace:*",
     "@semaphore-protocol/core": "^4.7.2",
     "@semaphore-protocol/data": "^4.7.2",
-    "@t3-oss/env-core": "0.10.1",
+    "@t3-oss/env-core": "0.11.1",
     "@ts-rest/core": "^3.51.0",
     "@ts-rest/fastify": "^3.51.0",
     "ethers": "^6.13.4",
@@ -31,9 +31,9 @@
   "devDependencies": {
     "@fastify/cors": "^10.0.1",
     "@ianvs/prettier-plugin-sort-imports": "^4.4.0",
-    "@types/node": "^20.17.1",
+    "@types/node": "^20.17.9",
     "esbuild": "^0.24.0",
-    "prettier": "^3.4.1"
+    "prettier": "^3.4.2"
   },
   "files": [
     "dist"
