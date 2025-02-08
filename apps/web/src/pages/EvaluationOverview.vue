@@ -67,6 +67,9 @@ const store = useEvaluationStore();
       >
         Create
       </q-btn>
+      <q-btn to="/evaluation/create" color="primary" class="q-mb-md">
+        + Neue Evaluation erstellen
+      </q-btn>
     </div>
 
     <ParticipantEvaluationList

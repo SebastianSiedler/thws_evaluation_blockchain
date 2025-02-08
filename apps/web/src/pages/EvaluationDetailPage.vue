@@ -65,7 +65,7 @@ const isEvaluationAdmin = computed(() => {
     />
     <p v-else>
       Unable to vote because you are not part of this group. Ask the group admin
-      to add you identity to the group
+      to add your identity to the group
     </p>
   </div>
   <div v-else-if="evaluation.isLoading.value">Loading...</div>
