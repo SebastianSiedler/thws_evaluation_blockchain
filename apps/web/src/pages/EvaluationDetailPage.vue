@@ -4,6 +4,7 @@ import FinalizeEvaluation from 'src/components/Evaluation/FinalizeEvaluation.vue
 import MembersList from 'src/components/Evaluation/MembersList.vue';
 import MessageList from 'src/components/Evaluation/MessageList.vue';
 import SendVote from 'src/components/Evaluation/SendVote.vue';
+import EvaluationStepper from 'src/pages/questionnaire/EvaluationStepper.vue';
 
 import { computed } from 'vue';
 import { useRoute } from 'vue-router';
@@ -58,6 +59,13 @@ const isEvaluationAdmin = computed(() => {
     <AddParticipant :evaluationId="BigInt(groupId)" v-if="isEvaluationAdmin" />
     <p v-else>Only an admin is allowed to add participants to this group</p>
 
+    <!-- Evaluation Stepper -->
+    <!-- TODO: Move this to an separate subroute -->
+    <div v-if="isGroupMember">
+      <EvaluationStepper :groupId="groupId" />
+    </div>
+
+    <!-- Send Vote -->
     <SendVote
       :groupId="groupId"
       v-if="isGroupMember"
