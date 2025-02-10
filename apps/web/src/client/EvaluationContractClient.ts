@@ -18,8 +18,6 @@ export const getEvaluationContractClient = () => {
   });
 
   const semaphore = getSemaphore({
-    // VITE_ETH_NETWORK_URL: env.VITE_ETH_NETWORK_URL,
-    // VITE_SEMAPHORE_CONTRACT_ADDRESS: env.VITE_SEMAPHORE_CONTRACT_ADDRESS,
     VITE_SEMAPHORE_CONTRACT_ADDRESS: env.VITE_SEMAPHORE_CONTRACT_ADDRESS,
     VITE_ETH_NETWORK_URL: env.VITE_ETH_NETWORK_URL,
   });
@@ -44,16 +42,24 @@ export const getEvaluationContractClient = () => {
 
   const createEvaluation = useMutation({
     mutationKey: ['createEvaluation'],
-    mutationFn: async (args: { name: string }) => {
-      const { name } = args;
+    mutationFn: async (args: {
+      name: string;
+      startDate: number;
+      endDate: number;
+    }) => {
+      const { name, startDate, endDate } = args;
 
       const browserContractState = browserContract.state.value?.browserContract;
       if (!browserContractState) {
         throw new Error('No ethereum provider found');
       }
 
-      // const txHash = await browserContractState.createEvaluation(name);
-      const txHash = await rpcContract.createEvaluation(name);
+      // Übergebe name, startDate und endDate an den Smart Contract
+      const txHash = await rpcContract.createEvaluation(
+        name,
+        startDate,
+        endDate,
+      );
       const receipt = await txHash.wait();
 
       return {

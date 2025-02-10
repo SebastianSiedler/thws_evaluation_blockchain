@@ -9,12 +9,13 @@ contract EvaluationPlatform {
 
     struct Evaluation {
         address creator;
-        // mapping(uint256 => bool) hasVoted; // Tracks if an identityCommitment has voted
         uint256 voteCount; // Number of votes
         mapping(uint256 => bool) participants; // Tracks participants
         uint256[] participantList; // List of participants (identityCommitments)
         bool finalized; // Whether the evaluation is finalized
         string name;
+        uint256 startDate; // Start date of the evaluation
+        uint256 endDate; // End date of the evaluation
     }
 
     struct Student {
@@ -38,7 +39,15 @@ contract EvaluationPlatform {
         semaphore = ISemaphore(_semaphore);
     }
 
-    function createEvaluation(string memory name) external returns (uint256) {
+    function createEvaluation(
+        string memory name,
+        uint256 startDate,
+        uint256 endDate
+    ) external returns (uint256) {
+        require(startDate < endDate, "Start date must be before end date");
+        require(startDate / 86400 >= block.timestamp / 86400, "Start date must be today or in the future");
+
+
         uint256 groupId = semaphore.createGroup();
 
         console.log('createEvaluation: ');
@@ -46,6 +55,8 @@ contract EvaluationPlatform {
         evaluations[groupId].creator = msg.sender;
         evaluations[groupId].finalized = false;
         evaluations[groupId].name = name;
+        evaluations[groupId].startDate = startDate;
+        evaluations[groupId].endDate = endDate;
 
         creatorAddressEvaluations[msg.sender].push(groupId);
 
@@ -58,16 +69,10 @@ contract EvaluationPlatform {
         uint256 groupId,
         uint256 identityCommitment
     ) external {
-        // require(
-        //     msg.sender == evaluations[groupId].creator,
-        //     "Only creator can add participants"
-        // );
         require(
             !evaluations[groupId].participants[identityCommitment],
             'Participant already added'
         );
-
-        // make sure the evaluation is not finalized
         require(!evaluations[groupId].finalized, 'Evaluation is finalized');
 
         evaluations[groupId].participants[identityCommitment] = true;
@@ -87,6 +92,8 @@ contract EvaluationPlatform {
     ) external {
         Evaluation storage evaluation = evaluations[groupId];
         require(!evaluation.finalized, 'Evaluation is finalized');
+        require(block.timestamp >= evaluation.startDate, "Voting has not started yet");
+        require(block.timestamp <= evaluation.endDate, "Voting has ended");
 
         ISemaphore.SemaphoreProof memory proof = ISemaphore.SemaphoreProof(
             merkleTreeDepth,
@@ -174,6 +181,8 @@ contract EvaluationPlatform {
         uint256[] participantList;
         bool finalized;
         string name;
+        uint256 startDate;
+        uint256 endDate;
     }
 
     function getEvaluation(
@@ -186,7 +195,9 @@ contract EvaluationPlatform {
                 evaluation.voteCount,
                 evaluation.participantList,
                 evaluation.finalized,
-                evaluation.name
+                evaluation.name,
+                evaluation.startDate,
+                evaluation.endDate
             );
     }
 }
