@@ -1,7 +1,19 @@
 <script setup lang="ts">
 import { defineEmits, defineProps, ref } from 'vue';
 
-const props = defineProps<{ modelValue: number | null }>();
+import {
+  FivePointHighToLow,
+  FivePointLikeScale,
+  FivePointTimeEstimate,
+} from 'src/stores/questionnaireStore';
+
+const props = defineProps<{
+  modelValue:
+    | FivePointHighToLow
+    | FivePointLikeScale
+    | FivePointTimeEstimate
+    | null;
+}>();
 const emit = defineEmits<{
   (e: 'update:modelValue', value: number | null): void;
 }>();
@@ -17,7 +29,11 @@ const ratingOptions = [
 ];
 
 const updateRating = (value: number | null) => {
-  rating.value = value;
+  rating.value = value as
+    | FivePointHighToLow
+    | FivePointLikeScale
+    | FivePointTimeEstimate
+    | null;
   emit('update:modelValue', value);
 };
 </script>
@@ -28,7 +44,6 @@ const updateRating = (value: number | null) => {
       <q-radio
         v-for="option in ratingOptions"
         color="primary"
-        bottom-label
         v-model="rating"
         :key="option.value ? option.value : 'null'"
         :val="option.value"

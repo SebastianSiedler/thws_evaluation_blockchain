@@ -9,11 +9,10 @@ import { useQuestionnaireStore } from 'src/stores/questionnaireStore';
 const $q = useQuasar();
 const store = useQuestionnaireStore();
 const step = ref(1);
-
 </script>
 
 <template>
- <div class="q-pa-md">
+  <div class="q-pa-md">
     <q-stepper v-model="step" header-nav vertical color="primary" animated>
       <q-step
         v-for="(category, index) in store.questionnaire"
