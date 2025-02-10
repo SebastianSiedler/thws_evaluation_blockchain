@@ -23,6 +23,11 @@ contract EvaluationPlatform {
         string matNr;
     }
 
+    struct EvaluationQuestionnaire {
+        string question;
+        uint256[8] points;
+    }
+
     event EvaluationCreated(uint256 groupId, address creator);
 
     mapping(uint256 => Evaluation) public evaluations; // Maps evaluation IDs to their data
