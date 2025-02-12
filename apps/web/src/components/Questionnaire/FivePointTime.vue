@@ -3,12 +3,13 @@ import { defineEmits } from 'vue';
 
 const model = defineModel();
 
-const fivePointLikeScale = [
-  { label: 'trifft gar nicht zu', value: 1 },
-  { label: 'trifft eher nicht zu', value: 2 },
-  { label: 'trifft teilweise zu', value: 3 },
-  { label: 'trifft eher zu', value: 4 },
-  { label: 'trifft voll zu', value: 5 },
+const fivePointTimeEstimate = [
+  { label: '0 Stunden', value: 0 },
+  { label: 'bis zu einer Stunde', value: 1 },
+  { label: '1-2 Stunden', value: 2 },
+  { label: '3-4 Stunden', value: 3 },
+  { label: '5-6 Stunden', value: 5 },
+  { label: 'mehr als 6 Stunden', value: 6 },
 ];
 </script>
 
@@ -16,7 +17,7 @@ const fivePointLikeScale = [
   <div class="rating-scale">
     <div class="q-gutter-md">
       <q-option-group
-        :options="fivePointLikeScale"
+        :options="fivePointTimeEstimate"
         type="radio"
         v-model="model"
       />

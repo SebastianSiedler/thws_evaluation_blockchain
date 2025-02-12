@@ -1,45 +1,40 @@
 import { defineStore } from 'pinia';
 
-export type FivePointLikeScale =
-  | { label: 'trifft gar nicht zu'; value: 1 }
-  | { label: 'trifft eher nicht zu'; value: 2 }
-  | { label: 'trifft teilweise zu'; value: 3 }
-  | { label: 'trifft eher zu'; value: 4 }
-  | { label: 'trifft voll zu'; value: 5 }
-  | { label: null; value: null };
+export type FivePointLikeScale = 1 | 2 | 3 | 4 | 5 | null;
+export type Degree = 
+  'Bachelor Digitale Gesellschaft' |
+  'Bachelor E-Commerce' |
+  'Bachelor Informatik' |
+  'Bachelor Informationssicherheit' |
+  'Bachelor Wirtschaftsinformatik' |
+  'Master Artificial Intelligence' |
+  'Master Digital Business Systems' |
+  'Anderer Studiengang' | 
+  null;
 
-export type FivePointHighToLow =
-  | { label: 'viel zu niedrig'; value: 5 }
-  | { label: 'etwas zu niedrig'; value: 4 }
-  | { label: 'genau richtig'; value: 3 }
-  | { label: 'etwas zu hoch'; value: 2 }
-  | { label: 'viel zu hoch'; value: 1 }
-  | { label: null; value: null };
-
-export type FivePointTimeEstimate =
-  | { label: '0 Stunden'; value: 0 }
-  | { label: 'bis zu einer Stunde'; value: 1 }
-  | { label: '1-2 Stunden'; value: 2 }
-  | { label: '3-4 Stunden'; value: 3 }
-  | { label: '5-6 Stunden'; value: 5 }
-  | { label: 'mehr als 6 Stunden'; value: 6 }
-  | { label: null; value: null };
-
-type FivePointLikeScaleQuestion = {
-  type: 'five-point-like-question';
+export type FivePointLikeScaleQuestion = {
+type: 'five-point-like-question';
+question: string;
+answer: FivePointLikeScale | null;
+};
+export type FivePointHighToLowQuestion = {
+  type: 'five-point-high-to-low-question';
   question: string;
   answer: FivePointLikeScale | null;
 };
-type FivePointHighToLowQuestion = {
-  type: 'five-point-high-to-low-question';
-  question: string;
-  answer: FivePointHighToLow | null;
-};
-type FivePointTimeEstimateQuestion = {
+export type FivePointTimeEstimateQuestion = {
   type: 'five-point-time-estimate-question';
   question: string;
-  answer: FivePointTimeEstimate | null;
+  answer: FivePointLikeScale | null;
 };
+
+type DegreeQuestion = {
+    type: 'degree-question';
+    question: string;
+    answer: Degree | null
+  }
+
+export type FivePointQuestion = FivePointLikeScaleQuestion | FivePointHighToLowQuestion | FivePointTimeEstimateQuestion;
 
 type Yes = true;
 type No = false;
@@ -53,16 +48,17 @@ type YesNoQuestion = {
 type OpenQuestion = {
   type: 'open-question';
   question: string;
-  answer: string | null;
+  answer: string;
 };
 
-type Question =
+export type Question =
   | FivePointLikeScaleQuestion
   | YesNoQuestion
   | OpenQuestion
   | FivePointTimeEstimateQuestion
   | FivePointHighToLowQuestion
-  | FivePointHighToLowQuestion;
+  | FivePointHighToLowQuestion
+  | DegreeQuestion;
 
 type Category = {
   title: string;
@@ -292,18 +288,18 @@ export const useQuestionnaireStore = defineStore('questionnaire', () => {
           type: 'open-question',
           question:
             'Was hat Ihnen an dieser Veranstaltung bisher besonders gut gefallen?',
-          answer: null,
+          answer: '',
         },
         {
           type: 'open-question',
           question: 'Was könnte künftig besser gemacht werden?',
-          answer: null,
+          answer: '',
         },
         {
           type: 'open-question',
           question:
             'Was möchten Sie noch mitteilen? Bitte nutzen Sie den Platz für weitere Verbesserungsvorschläge, Anregungen und Anmerkungen!',
-          answer: null,
+          answer: '',
         },
       ],
       completed: false,
@@ -318,7 +314,7 @@ export const useQuestionnaireStore = defineStore('questionnaire', () => {
           answer: null,
         },
         {
-          type: 'open-question',
+          type: 'degree-question',
           question: 'In welchem Studiengang sind Sie aktuell eingeschrieben?',
           answer: null,
         },

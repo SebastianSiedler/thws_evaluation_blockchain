@@ -3,12 +3,12 @@ import { defineEmits } from 'vue';
 
 const model = defineModel();
 
-const fivePointLikeScale = [
-  { label: 'trifft gar nicht zu', value: 1 },
-  { label: 'trifft eher nicht zu', value: 2 },
-  { label: 'trifft teilweise zu', value: 3 },
-  { label: 'trifft eher zu', value: 4 },
-  { label: 'trifft voll zu', value: 5 },
+const fivePointHighToLow = [
+  { label: 'viel zu niedrig', value: 5 },
+  { label: 'etwas zu niedrig', value: 4 },
+  { label: 'genau richtig', value: 3 },
+  { label: 'etwas zu hoch', value: 2 },
+  { label: 'viel zu hoch', value: 1 },
 ];
 </script>
 
@@ -16,7 +16,7 @@ const fivePointLikeScale = [
   <div class="rating-scale">
     <div class="q-gutter-md">
       <q-option-group
-        :options="fivePointLikeScale"
+        :options="fivePointHighToLow"
         type="radio"
         v-model="model"
       />
