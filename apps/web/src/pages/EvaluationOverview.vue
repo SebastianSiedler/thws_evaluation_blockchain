@@ -10,12 +10,52 @@ import { useEvaluationStore } from 'src/stores/evaluationStore';
 
 const client = getEvaluationContractClient();
 const newEvaluationName = ref('');
+const newStartDate = ref<string | null>(null); // Als String speichern
+const newEndDate = ref<string | null>(null); // Als String speichern
 
 const $q = useQuasar();
 
 const createNewEvaluation = () => {
+  if (!newStartDate.value || !newEndDate.value) {
+    $q.notify({
+      message: 'Start and end date are required.',
+      color: 'negative',
+    });
+    return;
+  }
+
+  // Konvertiere die String-Daten in Date-Objekte für die Validierung
+  const startDateObj = new Date(newStartDate.value);
+  const endDateObj = new Date(newEndDate.value);
+
+  // Aktuelles Datum ohne Uhrzeit (nur Jahr, Monat, Tag)
+  const today = new Date();
+  today.setHours(0, 0, 0, 0); // Setze die Uhrzeit auf Mitternacht
+
+  // Überprüfe, ob das Startdatum in der Vergangenheit liegt
+  if (startDateObj < today) {
+    $q.notify({
+      message: 'Start date cannot be in the past.',
+      color: 'negative',
+    });
+    return;
+  }
+
+  // Überprüfe, ob das Startdatum vor dem Enddatum liegt
+  if (startDateObj >= endDateObj) {
+    $q.notify({
+      message: 'Start date must be before end date.',
+      color: 'negative',
+    });
+    return;
+  }
+
   client.createEvaluation
-    .mutateAsync({ name: newEvaluationName.value })
+    .mutateAsync({
+      name: newEvaluationName.value,
+      startDate: Math.floor(startDateObj.getTime() / 1000), // Konvertiere in Unix-Timestamp
+      endDate: Math.floor(endDateObj.getTime() / 1000), // Konvertiere in Unix-Timestamp
+    })
     .then(() => {
       $q.notify({
         message: 'Evaluation created',
@@ -58,10 +98,30 @@ const store = useEvaluationStore();
         </q-list>
       </div>
 
-      <q-input v-model="newEvaluationName" />
+      <q-input
+        v-model="newEvaluationName"
+        label="Evaluation Name"
+        class="q-mb-md"
+      />
+
+      <!-- Start Date Input -->
+      <q-input
+        v-model="newStartDate"
+        label="Start Date"
+        type="date"
+        class="q-mb-md"
+      />
+
+      <!-- End Date Input -->
+      <q-input
+        v-model="newEndDate"
+        label="End Date"
+        type="date"
+        class="q-mb-md"
+      />
 
       <q-btn
-        :disable="newEvaluationName.length <= 0"
+        :disable="newEvaluationName.length <= 0 || !newStartDate || !newEndDate"
         @click="createNewEvaluation"
         :loading="client.createEvaluation.isPending.value"
       >
