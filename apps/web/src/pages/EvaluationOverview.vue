@@ -106,23 +106,101 @@ const globalEvaluations = computed(
 
     <q-card class="q-mt-md q-pa-md">
       <div class="text-h6 q-mb-md">Create New Evaluation</div>
-      <q-input
-        v-model="newEvaluationName"
-        label="Evaluation Name"
-        class="q-mb-md"
-      />
-      <q-input
-        v-model="newStartDateTime"
-        label="Start Date/Time"
-        type="datetime-local"
-        class="q-mb-md"
-      />
-      <q-input
-        v-model="newEndDateTime"
-        label="End Date/Time"
-        type="datetime-local"
-        class="q-mb-md"
-      />
+      <div class="row">
+        <q-input
+          v-model="newEvaluationName"
+          label="Evaluation Name"
+          class="q-mb-md col"
+        />
+
+        <div class="q-pa-md col" style="max-width: 300px">
+          <q-input filled v-model="newStartDateTime">
+            <template v-slot:prepend>
+              <q-icon name="event" class="cursor-pointer">
+                <q-popup-proxy
+                  cover
+                  transition-show="scale"
+                  transition-hide="scale"
+                >
+                  <q-date
+                    landscape
+                    v-model="newStartDateTime"
+                    mask="YYYY-MM-DD HH:mm"
+                  >
+                    <div class="row items-center justify-end">
+                      <q-btn v-close-popup label="Close" color="primary" flat />
+                    </div>
+                  </q-date>
+                </q-popup-proxy>
+              </q-icon>
+            </template>
+
+            <template v-slot:append>
+              <q-icon name="access_time" class="cursor-pointer">
+                <q-popup-proxy
+                  cover
+                  transition-show="scale"
+                  transition-hide="scale"
+                >
+                  <q-time
+                    v-model="newStartDateTime"
+                    mask="YYYY-MM-DD HH:mm"
+                    format24h
+                  >
+                    <div class="row items-center justify-end">
+                      <q-btn v-close-popup label="Close" color="primary" flat />
+                    </div>
+                  </q-time>
+                </q-popup-proxy>
+              </q-icon>
+            </template>
+          </q-input>
+        </div>
+
+        <div class="q-pa-md col" style="max-width: 300px">
+          <q-input filled v-model="newEndDateTime">
+            <template v-slot:prepend>
+              <q-icon name="event" class="cursor-pointer">
+                <q-popup-proxy
+                  cover
+                  transition-show="scale"
+                  transition-hide="scale"
+                >
+                  <q-date
+                    landscape
+                    v-model="newEndDateTime"
+                    mask="YYYY-MM-DD HH:mm"
+                  >
+                    <div class="row items-center justify-end">
+                      <q-btn v-close-popup label="Close" color="primary" flat />
+                    </div>
+                  </q-date>
+                </q-popup-proxy>
+              </q-icon>
+            </template>
+
+            <template v-slot:append>
+              <q-icon name="access_time" class="cursor-pointer">
+                <q-popup-proxy
+                  cover
+                  transition-show="scale"
+                  transition-hide="scale"
+                >
+                  <q-time
+                    v-model="newEndDateTime"
+                    mask="YYYY-MM-DD HH:mm"
+                    format24h
+                  >
+                    <div class="row items-center justify-end">
+                      <q-btn v-close-popup label="Close" color="primary" flat />
+                    </div>
+                  </q-time>
+                </q-popup-proxy>
+              </q-icon>
+            </template>
+          </q-input>
+        </div>
+      </div>
       <q-btn
         :disable="!newEvaluationName || !newStartDateTime || !newEndDateTime"
         @click="createNewEvaluation"

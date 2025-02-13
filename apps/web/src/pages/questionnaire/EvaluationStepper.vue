@@ -64,7 +64,7 @@ const save = () => {
               <q-editor v-model="question.answer" />
             </div>
             <div v-if="question.type === 'degree-question'" class="q-pa-md">
-              <Degree v-model="question.answer" />
+              <DegreePicker v-model="question.answer" />
             </div>
           </div>
         </div>
