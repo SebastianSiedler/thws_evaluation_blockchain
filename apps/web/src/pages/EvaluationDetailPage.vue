@@ -1,85 +1,90 @@
 <script setup lang="ts">
 import AddParticipant from 'src/components/Evaluation/AddParticipant.vue';
+import EvaluationStepper from 'src/components/Evaluation/EvaluationStepper.vue';
 import FinalizeEvaluation from 'src/components/Evaluation/FinalizeEvaluation.vue';
 import MembersList from 'src/components/Evaluation/MembersList.vue';
 import MessageList from 'src/components/Evaluation/MessageList.vue';
 import SendVote from 'src/components/Evaluation/SendVote.vue';
-import EvaluationStepper from 'src/pages/questionnaire/EvaluationStepper.vue';
 
-import { computed } from 'vue';
+import { computed, ref } from 'vue';
 import { useRoute } from 'vue-router';
-import { z } from 'zod';
 
 import { getEvaluationContractClient } from 'src/client/EvaluationContractClient';
 import { useEvaluationStore } from 'src/stores/evaluationStore';
 
 const route = useRoute();
-
-const groupId = z.string().parse(route.params.id);
-
+const activeTab = ref('members');
+const groupId = computed(() =>
+  Array.isArray(route.params.id) ? route.params.id[0] : route.params.id,
+);
 const client = getEvaluationContractClient();
-
 const store = useEvaluationStore();
 
-const members = client.getEvaluationMembers({ groupId });
-const isGroupMember = computed(() => {
-  return members.data.value?.includes(
-    store._identity?.commitment ?? BigInt(-1),
-  );
-});
+const evaluation = client.getEvaluation({ groupId: groupId.value });
+const members = client.getEvaluationMembers({ groupId: groupId.value });
 
-const evaluation = client.getEvaluation({ groupId });
-
+const isGroupMember = computed(() =>
+  members.data.value?.includes(store._identity?.commitment ?? BigInt(-1)),
+);
 const isEvaluationAdmin = computed(() => {
-  const creatorAddress = evaluation.data.value?.creator.toLowerCase() ?? '';
-  return store.wallet.state?.includes(creatorAddress);
+  return store.wallet.state?.includes(
+    evaluation.data.value?.creator.toLowerCase() ?? '',
+  );
 });
 </script>
 
 <template>
   <div class="q-pa-lg" v-if="evaluation.data.value">
-    <div class="text-h4">{{ evaluation.data.value?.name }}</div>
-    <FinalizeEvaluation
-      v-if="!evaluation.data.value?.finalized && isEvaluationAdmin"
-      :groupId="groupId"
-    />
+    <div class="text-h4 q-mb-md">{{ evaluation.data.value?.name }}</div>
 
-    <div>
-      <span>Finalized: </span>
-      <span> {{ evaluation.data.value.finalized }} </span>
-    </div>
+    <q-card class="q-pa-md q-mb-md">
+      <q-banner
+        v-if="!evaluation.data.value?.finalized && isEvaluationAdmin"
+        dense
+      >
+        <FinalizeEvaluation :groupId="groupId" />
+      </q-banner>
+      <q-banner class="bg-secondary text-white" v-else>
+        <strong>Finalized:</strong>
+        {{ evaluation.data.value.finalized ? 'Yes' : 'No' }}
+      </q-banner>
+    </q-card>
 
-    <!-- Members -->
-    <MembersList :groupId="groupId" />
+    <q-tabs v-model="activeTab" class="bg-primary text-white">
+      <q-tab name="members" label="Members" />
+      <q-tab name="messages" label="Messages" />
+      <q-tab name="evaluation" label="Evaluation" v-if="isGroupMember" />
+    </q-tabs>
 
-    <!-- Messages -->
-    <MessageList :groupId="groupId" />
+    <q-tab-panels v-model="activeTab" animated>
+      <q-tab-panel name="members">
+        <MembersList :groupId="groupId" />
+        <AddParticipant
+          v-if="isEvaluationAdmin"
+          :evaluationId="BigInt(groupId)"
+        />
+        <p v-else>Only an admin can add participants.</p>
+      </q-tab-panel>
 
-    <!-- Add Participant -->
-    <AddParticipant :evaluationId="BigInt(groupId)" v-if="isEvaluationAdmin" />
-    <p v-else>Only an admin is allowed to add participants to this group</p>
+      <q-tab-panel name="messages">
+        <MessageList :groupId="groupId" />
+      </q-tab-panel>
 
-    <!-- Evaluation Stepper -->
-    <!-- TODO: Move this to an separate subroute -->
-    <div v-if="isGroupMember">
-      <EvaluationStepper :groupId="groupId" />
-    </div>
-
-    <!-- Send Vote -->
-    <SendVote
-      :groupId="groupId"
-      v-if="isGroupMember"
-      :identity="store._identity!"
-    />
-    <p v-else>
-      Unable to vote because you are not part of this group. Ask the group admin
-      to add your identity to the group
-    </p>
+      <q-tab-panel name="evaluation" v-if="isGroupMember">
+        <EvaluationStepper :groupId="groupId" />
+        <SendVote
+          :groupId="groupId"
+          v-if="isGroupMember"
+          :identity="store._identity!"
+        />
+      </q-tab-panel>
+    </q-tab-panels>
   </div>
+
   <div v-else-if="evaluation.isLoading.value">Loading...</div>
 
   <div v-else-if="evaluation.error.value">
-    <q-banner>
+    <q-banner class="bg-negative text-white">
       <div class="text-h6">Error</div>
       <div>{{ evaluation.error.value }}</div>
     </q-banner>
