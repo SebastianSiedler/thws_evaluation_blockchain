@@ -114,7 +114,7 @@ const globalEvaluations = computed(
         />
 
         <div class="q-pa-md col" style="max-width: 300px">
-          <q-input filled v-model="newStartDateTime">
+          <q-input filled v-model="newStartDateTime" :label="'Start Date/Time'">
             <template v-slot:prepend>
               <q-icon name="event" class="cursor-pointer">
                 <q-popup-proxy
@@ -158,7 +158,7 @@ const globalEvaluations = computed(
         </div>
 
         <div class="q-pa-md col" style="max-width: 300px">
-          <q-input filled v-model="newEndDateTime">
+          <q-input filled v-model="newEndDateTime" :label="'End Date/Time'">
             <template v-slot:prepend>
               <q-icon name="event" class="cursor-pointer">
                 <q-popup-proxy
