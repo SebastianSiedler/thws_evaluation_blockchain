@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import AddParticipant from 'src/components/Evaluation/AddParticipant.vue';
-import EvaluationStepper from 'src/components/Evaluation/EvaluationStepper.vue';
 import FinalizeEvaluation from 'src/components/Evaluation/FinalizeEvaluation.vue';
 import MembersList from 'src/components/Evaluation/MembersList.vue';
 import MessageList from 'src/components/Evaluation/MessageList.vue';
 import SendVote from 'src/components/Evaluation/SendVote.vue';
+import EvaluationStepper from 'src/pages/questionnaire/EvaluationStepper.vue';
 
 import { computed, ref } from 'vue';
 import { useRoute } from 'vue-router';
