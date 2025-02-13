@@ -29,11 +29,26 @@ contract EvaluationPlatform {
         string matNr;
     }
 
+    enum QuestionType {
+        FivePointLikeScale, // For questions like "Rate this from 1 to 5"
+        YesNo,              // For yes/no questions
+        Open,               // For open-ended questions
+        Degree              // For degree questions
+    }
+
+    struct Answer {
+        uint8 questionId;       // The ID of the question (e.g., 0, 1, 2, etc.)
+        QuestionType questionType; // The type of question (e.g., FivePointLikeScale)
+        uint8 numericAnswer;    // For numeric answers (e.g., 1, 2, 3, 4, 5)
+        bytes openAnswer;       // For text answers (e.g., "I loved it!")
+    }
+
     event EvaluationCreated(uint256 groupId, address creator);
 
     mapping(uint256 => Evaluation) public evaluations; // Maps evaluation IDs to their data
     mapping(address => uint256[]) public creatorAddressEvaluations; // creatorAddress => groupId[]
     mapping(uint256 => uint256[]) public participantICEvaluation; // participantIdentityCommit => groupId[]
+    mapping(uint256 => mapping(uint256 => Answer[])) public answers; // evaluationId => participantIdentityCommitment => Answer[]
 
     // Fragen als immutable Variable
     Question[] public QUESTIONS;
@@ -53,7 +68,7 @@ contract EvaluationPlatform {
         QUESTIONS.push(Question(6,  unicode'Die Lehrperson setzt Darstellungsweisen (z. B. Tafel, Präsentationen) sinnvoll ein.'));
         QUESTIONS.push(Question(7,  unicode'Die Lehrperson spricht deutlich und gut hörbar.'));
         QUESTIONS.push(Question(8,  unicode'Die Lehrperson ist auf die Veranstaltung gut vorbereitet.'));
-        QUESTIONS.push(Question(9, unicode'Die Lehrperson geht auf Fragen und Anregungen der Studierenden angemessen ein.'));
+        QUESTIONS.push(Question(9,  unicode'Die Lehrperson geht auf Fragen und Anregungen der Studierenden angemessen ein.'));
         QUESTIONS.push(Question(10, unicode'Die Lehrperson knüpft an mein Vorwissen oder meine Vorerfahrungen an.'));
         QUESTIONS.push(Question(11, unicode'Die Lehrperson regt mich zur aktiven Auseinandersetzung mit den Inhalten an.'));
         QUESTIONS.push(Question(12, unicode'Die Lehrperson verhält sich den Studierenden gegenüber freundlich und respektvoll.'));
@@ -150,6 +165,37 @@ contract EvaluationPlatform {
 
         semaphore.validateProof(groupId, proof);
         evaluation.voteCount += 1;
+    }
+
+    function submitAnswers(
+        uint256 evaluationId,
+        uint256 identityCommitment,
+        Answer[] calldata participantAnswers
+    ) external {
+        // Check if the evaluation is still open
+        require(!evaluations[evaluationId].finalized, "Evaluation is finalized");
+
+        // Check if the participant is allowed to submit answers
+        require(evaluations[evaluationId].participants[identityCommitment], "Participant not found");
+
+        // Clear previous answers (if any)
+        delete answers[evaluationId][identityCommitment];
+
+        // Store new answers
+        for (uint256 i = 0; i < participantAnswers.length; i++) {
+            answers[evaluationId][identityCommitment].push(participantAnswers[i]);
+        }
+    }
+
+    function getAnswers(
+        uint256 evaluationId,
+        uint256 identityCommitment
+    ) external view returns (Answer[] memory) {
+        // Check if the evaluation is finalized
+        require(evaluations[evaluationId].finalized, "Evaluation is not finalized");
+
+        // Return the answers
+        return answers[evaluationId][identityCommitment];
     }
 
     function finalizeEvaluation(uint256 evaluationId) external {
