@@ -8,8 +8,8 @@ const $q = useQuasar();
 const client = getEvaluationContractClient();
 
 const evaluationName = ref('');
-const startDate = ref<string | null>(null); // Als String speichern
-const endDate = ref<string | null>(null); // Als String speichern
+const startDateTime = ref<string | null>(null); // Als String speichern (Datum + Uhrzeit)
+const endDateTime = ref<string | null>(null); // Als String speichern (Datum + Uhrzeit)
 const questions = ref<
   { type: 'text' | 'multiple-choice'; question: string; options?: string[] }[]
 >([]);
@@ -58,35 +58,34 @@ const createEvaluation = async () => {
     return;
   }
 
-  if (!startDate.value || !endDate.value) {
+  if (!startDateTime.value || !endDateTime.value) {
     $q.notify({
-      message: 'Start and end date are required.',
+      message: 'Start and end date/time are required.',
       color: 'negative',
     });
     return;
   }
 
   // Konvertiere die String-Daten in Date-Objekte für die Validierung
-  const startDateObj = new Date(startDate.value);
-  const endDateObj = new Date(endDate.value);
+  const startDateTimeObj = new Date(startDateTime.value);
+  const endDateTimeObj = new Date(endDateTime.value);
 
-  // Aktuelles Datum ohne Uhrzeit (nur Jahr, Monat, Tag)
-  const today = new Date();
-  today.setHours(0, 0, 0, 0); // Setze die Uhrzeit auf Mitternacht
+  // Aktuelles Datum und Uhrzeit
+  const now = new Date();
 
   // Überprüfe, ob das Startdatum in der Vergangenheit liegt
-  if (startDateObj < today) {
+  if (startDateTimeObj < now) {
     $q.notify({
-      message: 'Start date cannot be in the past.',
+      message: 'Start date/time cannot be in the past.',
       color: 'negative',
     });
     return;
   }
 
   // Überprüfe, ob das Startdatum vor dem Enddatum liegt
-  if (startDateObj >= endDateObj) {
+  if (startDateTimeObj >= endDateTimeObj) {
     $q.notify({
-      message: 'Start date must be before end date.',
+      message: 'Start date/time must be before end date/time.',
       color: 'negative',
     });
     return;
@@ -95,8 +94,8 @@ const createEvaluation = async () => {
   try {
     const response = await client.createEvaluation.mutateAsync({
       name: evaluationName.value,
-      startDate: Math.floor(startDateObj.getTime() / 1000), // Konvertiere in Unix-Timestamp
-      endDate: Math.floor(endDateObj.getTime() / 1000), // Konvertiere in Unix-Timestamp
+      startDate: Math.floor(startDateTimeObj.getTime() / 1000), // Konvertiere in Unix-Timestamp
+      endDate: Math.floor(endDateTimeObj.getTime() / 1000), // Konvertiere in Unix-Timestamp
     });
     createdGroupId.value = response.receipt?.contractAddress || 'Unknown';
     $q.notify({
@@ -113,16 +112,21 @@ const createEvaluation = async () => {
   <div class="q-pa-md">
     <q-input v-model="evaluationName" label="Evaluation Name" class="q-mb-md" />
 
-    <!-- Start Date Input -->
+    <!-- Start Date/Time Input -->
     <q-input
-      v-model="startDate"
-      label="Start Date"
-      type="date"
+      v-model="startDateTime"
+      label="Start Date/Time"
+      type="datetime-local"
       class="q-mb-md"
     />
 
-    <!-- End Date Input -->
-    <q-input v-model="endDate" label="End Date" type="date" class="q-mb-md" />
+    <!-- End Date/Time Input -->
+    <q-input
+      v-model="endDateTime"
+      label="End Date/Time"
+      type="datetime-local"
+      class="q-mb-md"
+    />
 
     <q-card class="q-pa-md">
       <q-input v-model="newQuestion" label="New Question" class="q-mb-sm" />
