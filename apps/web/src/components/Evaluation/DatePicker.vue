@@ -1,9 +1,12 @@
 <script setup lang="ts">
-const model = defineModel();
+const model = defineModel({
+  type: String,
+  default: '',
+});
 </script>
 
 <template>
-  <div class="q-pa-md">
+  <div class="q-va-md">
     <q-input filled v-model="model">
       <template v-slot:prepend>
         <q-icon name="event" class="cursor-pointer">

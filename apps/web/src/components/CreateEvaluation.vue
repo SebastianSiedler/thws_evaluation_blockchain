@@ -77,9 +77,8 @@ const createNewEvaluation = async () => {
           class="q-mb-md"
         />
 
-        <DatePicker v-model="newStartDateTime" />
-
-        <DatePicker v-model="newEndDateTime" />
+        <DatePicker v-model="newStartDateTime" class="q-mb-md"/>
+        <DatePicker v-model="newEndDateTime" class="q-mb-md"/>
 
         <q-input
           v-model="identityCommits"
