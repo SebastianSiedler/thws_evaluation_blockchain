@@ -4,8 +4,8 @@ import { defineEmits } from 'vue';
 const model = defineModel();
 
 const yesNoOptions = [
-  { value: true, label: 'Ja' },
-  { value: false, label: 'Nein' },
+  { value: 1, label: 'Ja' },
+  { value: 2, label: 'Nein' },
 ];
 </script>
 

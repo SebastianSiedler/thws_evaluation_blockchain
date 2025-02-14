@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import Degree from 'src/components/Questionnaire/Degree.vue';
+import DegreePicker from 'src/components/Questionnaire/DegreePicker.vue';
 import FivePointHighToLow from 'src/components/Questionnaire/FivePointHighToLow.vue';
 import FivePointScale from 'src/components/Questionnaire/FivePointScale.vue';
 import FivePointTime from 'src/components/Questionnaire/FivePointTime.vue';
@@ -21,10 +21,18 @@ const save = () => {
     ok: 'OK',
   });
 };
+
+const next = () => {
+  if (step.value < store.questionnaire.length) {
+    step.value++;
+  } else {
+    save();
+  }
+};
 </script>
 
 <template>
-  <div class="q-pa-md">
+  <div class="">
     <q-stepper v-model="step" header-nav contracted color="primary" animated>
       <q-step
         v-for="(category, index) in store.questionnaire"
@@ -71,7 +79,7 @@ const save = () => {
         <q-stepper-navigation>
           <q-btn
             v-if="step < store.questionnaire.length"
-            @click="step++"
+            @click="next"
             color="primary"
             label="Continue"
           />

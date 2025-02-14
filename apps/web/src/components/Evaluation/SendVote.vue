@@ -4,8 +4,10 @@ import { useQuasar } from 'quasar';
 import { ref } from 'vue';
 
 import { getEvaluationContractClient } from 'src/client/EvaluationContractClient';
+import { useQuestionnaireStore } from 'src/stores/questionnaireStore';
 
 const client = getEvaluationContractClient();
+const store = useQuestionnaireStore();
 const $q = useQuasar();
 
 const message = ref('');
@@ -18,7 +20,7 @@ const props = defineProps<{
 const sendVote = () => {
   client.vote
     .mutateAsync({
-      vote: message.value,
+      vote: deconstructAnswers(), // message.value,
       groupId: props.groupId,
       _identity: props.identity,
     })
@@ -32,6 +34,27 @@ const sendVote = () => {
     .catch((err) => {
       $q.notify({ message: err.message, color: 'negative' });
     });
+};
+
+const deconstructAnswers = () => {
+  const answers = store.questionnaire.reduce((acc, category) => {
+    category.questions.forEach((question) => {
+      acc[question.id] = question.answer;
+    });
+    return acc;
+  }, {});
+
+  console.debug('[answers:]', answers);
+
+  const msg = store.questionnaire.reduce((acc, category) => {
+    category.questions.forEach((question) => {
+      acc += `${question.answer}`;
+    });
+    return acc;
+  }, '');
+
+  console.debug('[msg:] ', msg);
+  return msg;
 };
 </script>
 
