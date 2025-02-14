@@ -44,9 +44,11 @@ contract EvaluationPlatform {
         uint256 startDate,
         uint256 endDate
     ) external returns (uint256) {
-        require(startDate < endDate, "Start date must be before end date");
-        require(startDate / 86400 >= block.timestamp / 86400, "Start date must be today or in the future");
-
+        require(startDate < endDate, 'Start date must be before end date');
+        require(
+            startDate / 86400 >= block.timestamp / 86400,
+            'Start date must be today or in the future'
+        );
 
         uint256 groupId = semaphore.createGroup();
 
@@ -92,8 +94,11 @@ contract EvaluationPlatform {
     ) external {
         Evaluation storage evaluation = evaluations[groupId];
         require(!evaluation.finalized, 'Evaluation is finalized');
-        require(block.timestamp >= evaluation.startDate, "Voting has not started yet");
-        require(block.timestamp <= evaluation.endDate, "Voting has ended");
+        require(
+            block.timestamp >= evaluation.startDate,
+            'Voting has not started yet'
+        );
+        require(block.timestamp <= evaluation.endDate, 'Voting has ended');
 
         ISemaphore.SemaphoreProof memory proof = ISemaphore.SemaphoreProof(
             merkleTreeDepth,
