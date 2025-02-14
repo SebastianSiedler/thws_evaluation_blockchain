@@ -12,8 +12,8 @@ const $q = useQuasar();
 const client = getEvaluationContractClient();
 
 const newEvaluationName = ref('');
-const newStartDateTime = ref<string | null>(null);
-const newEndDateTime = ref<string | null>(null);
+const newStartDateTime = ref<string>("");
+const newEndDateTime = ref<string>("");
 const identityCommits = ref<string>('');
 
 const createNewEvaluation = async () => {
