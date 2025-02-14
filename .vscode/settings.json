@@ -1,5 +1,7 @@
 {
-  "conventionalCommits.scopes": [
-    "ui"
-  ]
+  "conventionalCommits.scopes": ["ui"],
+
+  // format on save
+  "editor.formatOnSave": true,
+  "editor.defaultFormatter": "esbenp.prettier-vscode"
 }
