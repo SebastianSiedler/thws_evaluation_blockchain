@@ -3,15 +3,15 @@ import { defineEmits } from 'vue';
 
 const model = defineModel();
 
-const fivePointHighToLow = [
-  { label: 'Bachelor Digitale Gesellschaft', value: 0 },
-  { label: 'Bachelor E-Commerce', value: 1 },
-  { label: 'Bachelor Informatik', value: 2 },
-  { label: 'Bachelor Informationssicherheit', value: 3 },
-  { label: 'Bachelor Wirtschaftsinformatik', value: 4 },
-  { label: 'Master Artificial Intelligence', value: 5 },
-  { label: 'Master Digital Business Systems', value: 6 },
-  { label: 'Anderer Studiengang', value: 7 },
+const degreeOptions = [
+  { label: 'Bachelor Digitale Gesellschaft', value: 1 },
+  { label: 'Bachelor E-Commerce', value: 2 },
+  { label: 'Bachelor Informatik', value: 3 },
+  { label: 'Bachelor Informationssicherheit', value: 4 },
+  { label: 'Bachelor Wirtschaftsinformatik', value: 5 },
+  { label: 'Master Artificial Intelligence', value: 6 },
+  { label: 'Master Digital Business Systems', value: 7 },
+  { label: 'Anderer Studiengang', value: 8 },
 ];
 </script>
 
@@ -19,7 +19,7 @@ const fivePointHighToLow = [
   <div class="rating-scale">
     <div class="q-gutter-md">
       <q-option-group
-        :options="fivePointHighToLow"
+        :options="degreeOptions"
         type="radio"
         v-model="model"
       />

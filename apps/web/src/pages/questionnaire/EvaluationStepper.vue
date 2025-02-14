@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import Degree from 'src/components/Questionnaire/Degree.vue';
+import DegreePicker from 'src/components/Questionnaire/DegreePicker.vue';
 import FivePointHighToLow from 'src/components/Questionnaire/FivePointHighToLow.vue';
 import FivePointScale from 'src/components/Questionnaire/FivePointScale.vue';
 import FivePointTime from 'src/components/Questionnaire/FivePointTime.vue';

@@ -4,12 +4,12 @@ import { defineEmits } from 'vue';
 const model = defineModel();
 
 const fivePointTimeEstimate = [
-  { label: '0 Stunden', value: 0 },
-  { label: 'bis zu einer Stunde', value: 1 },
-  { label: '1-2 Stunden', value: 2 },
-  { label: '3-4 Stunden', value: 3 },
-  { label: '5-6 Stunden', value: 5 },
-  { label: 'mehr als 6 Stunden', value: 6 },
+  { label: '0 Stunden', value: 1 },
+  { label: 'bis zu einer Stunde', value: 2 },
+  { label: '1-2 Stunden', value: 3 },
+  { label: '3-4 Stunden', value: 4 },
+  { label: '5-6 Stunden', value: 6 },
+  { label: 'mehr als 6 Stunden', value: 7 },
 ];
 </script>
 
