@@ -10,8 +10,13 @@ jobs:
         node-version: [20]
     steps:
       - uses: actions/checkout@v4
-      - name: Enable Corepack
-        run: corepack enable
+
+      # Setup pnpm first, before Node.js
+      # TODO: eigentlich unnötig. Aber corepack ist irgendwie kaputt
+      - uses: pnpm/action-setup@v2
+        with:
+          version: 9.14.4
+
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v4
         with:
@@ -30,6 +35,9 @@ jobs:
 
       - name: Run Tests
         run: pnpm run test
+
+      - name: Compile hardhat contracts
+        run: pnpm --filter contracts run -r compile
 
       - name: Build
         run: pnpm run build
