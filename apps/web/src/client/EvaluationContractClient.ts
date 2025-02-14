@@ -38,6 +38,7 @@ export const getEvaluationContractClient = () => {
 
   const queryClient = useQueryClient();
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const evaluationStore = useEvaluationStore();
 
   const createEvaluation = useMutation({

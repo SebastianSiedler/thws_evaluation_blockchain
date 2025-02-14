@@ -39,12 +39,13 @@ const sendVote = () => {
     });
 };
 
-const deconstructAnswers = () => {
+interface Answers {
+  [key: number]: any; // or a more specific type if you know the structure of `question.answer`
+}
 
-  const answers = store.questionnaire.reduce((acc, category) => {
-    category.questions.forEach((question) => {
-      acc[question.id] = question.answer;
-    });
+const deconstructAnswers = () => {
+  const result = category.questions.reduce<Answers>((acc, question) => {
+    acc[question.id] = question.answer;
     return acc;
   }, {});
 

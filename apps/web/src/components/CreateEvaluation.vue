@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import DatePicker from 'src/components/Evaluation/DatePicker.vue';
+
 import { useQuasar } from 'quasar';
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
@@ -74,18 +76,11 @@ const createNewEvaluation = async () => {
           label="Evaluation Name"
           class="q-mb-md"
         />
-        <q-input
-          v-model="newStartDateTime"
-          label="Start Date/Time"
-          type="datetime-local"
-          class="q-mb-md"
-        />
-        <q-input
-          v-model="newEndDateTime"
-          label="End Date/Time"
-          type="datetime-local"
-          class="q-mb-md"
-        />
+
+        <DatePicker v-model="newStartDateTime" />
+
+        <DatePicker v-model="newEndDateTime" />
+
         <q-input
           v-model="identityCommits"
           label="Identity Commits (comma-separated)"

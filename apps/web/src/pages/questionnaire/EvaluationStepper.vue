@@ -6,7 +6,7 @@ import FivePointTime from 'src/components/Questionnaire/FivePointTime.vue';
 import YesNoTicks from 'src/components/Questionnaire/YesNoTicks.vue';
 
 import { useQuasar } from 'quasar';
-import { computed, ref } from 'vue';
+import { ref } from 'vue';
 
 import { useQuestionnaireStore } from 'src/stores/questionnaireStore';
 
@@ -14,6 +14,7 @@ const $q = useQuasar();
 const store = useQuestionnaireStore();
 const step = ref(1);
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const save = () => {
   $q.dialog({
     title: 'Thank you!',

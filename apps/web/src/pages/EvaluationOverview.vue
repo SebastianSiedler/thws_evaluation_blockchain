@@ -12,6 +12,7 @@ import { useEvaluationStore } from 'src/stores/evaluationStore';
 const client = getEvaluationContractClient();
 const store = useEvaluationStore();
 const router = useRouter();
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const $q = useQuasar();
 
 // **Fehlende Definition von `tab` hinzugefügt**
