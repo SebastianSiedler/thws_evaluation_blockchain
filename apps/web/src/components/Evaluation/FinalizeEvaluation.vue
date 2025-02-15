@@ -30,6 +30,7 @@ const finalizeEvaluation = () => {
 
 <template>
   <q-btn
+    color="primary"
     @click="finalizeEvaluation"
     :loading="client.finalizeEvaluation.isPending.value"
   >

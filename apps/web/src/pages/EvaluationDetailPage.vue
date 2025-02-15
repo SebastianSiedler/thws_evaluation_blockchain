@@ -81,19 +81,6 @@ watchEffect(() => {
   <div class="q-pa-lg" v-if="evaluation.data.value">
     <div class="text-h4 q-mb-md">{{ evaluation.data.value?.name }}</div>
 
-    <q-card class="q-pa-md q-mb-md">
-      <q-banner
-        v-if="!evaluation.data.value?.finalized && isEvaluationAdmin"
-        dense
-      >
-        <FinalizeEvaluation :groupId="groupId" />
-      </q-banner>
-      <q-banner class="bg-secondary text-white" v-else>
-        <strong>Finalized:</strong>
-        {{ evaluation.data.value.finalized ? 'Yes' : 'No' }}
-      </q-banner>
-    </q-card>
-
     <q-tabs v-model="activeTab" class="bg-primary text-white">
       <q-tab name="overview" label="Overview" />
       <q-tab name="members" label="Members" />
@@ -127,6 +114,18 @@ watchEffect(() => {
             </q-card-section>
           </q-card>
         </div>
+        <q-card class="q-pa-md q-mb-md">
+          <q-banner
+            v-if="!evaluation.data.value?.finalized && isEvaluationAdmin"
+            dense
+          >
+            <FinalizeEvaluation :groupId="groupId" />
+          </q-banner>
+          <q-banner class="bg-secondary text-white" v-else>
+            <strong>Finalized:</strong>
+            {{ evaluation.data.value.finalized ? 'Yes' : 'No' }}
+          </q-banner>
+        </q-card>
       </q-tab-panel>
 
       <q-tab-panel name="members">
