@@ -24,11 +24,6 @@ contract EvaluationPlatform {
         string matNr;
     }
 
-    struct EvaluationQuestionnaire {
-        string question;
-        uint256[8] points;
-    }
-
     event EvaluationCreated(uint256 groupId, address creator);
 
     mapping(uint256 => Evaluation) public evaluations; // Maps evaluation IDs to their data
@@ -94,10 +89,7 @@ contract EvaluationPlatform {
     ) external {
         Evaluation storage evaluation = evaluations[groupId];
         require(!evaluation.finalized, 'Evaluation is finalized');
-        require(
-            block.timestamp >= evaluation.startDate,
-            'Voting has not started yet'
-        );
+        // require( block.timestamp >= evaluation.startDate, 'Voting has not started yet');
         require(block.timestamp <= evaluation.endDate, 'Voting has ended');
 
         ISemaphore.SemaphoreProof memory proof = ISemaphore.SemaphoreProof(

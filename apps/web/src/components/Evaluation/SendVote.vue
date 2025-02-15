@@ -19,7 +19,6 @@ const props = defineProps<{
 }>();
 
 const sendVote = () => {
-  deconstructAnswers();
 
   client.vote
     .mutateAsync({
@@ -39,20 +38,6 @@ const sendVote = () => {
     });
 };
 
-interface Answers {
-  [key: number]: any; // or a more specific type if you know the structure of `question.answer`
-}
-
-const deconstructAnswers = () => {
-  const result = category.questions.reduce<Answers>((acc, question) => {
-    acc[question.id] = question.answer;
-    return acc;
-  }, {});
-
-  console.debug('answers', answers);
-
-  // return answers.flat();
-};
 </script>
 
 <template>
