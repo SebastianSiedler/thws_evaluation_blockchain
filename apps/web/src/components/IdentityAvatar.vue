@@ -15,8 +15,11 @@ const logout = () => {
 </script>
 
 <template>
-  <div>{{ store._identity?.commitment ?? 'not signed in' }}</div>
-  <q-avatar>Initials </q-avatar>
-  <q-btn @click="logout" v-if="store.isLoggedIn">SignOut</q-btn>
-  <q-btn @click="$router.push('/login')" v-else>LogIn</q-btn>
+  <div class="col-4">
+    {{ store._identity?.commitment ?? 'not signed in' }}
+  </div>
+  <div class="col-4 text-right">
+    <q-btn @click="logout" v-if="store.isLoggedIn">SignOut</q-btn>
+    <q-btn @click="$router.push('/login')" v-else>LogIn</q-btn>
+  </div>
 </template>

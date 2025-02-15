@@ -13,15 +13,19 @@ import IdentityAvatar from 'src/components/IdentityAvatar.vue';
         />
       </div> -->
       <!-- <IdentitySelector /> -->
-      <q-toolbar>
-        <q-toolbar-title
-          @click="() => $router.push('/')"
-          class="cursor-pointer"
-        >
-          THWS Evaluation
-        </q-toolbar-title>
-        <IdentityAvatar />
-      </q-toolbar>
+      <div class="row">
+        <q-toolbar>
+          <div class="col-4">
+            <q-toolbar-title
+              @click="() => $router.push('/')"
+              class="cursor-pointer"
+            >
+              THWS Evaluation
+            </q-toolbar-title>
+          </div>
+          <IdentityAvatar />
+        </q-toolbar>
+      </div>
     </q-header>
 
     <q-page-container>

@@ -71,20 +71,18 @@ const removeInputField = (index: number) => {
       </div>
     </div>
 
-    <div class="q-mt-sm">
+    <div class="q-mt-sm q-mb-lg">
       <q-btn
         label="Add Another"
         color="primary"
         flat
+        style="margin-right: 10px"
         @click="addNewInputField"
       />
-    </div>
-
-    <div class="q-mt-md">
       <q-btn
         @click="addParticipant"
         :loading="client.addParticipant.isPending.value"
-        color="positive"
+        color="primary"
       >
         Add Participants
       </q-btn>

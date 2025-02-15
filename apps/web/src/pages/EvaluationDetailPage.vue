@@ -6,14 +6,15 @@ import MessageList from 'src/components/Evaluation/MessageList.vue';
 import SendVote from 'src/components/Evaluation/SendVote.vue';
 import EvaluationStepper from 'src/pages/questionnaire/EvaluationStepper.vue';
 
-import { computed, ref } from 'vue';
+import Chart from 'chart.js/auto';
+import { computed, ref, watchEffect } from 'vue';
 import { useRoute } from 'vue-router';
 
 import { getEvaluationContractClient } from 'src/client/EvaluationContractClient';
 import { useEvaluationStore } from 'src/stores/evaluationStore';
 
 const route = useRoute();
-const activeTab = ref('members');
+const activeTab = ref('overview');
 const groupId = computed(() =>
   Array.isArray(route.params.id) ? route.params.id[0] : route.params.id,
 );
@@ -30,6 +31,49 @@ const isEvaluationAdmin = computed(() => {
   return store.wallet.state?.includes(
     evaluation.data.value?.creator.toLowerCase() ?? '',
   );
+});
+
+const votes = client.getEvaluationMessages({ groupId: groupId.value });
+
+const totalVoters = computed(() => members.data.value?.length ?? 0);
+const votesCast = computed(() => votes.data.value?.length ?? 0);
+const votesRemaining = computed(() =>
+  Math.max(totalVoters.value - votesCast.value, 0),
+);
+
+const chartCanvas = ref<HTMLCanvasElement | null>(null);
+let chartInstance: Chart | null = null;
+
+// **watchEffect stellt sicher, dass das Diagramm aktualisiert wird, wenn die Daten verfügbar sind**
+watchEffect(() => {
+  if (chartCanvas.value && totalVoters.value > 0) {
+    if (chartInstance) {
+      // Falls das Chart existiert, aktualisieren wir es
+      chartInstance.data.datasets[0].data = [
+        votesCast.value,
+        votesRemaining.value,
+      ];
+      chartInstance.update();
+    } else {
+      // Erstelle das Chart nur, wenn es noch nicht existiert
+      chartInstance = new Chart(chartCanvas.value, {
+        type: 'pie',
+        data: {
+          labels: ['Abgegebene Stimmen', 'Noch nicht abgestimmt'],
+          datasets: [
+            {
+              data: [votesCast.value, votesRemaining.value],
+              backgroundColor: ['#4CAF50', '#FFC107'],
+            },
+          ],
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+        },
+      });
+    }
+  }
 });
 </script>
 
@@ -51,23 +95,47 @@ const isEvaluationAdmin = computed(() => {
     </q-card>
 
     <q-tabs v-model="activeTab" class="bg-primary text-white">
+      <q-tab name="overview" label="Overview" />
       <q-tab name="members" label="Members" />
-      <q-tab name="messages" label="Messages" />
       <q-tab name="evaluation" label="Evaluation" v-if="isGroupMember" />
     </q-tabs>
 
     <q-tab-panels v-model="activeTab" animated>
+      <q-tab-panel name="overview">
+        <MessageList :groupId="groupId" />
+        <div class="q-mt-md">
+          <q-card class="q-pa-md">
+            <q-card-section>
+              <div class="text-h6">Abstimmungsbeteiligung</div>
+              <div v-if="totalVoters > 0">
+                <q-card-section>
+                  <canvas
+                    ref="chartCanvas"
+                    style="max-width: 400px; margin: auto"
+                  ></canvas>
+                </q-card-section>
+                <p class="text-center">
+                  {{ votesCast }} von {{ totalVoters }} haben bereits abgestimmt
+                  ({{ ((votesCast / totalVoters) * 100).toFixed(1) }}%)
+                </p>
+              </div>
+              <div v-else>
+                <q-banner class="bg-warning text-white">
+                  Keine Stimmberechtigten vorhanden.
+                </q-banner>
+              </div>
+            </q-card-section>
+          </q-card>
+        </div>
+      </q-tab-panel>
+
       <q-tab-panel name="members">
-        <MembersList :groupId="groupId" />
         <AddParticipant
           v-if="isEvaluationAdmin"
           :evaluationId="BigInt(groupId)"
         />
         <p v-else>Only an admin can add participants.</p>
-      </q-tab-panel>
-
-      <q-tab-panel name="messages">
-        <MessageList :groupId="groupId" />
+        <MembersList :groupId="groupId" />
       </q-tab-panel>
 
       <q-tab-panel name="evaluation" v-if="isGroupMember">
