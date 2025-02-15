@@ -24,7 +24,6 @@ const newEndDateTime = ref<string>(
     .slice(0, 16)
     .replace('T', ' '),
 );
-const identityCommits = ref<string>('');
 
 const createNewEvaluation = async () => {
   if (!newStartDateTime.value || !newEndDateTime.value) {
