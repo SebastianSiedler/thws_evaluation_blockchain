@@ -12,8 +12,18 @@ const $q = useQuasar();
 const client = getEvaluationContractClient();
 
 const newEvaluationName = ref('');
-const newStartDateTime = ref<string>("");
-const newEndDateTime = ref<string>("");
+const newStartDateTime = ref<string>(
+  new Date(new Date().getTime() + 60 * 60 * 1000)
+    .toISOString()
+    .slice(0, 16)
+    .replace('T', ' '),
+);
+const newEndDateTime = ref<string>(
+  new Date(new Date().getTime() + 60 * 60 * 1000 + 14 * 24 * 60 * 60 * 1000)
+    .toISOString()
+    .slice(0, 16)
+    .replace('T', ' '),
+);
 const identityCommits = ref<string>('');
 
 const createNewEvaluation = async () => {
@@ -27,7 +37,7 @@ const createNewEvaluation = async () => {
 
   const startDateTimeObj = new Date(newStartDateTime.value);
   const endDateTimeObj = new Date(newEndDateTime.value);
-  const now = new Date();
+  const now = new Date(new Date().getTime() - 60 * 1000);
 
   if (startDateTimeObj < now) {
     $q.notify({
@@ -77,14 +87,8 @@ const createNewEvaluation = async () => {
           class="q-mb-md"
         />
 
-        <DatePicker v-model="newStartDateTime" class="q-mb-md"/>
-        <DatePicker v-model="newEndDateTime" class="q-mb-md"/>
-
-        <q-input
-          v-model="identityCommits"
-          label="Identity Commits (comma-separated)"
-          class="q-mb-md"
-        />
+        <DatePicker v-model="newStartDateTime" class="q-mb-md" />
+        <DatePicker v-model="newEndDateTime" class="q-mb-md" />
       </q-card-section>
 
       <q-card-actions align="right">
@@ -94,7 +98,13 @@ const createNewEvaluation = async () => {
           flat
           @click="router.push('/evaluation')"
         />
-        <q-btn label="Create" color="primary" @click="createNewEvaluation" />
+        <q-btn
+          :loading="client.createEvaluation.isPending.value"
+          label="Create"
+          color="primary"
+          :disable="!newEvaluationName || !newStartDateTime || !newEndDateTime"
+          @click="createNewEvaluation"
+        />
       </q-card-actions>
     </q-card>
   </q-page>
