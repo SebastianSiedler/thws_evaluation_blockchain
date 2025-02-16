@@ -3,7 +3,6 @@ import AddParticipant from 'src/components/Evaluation/AddParticipant.vue';
 import FinalizeEvaluation from 'src/components/Evaluation/FinalizeEvaluation.vue';
 import MembersList from 'src/components/Evaluation/MembersList.vue';
 import MessageList from 'src/components/Evaluation/MessageList.vue';
-import SendVote from 'src/components/Evaluation/SendVote.vue';
 import EvaluationStepper from 'src/pages/questionnaire/EvaluationStepper.vue';
 
 import Chart from 'chart.js/auto';
@@ -138,8 +137,7 @@ watchEffect(() => {
       </q-tab-panel>
 
       <q-tab-panel name="evaluation" v-if="isGroupMember">
-        <EvaluationStepper :groupId="groupId" />
-        <SendVote
+        <EvaluationStepper
           :groupId="groupId"
           v-if="isGroupMember"
           :identity="store._identity!"

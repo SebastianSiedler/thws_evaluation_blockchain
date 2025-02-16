@@ -4,10 +4,10 @@ import { useQuasar } from 'quasar';
 import { ref } from 'vue';
 
 import { getEvaluationContractClient } from 'src/client/EvaluationContractClient';
-import { useQuestionnaireStore } from 'src/stores/questionnaireStore';
+// import { useQuestionnaireStore } from 'src/stores/questionnaireStore';
 
 const client = getEvaluationContractClient();
-const store = useQuestionnaireStore();
+// const store = useQuestionnaireStore();
 
 const $q = useQuasar();
 
@@ -19,9 +19,10 @@ const props = defineProps<{
 }>();
 
 const sendVote = () => {
+  const vote = reduceQuestionaire();
   client.vote
     .mutateAsync({
-      vote: message.value,
+      vote: vote,
       groupId: props.groupId,
       _identity: props.identity,
     })
@@ -36,19 +37,21 @@ const sendVote = () => {
       $q.notify({ message: err.message, color: 'negative' });
     });
 };
+
+function reduceQuestionaire() {
+  // const answers = store.questionnaire.reduce((acc, category) => {
+  //   return acc.concat(category.questions.map((q) => q.answer));
+  // }, []);
+  // console.debug('[questions:]', answers.join(''));
+  // return answers.join('');
+  return 'temp';
+}
 </script>
 
 <template>
   <div class="row">
-    <div class="col-2">
-      <q-input v-model="message" label="Vote" />
-    </div>
     <div class="col-10">
-      <q-btn
-        :disable="!message"
-        @click="sendVote"
-        :loading="client.vote.isPending.value"
-      >
+      <q-btn @click="sendVote" :loading="client.vote.isPending.value">
         send vote
       </q-btn>
     </div>

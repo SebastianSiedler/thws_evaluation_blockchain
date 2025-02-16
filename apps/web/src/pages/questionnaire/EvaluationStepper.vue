@@ -5,23 +5,53 @@ import FivePointScale from 'src/components/Questionnaire/FivePointScale.vue';
 import FivePointTime from 'src/components/Questionnaire/FivePointTime.vue';
 import YesNoTicks from 'src/components/Questionnaire/YesNoTicks.vue';
 
+import { Identity } from '@semaphore-protocol/core';
 import { useQuasar } from 'quasar';
 import { ref } from 'vue';
 
+import { getEvaluationContractClient } from 'src/client/EvaluationContractClient';
 import { useQuestionnaireStore } from 'src/stores/questionnaireStore';
 
 const $q = useQuasar();
 const store = useQuestionnaireStore();
+const client = getEvaluationContractClient();
 const step = ref(1);
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const props = defineProps<{
+  groupId: string;
+  identity: Identity;
+}>();
+
 const save = () => {
-  $q.dialog({
-    title: 'Thank you!',
-    message: 'Your answers have been saved.',
-    ok: 'OK',
-  });
+  const vote = reduceQuestionaire();
+  console.debug('[vote:]', vote);
+  client.vote
+    .mutateAsync({
+      vote: vote,
+      groupId: props.groupId,
+      _identity: props.identity,
+    })
+    .then(() => {
+      $q.notify({
+        message: 'Vote sent',
+        color: 'positive',
+      });
+    })
+    .catch((err) => {
+      $q.notify({ message: err.message, color: 'negative' });
+    });
 };
+
+function reduceQuestionaire() {
+  const categorys = store.questionnaire;
+  const questions = categorys.map((category) => {
+    return category.questions.map((question) => {
+      return question.answer;
+    });
+  });
+  const answers = questions.flat();
+  return answers.join('');
+}
 </script>
 
 <template>
@@ -76,7 +106,13 @@ const save = () => {
             color="primary"
             label="Continue"
           />
-          <q-btn v-else color="secondary" label="Finish" />
+          <q-btn
+            v-else
+            @click="save"
+            color="negative"
+            label="Senden"
+            :loading="client.vote.isPending.value"
+          />
         </q-stepper-navigation>
       </q-step>
     </q-stepper>

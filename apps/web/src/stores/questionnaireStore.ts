@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia';
 
-export type FivePointLikeScale = 1 | 2 | 3 | 4 | 5 | null;
+export type FivePointLikeScale = 1 | 2 | 3 | 4 | 5;
 export type Degree =
   | 1 // Bachelor Digitale Gesellschaft
   | 2 // Bachelor E-Commerce
@@ -9,8 +9,7 @@ export type Degree =
   | 5 // Bachelor Wirtschaftsinformatik
   | 6 // Master Artificial Intelligence
   | 7 // Master Digital Business Systems
-  | 8 // Anderer Studiengang
-  | 0; // Noch keine Angabe
+  | 8; // Anderer Studiengang
 
 export type FivePointLikeScaleQuestion = {
   id: number;
@@ -43,8 +42,8 @@ export type FivePointQuestion =
   | FivePointHighToLowQuestion
   | FivePointTimeEstimateQuestion;
 
-type Yes = true;
-type No = false;
+type Yes = 1;
+type No = 2;
 
 type YesNoQuestion = {
   id: number;
@@ -259,94 +258,94 @@ export const useQuestionnaireStore = defineStore('questionnaire', () => {
       ],
       completed: false,
     },
-    {
-      title: 'Arbeitsbelastung und Beurteilung der Lehrveranstaltung',
-      questions: [
-        {
-          id: 22,
-          type: 'five-point-like-question',
-          question:
-            'Die in dieser Veranstaltung gestellten Anforderungen sind...',
-          answer: 0,
-        },
-        {
-          id: 23,
-          type: 'five-point-time-estimate-question',
-          question:
-            'Wie viele Stunden pro Woche bereiten Sie diese Lehrveranstaltung aktuell im Schnitt vor und nach?',
-          answer: 0,
-        },
-        {
-          id: 24,
-          type: 'yes-no-question',
-          question:
-            'Handelt es sich bei der Lehrveranstaltung ausschließlich um synchrone und/oder asynchrone Online-Lehre?',
-          answer: 0,
-        },
-        {
-          id: 25,
-          type: 'yes-no-question',
-          question:
-            'Haben Sie in der Lehrveranstaltung bisher Arbeitsaufträge/Aufgaben für das Selbststudium erhalten?',
-          answer: 0,
-        },
-        {
-          id: 26,
-          type: 'yes-no-question',
-          question:
-            'Wurden in der Lehrveranstaltung bisher kommunikative Lehr-Lernformen (z. B. Gruppenarbeiten, Diskussionen etc.) eingesetzt?',
-          answer: 0,
-        },
-        {
-          id: 27,
-          type: 'yes-no-question',
-          question:
-            'Wurden in der Lehrveranstaltung bisher digitale Tools eingesetzt (z. B. Live-Quizzes, virtuelle Whiteboards etc.)?',
-          answer: 0,
-        },
-        {
-          id: 28,
-          type: 'yes-no-question',
-          question:
-            'Wurden in der Lehrveranstaltung bisher Live-Veranstaltungen via Videokonferenztool angeboten?',
-          answer: 0,
-        },
-        {
-          id: 29,
-          type: 'yes-no-question',
-          question:
-            'Wurden in der Lehrveranstaltung bisher Lernvideos bzw. Vorlesungsaufzeichnungen bereitgestellt?',
-          answer: 0,
-        },
-        {
-          id: 30,
-          type: 'five-point-like-question',
-          question: 'Welche Note (1-5) würden Sie der Veranstaltung geben?',
-          answer: 0,
-        },
-        {
-          id: 31,
-          type: 'open-question',
-          question:
-            'Was hat Ihnen an dieser Veranstaltung bisher besonders gut gefallen?',
-          answer: '',
-        },
-        {
-          id: 32,
-          type: 'open-question',
-          question: 'Was könnte künftig besser gemacht werden?',
-          answer: '',
-        },
-        {
-          id: 33,
-          type: 'open-question',
-          question:
-            'Was möchten Sie noch mitteilen? Bitte nutzen Sie den Platz für weitere Verbesserungsvorschläge, Anregungen und Anmerkungen!',
-          answer: '',
-        },
-      ],
-      completed: false,
-    },
+    // {
+    //   title: 'Arbeitsbelastung und Beurteilung der Lehrveranstaltung',
+    //   questions: [
+    //     {
+    //       id: 22,
+    //       type: 'five-point-like-question',
+    //       question:
+    //         'Die in dieser Veranstaltung gestellten Anforderungen sind...',
+    //       answer: 0,
+    //     },
+    //     {
+    //       id: 23,
+    //       type: 'five-point-time-estimate-question',
+    //       question:
+    //         'Wie viele Stunden pro Woche bereiten Sie diese Lehrveranstaltung aktuell im Schnitt vor und nach?',
+    //       answer: 0,
+    //     },
+    //     {
+    //       id: 24,
+    //       type: 'yes-no-question',
+    //       question:
+    //         'Handelt es sich bei der Lehrveranstaltung ausschließlich um synchrone und/oder asynchrone Online-Lehre?',
+    //       answer: 0,
+    //     },
+    //     {
+    //       id: 25,
+    //       type: 'yes-no-question',
+    //       question:
+    //         'Haben Sie in der Lehrveranstaltung bisher Arbeitsaufträge/Aufgaben für das Selbststudium erhalten?',
+    //       answer: 0,
+    //     },
+    //     {
+    //       id: 26,
+    //       type: 'yes-no-question',
+    //       question:
+    //         'Wurden in der Lehrveranstaltung bisher kommunikative Lehr-Lernformen (z. B. Gruppenarbeiten, Diskussionen etc.) eingesetzt?',
+    //       answer: 0,
+    //     },
+    //     {
+    //       id: 27,
+    //       type: 'yes-no-question',
+    //       question:
+    //         'Wurden in der Lehrveranstaltung bisher digitale Tools eingesetzt (z. B. Live-Quizzes, virtuelle Whiteboards etc.)?',
+    //       answer: 0,
+    //     },
+    //     {
+    //       id: 28,
+    //       type: 'yes-no-question',
+    //       question:
+    //         'Wurden in der Lehrveranstaltung bisher Live-Veranstaltungen via Videokonferenztool angeboten?',
+    //       answer: 0,
+    //     },
+    //     {
+    //       id: 29,
+    //       type: 'yes-no-question',
+    //       question:
+    //         'Wurden in der Lehrveranstaltung bisher Lernvideos bzw. Vorlesungsaufzeichnungen bereitgestellt?',
+    //       answer: 0,
+    //     },
+    //     {
+    //       id: 30,
+    //       type: 'five-point-like-question',
+    //       question: 'Welche Note (1-5) würden Sie der Veranstaltung geben?',
+    //       answer: 0,
+    //     },
+    //     {
+    //       id: 31,
+    //       type: 'open-question',
+    //       question:
+    //         'Was hat Ihnen an dieser Veranstaltung bisher besonders gut gefallen?',
+    //       answer: '',
+    //     },
+    //     {
+    //       id: 32,
+    //       type: 'open-question',
+    //       question: 'Was könnte künftig besser gemacht werden?',
+    //       answer: '',
+    //     },
+    //     {
+    //       id: 33,
+    //       type: 'open-question',
+    //       question:
+    //         'Was möchten Sie noch mitteilen? Bitte nutzen Sie den Platz für weitere Verbesserungsvorschläge, Anregungen und Anmerkungen!',
+    //       answer: '',
+    //     },
+    //   ],
+    //   completed: false,
+    // },
     {
       title: 'Weitere Angaben',
       questions: [

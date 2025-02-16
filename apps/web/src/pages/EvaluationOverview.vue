@@ -6,14 +6,10 @@ import { useQuasar } from 'quasar';
 import { computed, ref } from 'vue';
 import { useRouter } from 'vue-router';
 
-import { getEvaluationContractClient } from 'src/client/EvaluationContractClient';
 import { useEvaluationStore } from 'src/stores/evaluationStore';
 
-const client = getEvaluationContractClient();
 const store = useEvaluationStore();
 const router = useRouter();
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-const $q = useQuasar();
 
 // **Fehlende Definition von `tab` hinzugefügt**
 const tab = ref('participated');
