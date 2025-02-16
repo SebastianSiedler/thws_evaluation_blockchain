@@ -2,11 +2,14 @@ import { evaluationContractPlatform } from '@acme/contracts/clients/ethers/evalu
 import { getSemaphore } from '@acme/contracts/clients/ethers/semaphore';
 import { EvaluationPlatform } from '@acme/contracts/typechain-types';
 import cors from '@fastify/cors';
+import swagger from '@fastify/swagger';
+import swaggerUi from '@fastify/swagger-ui';
 import { generateProof, Group, Identity } from '@semaphore-protocol/core';
 import { SemaphoreEthers } from '@semaphore-protocol/data';
 import { initServer } from '@ts-rest/fastify';
+import { generateOpenApi } from '@ts-rest/open-api';
 import { encodeBytes32String, isError } from 'ethers';
-import Fastify from 'fastify';
+import Fastify, { FastifyInstance } from 'fastify';
 
 import { contract } from './contract';
 import { env } from './env';
@@ -19,6 +22,33 @@ app.register(cors, {
   // origin: env.VITE_WEB_DAPP_URL,
   origin: '*', // TODO: .env
 });
+
+const openApiDocument = generateOpenApi(contract, {
+  info: {
+    title: 'Posts API',
+    version: '1.0.0',
+  },
+});
+
+// Function to setup Swagger
+export async function setupSwagger(app: FastifyInstance) {
+  // Register Swagger plugin
+  // @ts-expect-error - fastify-swagger types are incorrect but it does still work
+  await app.register(swagger, {
+    openapi: openApiDocument,
+    hideUntagged: true,
+  });
+
+  // Register Swagger UI plugin
+  await app.register(swaggerUi, {
+    routePrefix: '/docs',
+    uiConfig: {
+      docExpansion: 'list',
+      deepLinking: false,
+    },
+    staticCSP: true,
+  });
+}
 
 const s = initServer();
 
@@ -105,6 +135,8 @@ export const router = s.router(contract, {
 app.register(s.plugin(router));
 
 const start = async () => {
+  await setupSwagger(app);
+
   const { rpcContract } = evaluationContractPlatform.getRpcContract({
     VITE_ETH_RELAYER_PK: env.VITE_ETH_RELAYER_PK,
     VITE_ETH_NETWORK_URL: env.VITE_ETH_NETWORK_URL,
