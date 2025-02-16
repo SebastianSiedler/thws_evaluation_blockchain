@@ -49,7 +49,7 @@ const formatTime = (seconds: number) => {
 
 <template>
   <div>
-    <div class="text-h4 q-mb-md">Verfügbare Evaluierungen</div>
+    <div class="text-h4 q-mb-md">Verfügbare Evaluationen</div>
 
     <!-- Loading -->
     <div

@@ -76,7 +76,7 @@ const createNewEvaluation = async () => {
   <q-page class="q-pa-md">
     <q-card class="q-pa-md">
       <q-card-section>
-        <div class="text-h6">Create New Evaluation</div>
+        <div class="text-h6">Neue Evaluation Erstellen</div>
       </q-card-section>
 
       <q-card-section>

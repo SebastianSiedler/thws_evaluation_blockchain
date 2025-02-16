@@ -84,7 +84,7 @@ const removeInputField = (index: number) => {
         :loading="client.addParticipant.isPending.value"
         color="primary"
       >
-        Add Participants
+        Teilnehmer hinzufügen
       </q-btn>
     </div>
   </div>

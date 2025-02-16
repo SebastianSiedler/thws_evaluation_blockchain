@@ -25,10 +25,10 @@ const evaluationMessages = client.getEvaluationMessages({
     <!-- Data -->
     <div v-if="evaluationMessages.data.value">
       <div class="text-h6">
-        Messages ({{ evaluationMessages.data.value.length }})
+        Nachrichten ({{ evaluationMessages.data.value.length }})
       </div>
       <div v-if="evaluationMessages.data.value.length <= 0">
-        No messages found
+        Keine Nachrichten gefunden
       </div>
       <q-list bordered separator v-else>
         <q-item

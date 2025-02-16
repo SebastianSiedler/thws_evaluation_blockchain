@@ -53,7 +53,7 @@ function reduceQuestionaire() {
   <div class="row">
     <div class="col-10">
       <q-btn @click="sendVote" :loading="client.vote.isPending.value">
-        send vote
+        vote senden
       </q-btn>
     </div>
   </div>

@@ -122,7 +122,7 @@ watchEffect(() => {
             <FinalizeEvaluation :groupId="groupId" />
           </q-banner>
           <q-banner class="bg-secondary text-white" v-else>
-            <strong>Finalized:</strong>
+            <strong>Finalisiert:</strong>
             {{ evaluation.data.value.finalized ? 'Yes' : 'No' }}
           </q-banner>
         </q-card>
@@ -133,7 +133,7 @@ watchEffect(() => {
           v-if="isEvaluationAdmin"
           :evaluationId="BigInt(groupId)"
         />
-        <p v-else>Only an admin can add participants.</p>
+        <p v-else>Nur ein Admin kann Teilnehmer hinzufügen.</p>
         <MembersList :groupId="groupId" />
       </q-tab-panel>
 

@@ -33,7 +33,8 @@ const isAdmin = computed(() => {
           :identity="store._identity"
         />
         <div v-else>
-          Sign in with your identity to view evaluations you can vote on.
+          Melden Sie sich mit Ihrer Identität an, um Bewertungen anzuzeigen, für
+          die Sie abstimmen können.
         </div>
       </q-tab-panel>
 
@@ -44,7 +45,8 @@ const isAdmin = computed(() => {
           :walletAddress="store.wallet.state[0]"
         />
         <div v-else>
-          Sign in with your wallet to manage your own evaluations.
+          Melden Sie sich mit Ihrer Wallet an, um Ihre eigenen Bewertungen zu
+          verwalten.
         </div>
       </q-tab-panel>
     </q-tab-panels>
