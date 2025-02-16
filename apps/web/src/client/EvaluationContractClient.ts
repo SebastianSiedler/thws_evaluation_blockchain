@@ -272,7 +272,12 @@ export const getEvaluationContractClient = () => {
           args.identityCommitment,
         );
 
-        return evaluationList;
+        return evaluationList.map((evaluation) => ({
+          groupId: evaluation.groupId.toString(), // `BigInt` → `String`
+          name: evaluation.name,
+          length: evaluation.length,
+          finalized: evaluation.finalized,
+        }));
       },
     });
   };
