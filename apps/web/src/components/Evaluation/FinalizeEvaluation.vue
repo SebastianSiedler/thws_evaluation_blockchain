@@ -16,7 +16,7 @@ const finalizeEvaluation = () => {
     .then(() => {
       $q.notify({
         type: 'positive',
-        message: 'Evaluation finalized successfully',
+        message: 'Evaluation abgeschlossen',
       });
     })
     .catch((error) => {

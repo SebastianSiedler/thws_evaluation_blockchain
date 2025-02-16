@@ -25,7 +25,7 @@ const addParticipant = async () => {
       });
 
       $q.notify({
-        message: `Added participant with identity commitment "${commitment}" to evaluation "${props.evaluationId}"`,
+        message: 'Teilnehmer hinzugefügt',
         color: 'positive',
       });
     } catch (err) {
@@ -73,7 +73,7 @@ const removeInputField = (index: number) => {
 
     <div class="q-mt-sm q-mb-lg">
       <q-btn
-        label="Add Another"
+        label="Weitere hinzufügen"
         color="primary"
         flat
         style="margin-right: 10px"

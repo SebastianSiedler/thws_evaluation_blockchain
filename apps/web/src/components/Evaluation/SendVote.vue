@@ -29,7 +29,7 @@ const sendVote = () => {
     })
     .then(() => {
       $q.notify({
-        message: 'Vote sent',
+        message: 'Vote gesendet',
         color: 'positive',
       });
       message.value = '';
