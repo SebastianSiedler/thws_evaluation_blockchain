@@ -171,7 +171,24 @@ export const getEvaluationContractClient = () => {
     queryKey: ['getEvaluations'],
     queryFn: async () => {
       const groupIds = await semaphore.getGroupIds();
-      return groupIds.map((groupId) => ({ groupId }));
+
+      // Hole für jede Evaluation zusätzliche Daten
+      const evaluations = await Promise.all(
+        groupIds.map(async (groupId) => {
+          const evaluationData = await rpcContract.getEvaluation(
+            BigInt(groupId),
+          );
+
+          return {
+            groupId,
+            name: evaluationData.name,
+            startDate: Number(evaluationData.startDate),
+            endDate: Number(evaluationData.endDate),
+          };
+        }),
+      );
+
+      return evaluations;
     },
   });
 
@@ -212,7 +229,22 @@ export const getEvaluationContractClient = () => {
       queryKey: ['getEvaluation', groupId],
       queryFn: async () => {
         const evaluationData = await rpcContract.getEvaluation(BigInt(groupId));
-        return evaluationData;
+
+        // Extrahiere Start- und Enddatum als Unix-Timestamps
+        const startDate = Number(evaluationData.startDate);
+        const endDate = Number(evaluationData.endDate);
+
+        // Formatierte Zeitwerte hinzufügen
+        const formattedStartDate = new Date(startDate * 1000).toLocaleString();
+        const formattedEndDate = new Date(endDate * 1000).toLocaleString();
+
+        return {
+          ...evaluationData,
+          startDate,
+          endDate,
+          formattedStartDate,
+          formattedEndDate,
+        };
       },
     });
   };
