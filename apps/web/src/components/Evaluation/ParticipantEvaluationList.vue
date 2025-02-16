@@ -80,7 +80,7 @@ const formatTime = (seconds: number) => {
         <q-item
           v-for="{ groupId, name } in participantEvaluationList.data.value"
           :key="groupId.toString()"
-          :to="'/evaluation/' + groupId"
+          :to="'/evaluation/' + groupId.toString()"
         >
           <q-item-section>
             <q-item-label>{{ name }}</q-item-label>

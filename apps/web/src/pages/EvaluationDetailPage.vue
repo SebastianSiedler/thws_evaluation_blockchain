@@ -27,9 +27,10 @@ const isGroupMember = computed(() =>
   members.data.value?.includes(store._identity?.commitment ?? BigInt(-1)),
 );
 const isEvaluationAdmin = computed(() => {
-  return store.wallet.state?.includes(
-    evaluation.data.value?.creator.toLowerCase() ?? '',
-  );
+  const creator = evaluation.data.value?.creator;
+  if (!creator) return false; // Falls creator noch nicht geladen ist, false zurückgeben
+
+  return store.wallet.state?.includes(creator.toLowerCase()) ?? false;
 });
 
 const votes = client.getEvaluationMessages({ groupId: groupId.value });
