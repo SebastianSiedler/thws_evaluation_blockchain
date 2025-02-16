@@ -28,10 +28,10 @@ const evaluationMembers = client.getEvaluationMembers({
     <!-- Data -->
     <div v-if="evaluationMembers.data.value">
       <div class="text-h6">
-        Members ({{ evaluationMembers.data.value.length }})
+        Teilnehmer ({{ evaluationMembers.data.value.length }})
       </div>
       <div v-if="evaluationMembers.data.value.length <= 0">
-        No members found
+        Keine Teilnehmer vorhanden
       </div>
       <q-list bordered separator v-else>
         <q-item
@@ -40,7 +40,7 @@ const evaluationMembers = client.getEvaluationMembers({
         >
           <q-item-section>
             <span v-if="member.toString() == _identity?.commitment.toString()">
-              (You)
+              (Ich)
             </span>
             <span>{{ member }}</span>
           </q-item-section>

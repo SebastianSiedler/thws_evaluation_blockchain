@@ -13,6 +13,8 @@ import { ethers, run } from 'hardhat';
 // eslint-disable-next-line
 import { EvaluationPlatform, ISemaphore } from '../typechain-types';
 
+// TODO: add more tests
+
 describe('Feedback', () => {
   async function deployEvaluationPlatformFixture() {
     const { semaphore } = await run('deploy:semaphore', {
@@ -49,7 +51,11 @@ describe('Feedback', () => {
 
     expect(
       // .connect(creator)
-      await evaluationPlatform.createEvaluation('Test Evaluation'),
+      await evaluationPlatform.createEvaluation(
+        'Test Evaluation',
+        Date.now(),
+        Date.now() + 1000,
+      ),
     )
       .to.emit(evaluationPlatform, 'EvaluationCreated')
       .withArgs(groupId, creator.address);
@@ -67,7 +73,11 @@ describe('Feedback', () => {
     );
 
     const [creator] = await ethers.getSigners();
-    const tx = await evaluationPlatform.createEvaluation('Test Evaluation');
+    const tx = await evaluationPlatform.createEvaluation(
+      'Test Evaluation',
+      Date.now(),
+      Date.now() + 1000,
+    );
     const receipt = await tx.wait();
 
     const groupId = 0;
@@ -88,7 +98,11 @@ describe('Feedback', () => {
       deployEvaluationPlatformFixture,
     );
 
-    const tx = await evaluationPlatform.createEvaluation('Test Evaluation');
+    const tx = await evaluationPlatform.createEvaluation(
+      'Test Evaluation',
+      Date.now(),
+      Date.now() + 1000,
+    );
     const receipt = await tx.wait();
 
     const groupId = 0;
@@ -107,7 +121,11 @@ describe('Feedback', () => {
       deployEvaluationPlatformFixture,
     );
 
-    const tx = await evaluationPlatform.createEvaluation('Test Evaluation');
+    const tx = await evaluationPlatform.createEvaluation(
+      'Test Evaluation',
+      Date.now(),
+      Date.now() + 1000,
+    );
     const receipt = await tx.wait();
 
     const groupId = 0;
@@ -142,7 +160,11 @@ describe('Feedback', () => {
       deployEvaluationPlatformFixture,
     );
 
-    const tx = await evaluationPlatform.createEvaluation('Test Evaluation');
+    const tx = await evaluationPlatform.createEvaluation(
+      'Test Evaluation',
+      Date.now(),
+      Date.now() + 1000,
+    );
     const receipt = await tx.wait();
 
     const groupId = 0;
@@ -206,7 +228,11 @@ describe('Feedback', () => {
       deployEvaluationPlatformFixture,
     );
 
-    const tx = await evaluationPlatform.createEvaluation('Test Evaluation');
+    const tx = await evaluationPlatform.createEvaluation(
+      'Test Evaluation',
+      Date.now(),
+      Date.now() + 1000,
+    );
     const receipt = await tx.wait();
 
     const groupId = 0;

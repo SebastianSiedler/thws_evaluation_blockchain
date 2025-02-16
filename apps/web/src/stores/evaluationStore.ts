@@ -1,3 +1,4 @@
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { evaluationContractPlatform } from '@acme/contracts/clients/ethers/evaluation';
 import { Identity } from '@semaphore-protocol/core';
 import { useAsyncState, useLocalStorage } from '@vueuse/core';
@@ -37,6 +38,7 @@ export const useEvaluationStore = defineStore('evaluation', () => {
 
   // TODO: passt das mit den livecycle hooks? wird das unsubscribed?
   // oder sogar jedes mal neu subscribed, wenn der store genutzt wird?
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   window.ethereum?.on('accountsChanged', (accounts) => {
     wallet.execute();
   });

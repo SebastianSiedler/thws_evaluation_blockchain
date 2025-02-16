@@ -14,6 +14,10 @@ const routes: RouteRecordRaw[] = [
         component: () => import('pages/EvaluationOverview.vue'),
       },
       {
+        path: 'evaluation/create',
+        component: () => import('components/CreateEvaluation.vue'),
+      },
+      {
         path: 'evaluation/:id',
         component: () => import('pages/EvaluationDetailPage.vue'),
       },
