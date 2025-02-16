@@ -26,8 +26,8 @@ const isAdmin = computed(() => {
 <template>
   <div class="q-pa-md">
     <q-tabs v-model="tab" class="text-primary">
-      <q-tab name="participated" label="Participated Evaluations" />
-      <q-tab name="mine" label="My Evaluations" />
+      <q-tab name="participated" label="Verfügbare Evaluationen" />
+      <q-tab name="mine" label="Meine Evaluationen" v-if="isAdmin" />
     </q-tabs>
 
     <q-tab-panels v-model="tab" animated>
@@ -43,7 +43,7 @@ const isAdmin = computed(() => {
       </q-tab-panel>
 
       <!-- Eigene erstellte Evaluationen -->
-      <q-tab-panel name="mine">
+      <q-tab-panel name="mine" v-if="isAdmin">
         <CreatorEvaluationList
           v-if="store.wallet.state"
           :walletAddress="store.wallet.state[0]"

@@ -15,7 +15,7 @@ const logout = () => {
 </script>
 
 <template>
-  <div class="col-4">
+  <div class="col-4 text-center">
     {{ store._identity?.commitment ?? 'not signed in' }}
   </div>
   <div class="col-4 text-right">

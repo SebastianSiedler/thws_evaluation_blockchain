@@ -16,7 +16,7 @@ const participantEvaluationList = client.getParticipantEvaluationList({
 
 <template>
   <div>
-    <div class="text-h6">Participant Evaluations (IdentityCommit)</div>
+    <div class="text-h4 q-mb-md">Verfügbare Evualationen</div>
 
     <!-- Loading -->
     <div v-if="participantEvaluationList.isLoading.value">Loading...</div>
@@ -29,7 +29,7 @@ const participantEvaluationList = client.getParticipantEvaluationList({
     <!-- Data -->
     <div v-if="participantEvaluationList.data.value">
       <div v-if="participantEvaluationList.data.value.length <= 0">
-        No evaluations found
+        <p>No evaluations found</p>
       </div>
       <q-list v-else separator bordered>
         <q-item

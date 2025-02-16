@@ -11,8 +11,10 @@ const evaluationList = client.getCreatorEvaluationList(props.walletAddress);
 
 <template>
   <div>
-    <div class="text-h6">Creator Evaluations (WalletAddress)</div>
-    <pre>{{ walletAddress }}</pre>
+    <div class="text-h4 q-mb-md">
+      Meine Evaluationen
+      <span class="text-subtitle1">(Wallet-Adresse: {{ walletAddress }})</span>
+    </div>
 
     <!-- Loading -->
     <div v-if="evaluationList.isLoading.value">Loading...</div>
