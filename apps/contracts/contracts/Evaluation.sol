@@ -47,8 +47,6 @@ contract EvaluationPlatform {
 
         uint256 groupId = semaphore.createGroup();
 
-        console.log('createEvaluation: ');
-
         evaluations[groupId].creator = msg.sender;
         evaluations[groupId].finalized = false;
         evaluations[groupId].name = name;
@@ -89,7 +87,10 @@ contract EvaluationPlatform {
     ) external {
         Evaluation storage evaluation = evaluations[groupId];
         require(!evaluation.finalized, 'Evaluation is finalized');
-        // require( block.timestamp >= evaluation.startDate, 'Voting has not started yet');
+        require(
+            block.timestamp >= evaluation.startDate,
+            'Voting has not started yet'
+        );
         require(block.timestamp <= evaluation.endDate, 'Voting has ended');
 
         ISemaphore.SemaphoreProof memory proof = ISemaphore.SemaphoreProof(
