@@ -55,7 +55,7 @@ const isAdmin = computed(() => {
     <q-page-sticky v-if="isAdmin" position="bottom-right" :offset="[18, 18]">
       <q-btn
         fab
-        label="Create Evaluation"
+        label="Neue Evaluation erstellen"
         color="primary"
         @click="router.push('/evaluation/create')"
       />

@@ -92,14 +92,14 @@ const createNewEvaluation = async () => {
 
       <q-card-actions align="right">
         <q-btn
-          label="Cancel"
-          color="negative"
+          label="Abbrechen"
+          color="primary"
           flat
           @click="router.push('/evaluation')"
         />
         <q-btn
           :loading="client.createEvaluation.isPending.value"
-          label="Create"
+          label="Erstellen"
           color="primary"
           :disable="!newEvaluationName || !newStartDateTime || !newEndDateTime"
           @click="createNewEvaluation"
