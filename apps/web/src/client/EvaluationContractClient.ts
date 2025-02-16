@@ -143,6 +143,9 @@ export const getEvaluationContractClient = () => {
       if (response.status === 500) {
         throw new Error(response.body.message);
       }
+      if (response.status !== 200) {
+        throw new Error('Failed to vote');
+      }
 
       return { groupId: args.groupId };
     },

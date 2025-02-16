@@ -53,8 +53,8 @@ describe('Feedback', () => {
       // .connect(creator)
       await evaluationPlatform.createEvaluation(
         'Test Evaluation',
-        Date.now(),
-        Date.now() + 1000,
+        Math.floor(Date.now() / 1000),
+        Math.floor(Date.now() / 1000 + 1000 * 3600),
       ),
     )
       .to.emit(evaluationPlatform, 'EvaluationCreated')
@@ -75,8 +75,8 @@ describe('Feedback', () => {
     const [creator] = await ethers.getSigners();
     const tx = await evaluationPlatform.createEvaluation(
       'Test Evaluation',
-      Date.now(),
-      Date.now() + 1000,
+      Math.floor(Date.now() / 1000),
+      Math.floor(Date.now() / 1000 + 1000 * 3600),
     );
     const receipt = await tx.wait();
 
@@ -100,8 +100,8 @@ describe('Feedback', () => {
 
     const tx = await evaluationPlatform.createEvaluation(
       'Test Evaluation',
-      Date.now(),
-      Date.now() + 1000,
+      Math.floor(Date.now() / 1000),
+      Math.floor(Date.now() / 1000 + 1000 * 3600),
     );
     const receipt = await tx.wait();
 
@@ -123,9 +123,10 @@ describe('Feedback', () => {
 
     const tx = await evaluationPlatform.createEvaluation(
       'Test Evaluation',
-      Date.now(),
-      Date.now() + 1000,
+      Math.floor(Date.now() / 1000),
+      Math.floor(Date.now() / 1000 + 1000 * 3600),
     );
+    await new Promise((resolve) => setTimeout(resolve, 500));
     const receipt = await tx.wait();
 
     const groupId = 0;
@@ -162,9 +163,11 @@ describe('Feedback', () => {
 
     const tx = await evaluationPlatform.createEvaluation(
       'Test Evaluation',
-      Date.now(),
-      Date.now() + 1000,
+      Math.floor(Date.now() / 1000),
+      Math.floor(Date.now() / 1000 + 1000 * 3600),
     );
+    await new Promise((resolve) => setTimeout(resolve, 500));
+
     const receipt = await tx.wait();
 
     const groupId = 0;
@@ -230,8 +233,8 @@ describe('Feedback', () => {
 
     const tx = await evaluationPlatform.createEvaluation(
       'Test Evaluation',
-      Date.now(),
-      Date.now() + 1000,
+      Math.floor(Date.now() / 1000),
+      Math.floor(Date.now() / 1000 + 1000 * 3600),
     );
     const receipt = await tx.wait();
 
