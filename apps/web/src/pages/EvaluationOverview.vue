@@ -2,7 +2,6 @@
 import CreatorEvaluationList from 'src/components/Evaluation/CreatorEvaluationList.vue';
 import ParticipantEvaluationList from 'src/components/Evaluation/ParticipantEvaluationList.vue';
 
-import { useQuasar } from 'quasar';
 import { computed, ref } from 'vue';
 import { useRouter } from 'vue-router';
 
