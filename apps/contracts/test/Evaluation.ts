@@ -13,7 +13,7 @@ import { ethers, run } from 'hardhat';
 // eslint-disable-next-line
 import { EvaluationPlatform, ISemaphore } from '../typechain-types';
 
-// TODO: add more tests 
+// TODO: add more tests
 
 describe('Feedback', () => {
   async function deployEvaluationPlatformFixture() {

@@ -4,6 +4,7 @@ import { useQuasar } from 'quasar';
 import { ref } from 'vue';
 
 import { getEvaluationContractClient } from 'src/client/EvaluationContractClient';
+
 // import { useQuestionnaireStore } from 'src/stores/questionnaireStore';
 
 const client = getEvaluationContractClient();
