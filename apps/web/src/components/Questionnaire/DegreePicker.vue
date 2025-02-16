@@ -1,5 +1,4 @@
 <script setup lang="ts">
-
 const model = defineModel();
 
 const degreeOptions = [
@@ -17,11 +16,7 @@ const degreeOptions = [
 <template>
   <div class="rating-scale">
     <div class="q-gutter-md">
-      <q-option-group
-        :options="degreeOptions"
-        type="radio"
-        v-model="model"
-      />
+      <q-option-group :options="degreeOptions" type="radio" v-model="model" />
     </div>
   </div>
 </template>

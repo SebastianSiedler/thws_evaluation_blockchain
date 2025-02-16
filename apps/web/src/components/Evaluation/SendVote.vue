@@ -19,7 +19,6 @@ const props = defineProps<{
 }>();
 
 const sendVote = () => {
-
   client.vote
     .mutateAsync({
       vote: message.value,
@@ -37,7 +36,6 @@ const sendVote = () => {
       $q.notify({ message: err.message, color: 'negative' });
     });
 };
-
 </script>
 
 <template>

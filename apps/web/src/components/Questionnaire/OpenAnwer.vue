@@ -1,12 +1,11 @@
 <script setup lang="ts">
-
 const model = defineModel();
 </script>
 
 <template>
   <div class="rating-scale">
     <div class="q-gutter-md">
-      <q-editor v-model="model as string"/>
+      <q-editor v-model="model as string" />
     </div>
   </div>
 </template>
