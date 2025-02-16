@@ -34,6 +34,6 @@ const finalizeEvaluation = () => {
     @click="finalizeEvaluation"
     :loading="client.finalizeEvaluation.isPending.value"
   >
-    Finalize Evaluation
+    Evaluation Abschließen
   </q-btn>
 </template>

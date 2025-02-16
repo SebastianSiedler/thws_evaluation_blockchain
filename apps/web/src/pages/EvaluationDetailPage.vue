@@ -139,7 +139,6 @@ watchEffect(() => {
 
       <q-tab-panel name="evaluation" v-if="isGroupMember">
         <EvaluationStepper :groupId="groupId" :identity="store._identity!" />
-
       </q-tab-panel>
     </q-tab-panels>
   </div>
