@@ -228,23 +228,7 @@ export const getEvaluationContractClient = () => {
     return useQuery({
       queryKey: ['getEvaluation', groupId],
       queryFn: async () => {
-        const evaluationData = await rpcContract.getEvaluation(BigInt(groupId));
-
-        // Extrahiere Start- und Enddatum als Unix-Timestamps
-        const startDate = Number(evaluationData.startDate);
-        const endDate = Number(evaluationData.endDate);
-
-        // Formatierte Zeitwerte hinzufügen
-        const formattedStartDate = new Date(startDate * 1000).toLocaleString();
-        const formattedEndDate = new Date(endDate * 1000).toLocaleString();
-
-        return {
-          ...evaluationData,
-          startDate,
-          endDate,
-          formattedStartDate,
-          formattedEndDate,
-        };
+        return await rpcContract.getEvaluation(BigInt(groupId));
       },
     });
   };

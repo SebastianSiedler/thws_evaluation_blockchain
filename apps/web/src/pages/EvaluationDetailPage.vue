@@ -3,6 +3,7 @@ import AddParticipant from 'src/components/Evaluation/AddParticipant.vue';
 import FinalizeEvaluation from 'src/components/Evaluation/FinalizeEvaluation.vue';
 import MembersList from 'src/components/Evaluation/MembersList.vue';
 import MessageList from 'src/components/Evaluation/MessageList.vue';
+import SendVote from 'src/components/Evaluation/SendVote.vue';
 import EvaluationStepper from 'src/pages/questionnaire/EvaluationStepper.vue';
 
 import Chart from 'chart.js/auto';
@@ -26,11 +27,11 @@ const members = client.getEvaluationMembers({ groupId: groupId.value });
 const isGroupMember = computed(() =>
   members.data.value?.includes(store._identity?.commitment ?? BigInt(-1)),
 );
-const isEvaluationAdmin = computed(() => {
-  const creator = evaluation.data.value?.creator;
-  if (!creator) return false; // Falls creator noch nicht geladen ist, false zurückgeben
 
-  return store.wallet.state?.includes(creator.toLowerCase()) ?? false;
+const isEvaluationAdmin = computed(() => {
+  return store.wallet.state?.includes(
+    evaluation.data.value?.creator.toLowerCase() ?? '',
+  );
 });
 
 const votes = client.getEvaluationMessages({ groupId: groupId.value });
@@ -138,7 +139,8 @@ watchEffect(() => {
       </q-tab-panel>
 
       <q-tab-panel name="evaluation" v-if="isGroupMember">
-        <EvaluationStepper
+        <EvaluationStepper :groupId="groupId" />
+        <SendVote
           :groupId="groupId"
           v-if="isGroupMember"
           :identity="store._identity!"
