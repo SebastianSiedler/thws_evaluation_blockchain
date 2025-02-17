@@ -1,7 +1,10 @@
 FROM node:20-slim AS base
+
+RUN npm install -g pnpm 
+
 ENV PNPM_HOME="/pnpm"
 ENV PATH="$PNPM_HOME:$PATH"
-RUN corepack enable
+# RUN corepack enable
 
 FROM base AS build
 COPY . /usr/src/app
@@ -16,7 +19,8 @@ FROM base AS relayer-production-stage
 COPY --from=build /prod/relayer /prod/relayer
 WORKDIR /prod/relayer
 EXPOSE 3000
-CMD [ "pnpm", "start" ]
+# should be "pnpm start"; but it's not working because esbuild doesn't copy static assets
+CMD [ "pnpm", "dev" ]
 
 FROM base AS hardhat-production-stage
 COPY --from=build /usr/src/app /usr/src/app
